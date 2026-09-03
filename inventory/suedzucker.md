@@ -26,3 +26,12 @@ www.suedzucker.de
 ## 2026-09-03 06:28:47 UTC
 
 ## 2026-09-03 11:41:49 UTC
+
+## 2026-09-03 16:00:35 UTC
+- NEW www.suedzuckergroup.com — corporate site redirect target of suedzucker.de (Drupal 11, live)
+- NEW shop.suedzucker.com — customer shop SPA with /login (e-commerce auth)
+- NEW plantportal.info — Plant Portal (farmer portal, partner-number linking flow)
+- NEW app.agriconetwork.com — Giełda Wysłodkowa byproduct trading platform (financial)
+- NEW bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
+- NEW suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
+- CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)

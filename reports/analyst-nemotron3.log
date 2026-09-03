@@ -1,0 +1,574 @@
+===== ANALYST nemotron3 2026-09-03 16:00:35 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" https://www.suedzucker.de --max-time 5
+301
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" https://suedzucker.de --max-time 5
+301
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" https://web.suedzucker.de --max-time 5
+000
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code}" https://mail.suedzucker.de --max-time 5
+000
+[0m
+[0m$ [0mcurl -sI https://www.suedzucker.de --max-time 5 | head -20
+HTTP/2 301 
+server: nginx
+date: Thu, 03 Sep 2026 15:42:24 GMT
+content-type: text/html
+content-length: 162
+location: https://www.suedzuckergroup.com/
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: geolocation=(), microphone=(), camera=()
+content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';
+[0m
+[0m$ [0mcurl -sI https://suedzucker.de --max-time 5 | head -20
+HTTP/2 301 
+server: nginx
+date: Thu, 03 Sep 2026 15:42:24 GMT
+content-type: text/html
+content-length: 162
+location: https://www.suedzuckergroup.com/
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: geolocation=(), microphone=(), camera=()
+content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';
+[0m
+[0m$ [0mcurl -sI https://www.suedzuckergroup.com --max-time 5 | head -30
+HTTP/2 301 
+date: Thu, 03 Sep 2026 15:43:17 GMT
+content-type: text/html; charset=utf-8
+location: https://www.suedzuckergroup.com/en
+server: cloudflare
+x-drupal-route-normalizer: 1
+x-drupal-dynamic-cache: UNCACHEABLE (301)
+content-language: en
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+cache-control: must-revalidate, no-cache, private
+expires: Sun, 19 Nov 1978 05:00:00 GMT
+x-generator: Drupal 11 (https://www.drupal.org)
+content-security-policy: frame-ancestors 'self' https://*.etracker.com https://etracker.com
+x-drupal-cache: UNCACHEABLE (response policy)
+x-xss-protection: 1; mode=block
+referrer-policy: no-referrer, strict-origin-when-cross-origin
+strict-transport-security: max-age=31536000
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,Content-Type,X-Auth-Token
+cf-cache-status: DYNAMIC
+cf-ray: a355de833ba6c993-IAD
+[0m
+[0m$ [0mcurl -sI https://www.suedzuckergroup.com/en --max-time 5 | head -25
+HTTP/2 200 
+date: Thu, 03 Sep 2026 15:44:53 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+cache-control: must-revalidate, no-cache, private
+x-drupal-dynamic-cache: UNCACHEABLE (poor cacheability)
+content-language: en
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+expires: Sun, 19 Nov 1978 05:00:00 GMT
+x-generator: Drupal 11 (https://www.drupal.org)
+x-drupal-cache: HIT
+x-xss-protection: 1; mode=block
+referrer-policy: no-referrer, strict-origin-when-cross-origin
+strict-transport-security: max-age=31536000
+access-control-allow-credentials: true
+access-control-allow-headers: Authorization,Content-Type,X-Auth-Token
+content-security-policy: frame-ancestors 'self' https://*.etracker.com https://etracker.com
+cf-cache-status: DYNAMIC
+cf-ray: a355e0dd8ee6c93b-IAD
+[0m
+[0m$ [0mcurl -s https://www.suedzuckergroup.com/en --max-time 10 | grep -i "api\|graphql\|rest\|swagger\|openapi" | head -20
+<link rel="preconnect" href="//api.usercentrics.eu">
+[0m
+[0m$ [0mcurl -s https://www.suedzuckergroup.com/en --max-time 10 | grep -Eo '(/api|/graphql|/rest|/jsonapi|/webapi)[^"\'\s<>]*' | sort -u
+/bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+[0m
+[0m$ [0mcurl -s https://www.suedzuckergroup.com/en --max-time 10 | grep -Eo '(api|graphql|rest|jsonapi)[^"\'\s<>]*' | sort -u
+/bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+[0m
+[0m$ [0mcurl -s https://www.suedzuckergroup.com/en --max-time 10 | grep -Eo "(/api|/graphql|/rest|/jsonapi|/webapi)[^\"'<> ]*" | sort -u
+/api.usercentrics.eu
+[0m
+[0m$ [0mcurl -sI "https://www.suedzuckergroup.com/jsonapi" --max-time 5 | head -15
+HTTP/2 404 
+date: Thu, 03 Sep 2026 15:47:30 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+cache-control: must-revalidate, no-cache, private
+x-drupal-dynamic-cache: UNCACHEABLE (404, sub-request: UNCACHEABLE (response policy))
+x-drupal-cache: UNCACHEABLE (response policy)
+content-language: en
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+expires: Sun, 19 Nov 1978 05:00:00 GMT
+x-generator: Drupal 11 (https://www.drupal.org)
+x-xss-protection: 1; mode=block
+referrer-policy: no-referrer, strict-origin-when-cross-origin
+[0m
+[0m$ [0mcurl -sI "https://www.suedzuckergroup.com/api" --max-time 5 | head -15
+HTTP/2 404 
+date: Thu, 03 Sep 2026 15:47:31 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+cache-control: must-revalidate, no-cache, private
+x-drupal-dynamic-cache: UNCACHEABLE (404, sub-request: UNCACHEABLE (response policy))
+x-drupal-cache: UNCACHEABLE (response policy)
+content-language: en
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+expires: Sun, 19 Nov 1978 05:00:00 GMT
+x-generator: Drupal 11 (https://www.drupal.org)
+x-xss-protection: 1; mode=block
+referrer-policy: no-referrer, strict-origin-when-cross-origin
+[0m
+[0m$ [0mcurl -s "https://www.suedzuckergroup.com/robots.txt" --max-time 5
+#
+# robots.txt
+#
+# This file is to prevent the crawling and indexing of certain parts
+# of your site by web crawlers and spiders run by sites like Yahoo!
+# and Google. By telling these "robots" where not to go on your site,
+# you save bandwidth and server resources.
+#
+# This file will be ignored unless it is at the root of your host:
+# Used:    http://example.com/robots.txt
+# Ignored: http://example.com/site/robots.txt
+#
+# For more information about the robots.txt standard, see:
+# http://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+# CSS, JS, Images
+Allow: /core/*.css$
+Allow: /core/*.css?
+Allow: /core/*.js$
+Allow: /core/*.js?
+Allow: /core/*.gif
+Allow: /core/*.jpg
+Allow: /core/*.jpeg
+Allow: /core/*.png
+Allow: /core/*.svg
+Allow: /profiles/*.css$
+Allow: /profiles/*.css?
+Allow: /profiles/*.js$
+Allow: /profiles/*.js?
+Allow: /profiles/*.gif
+Allow: /profiles/*.jpg
+Allow: /profiles/*.jpeg
+Allow: /profiles/*.png
+Allow: /profiles/*.svg
+# Directories
+Disallow: /core/
+Disallow: /profiles/
+# Files
+Disallow: /README.txt
+Disallow: /web.config
+# Paths (clean URLs)
+Disallow: /admin/
+Disallow: /comment/reply/
+Disallow: /filter/tips
+Disallow: /node/add/
+Disallow: /search/
+Disallow: /user/register/
+Disallow: /user/password/
+Disallow: /user/login/
+Disallow: /user/logout/
+# Paths (no clean URLs)
+Disallow: /index.php/admin/
+Disallow: /index.php/comment/reply/
+Disallow: /index.php/filter/tips
+Disallow: /index.php/node/add/
+Disallow: /index.php/search/
+Disallow: /index.php/user/password/
+Disallow: /index.php/user/register/
+Disallow: /index.php/user/login/
+Disallow: /index.php/user/logout/
+# Requested by client
+Disallow: /de/produkte-services/logistik
+# Sitemap link
+Sitemap: https://www.suedzuckergroup.com/sitemap.xml
+[0m
+[0m$ [0mcurl -sI "https://www.suedzuckergroup.com/jsonapi/node" --max-time 5 | head -10
+HTTP/2 404 
+date: Thu, 03 Sep 2026 15:48:34 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+cache-control: must-revalidate, no-cache, private
+x-drupal-dynamic-cache: UNCACHEABLE (404, sub-request: UNCACHEABLE (response policy))
+x-drupal-cache: UNCACHEABLE (response policy)
+content-language: en
+x-content-type-options: nosniff
+x-content-type-options: nosniff
+[0m
+[0m$ [0mcurl -s "https://www.suedzuckergroup.com/sitemap.xml" --max-time 10 | head -100
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Generated by the Simple XML Sitemap Drupal module: https://drupal.org/project/simple_sitemap.-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+ <url>
+  <loc>https://suedzuckergroup.com/de</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en"/>
+  <lastmod>2026-08-03T09:35:07+02:00</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>1.0</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/en</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en"/>
+  <lastmod>2026-08-03T09:35:07+02:00</lastmod>
+  <changefreq>daily</changefreq>
+  <priority>1.0</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-verbessert-operatives-ergebnis</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-verbessert-operatives-ergebnis"/>
+  <lastmod>2019-11-11T14:41:11+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-hoechste-dividende-der-firmengeschichte</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-hoechste-dividende-der-firmengeschichte"/>
+  <lastmod>2019-11-11T14:41:57+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-plant-vereinheitlichung-der-kapitalstruktur</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-plant-vereinheitlichung-der-kapitalstruktur"/>
+  <lastmod>2019-11-11T14:36:48+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/zwischenbericht-1-3-quartal-200506</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/zwischenbericht-1-3-quartal-200506"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en/press/interim-report-3rd-quarter-fy-200506"/>
+  <lastmod>2019-11-12T13:57:29+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/en/press/interim-report-3rd-quarter-fy-200506</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/zwischenbericht-1-3-quartal-200506"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en/press/interim-report-3rd-quarter-fy-200506"/>
+  <lastmod>2019-11-12T13:57:29+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-erwerb-saint-louis-sucre-verkauf-schoeller-holding</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-erwerb-saint-louis-sucre-verkauf-schoeller-holding"/>
+  <lastmod>2019-11-11T14:47:17+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/weitere-steigerung-der-ertragskraft-bei-suedzucker</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/weitere-steigerung-der-ertragskraft-bei-suedzucker"/>
+  <lastmod>2019-11-11T15:09:08+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/veraenderungen-im-suedzucker-vorstand</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/veraenderungen-im-suedzucker-vorstand"/>
+  <lastmod>2019-11-11T15:40:18+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-plant-baldige-kapitalerhoehung</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-plant-baldige-kapitalerhoehung"/>
+  <lastmod>2019-11-12T14:34:22+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-im-jubilaeumsjahr-mit-neuen-hoechstmarken</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-im-jubilaeumsjahr-mit-neuen-hoechstmarken"/>
+  <lastmod>2019-11-11T15:42:46+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/treibstoff-e85-erstmals-deutschland</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/treibstoff-e85-erstmals-deutschland"/>
+  <lastmod>2019-11-12T15:20:58+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-schliesst-kapitalerhoehung-erfolgreich-ab</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-schliesst-kapitalerhoehung-erfolgreich-ab"/>
+  <lastmod>2019-11-11T15:44:46+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-neuausrichtung-nach-plan</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-neuausrichtung-nach-plan"/>
+  <lastmod>2019-11-11T15:49:15+01:00</lastmod>
+  <priority>0.5</priority>
+ </url>
+ <url>
+[0m
+[0m$ [0mcurl -sI "https://suedzuckergroup.com" --max-time 5 | head -15
+HTTP/2 301 
+server: nginx
+date: Thu, 03 Sep 2026 15:50:43 GMT
+content-type: text/html
+content-length: 162
+location: https://www.suedzuckergroup.com
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: geolocation=(), microphone=(), camera=()
+content-security-policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';
+[0m
+[0m$ [0mcurl -s "https://www.suedzuckergroup.com/sitemap.xml" --max-time 10 | grep -E "api|graphql|rest|json" | head -20
+<loc>https://suedzuckergroup.com/de/presse/suedzucker-plant-vereinheitlichung-der-kapitalstruktur</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-plant-vereinheitlichung-der-kapitalstruktur"/>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-plant-baldige-kapitalerhoehung</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-plant-baldige-kapitalerhoehung"/>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-schliesst-kapitalerhoehung-erfolgreich-ab</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-schliesst-kapitalerhoehung-erfolgreich-ab"/>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-konkretisiert-restrukturierung</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-konkretisiert-restrukturierung"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en/press/sudzucker-decides-restructuring-locations"/>
+  <loc>https://suedzuckergroup.com/en/press/sudzucker-decides-restructuring-locations</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-konkretisiert-restrukturierung"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en/press/sudzucker-decides-restructuring-locations"/>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-konkretisiert-restrukturierungsplan</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-konkretisiert-restrukturierungsplan"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en/press/sudzucker-concretizes-restructuring-plan"/>
+  <loc>https://suedzuckergroup.com/en/press/sudzucker-concretizes-restructuring-plan</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-konkretisiert-restrukturierungsplan"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://suedzuckergroup.com/en/press/sudzucker-concretizes-restructuring-plan"/>
+  <loc>https://suedzuckergroup.com/de/presse/suedzucker-rueckkauf-ausstehender-wandelschuldverschreibungen-und-kapitalerhoehung</loc>
+  <xhtml:link rel="alternate" hreflang="de" href="https://suedzuckergroup.com/de/presse/suedzucker-rueckkauf-ausstehender-wandelschuldverschreibungen-und-kapitalerhoehung"/>
+[0m
+[0m$ [0mcurl -s "https://www.suedzuckergroup.com/sitemap.xml" --max-time 10 | grep -oP "https://[^<]+" | sort -u | head -50
+https://drupal.org/project/simple_sitemap.-->
+https://suedzuckergroup.com/de
+https://suedzuckergroup.com/de"/>
+https://suedzuckergroup.com/de/impressum
+https://suedzuckergroup.com/de/impressum"/>
+https://suedzuckergroup.com/de/node/3
+https://suedzuckergroup.com/de/node/3"/>
+https://suedzuckergroup.com/de/node/326
+https://suedzuckergroup.com/de/node/326"/>
+https://suedzuckergroup.com/de/node/4
+https://suedzuckergroup.com/de/node/4"/>
+https://suedzuckergroup.com/de/presse/agrana-beabsichtigt-schrittweisen-erwerb-der-atys-gruppe
+https://suedzuckergroup.com/de/presse/agrana-beabsichtigt-schrittweisen-erwerb-der-atys-gruppe"/>
+https://suedzuckergroup.com/de/presse/agrana-partnerschaft-serbisch-sunoko-mehrheitsbeteiligung
+https://suedzuckergroup.com/de/presse/agrana-partnerschaft-serbisch-sunoko-mehrheitsbeteiligung"/>
+https://suedzuckergroup.com/de/presse/antrag-oesterreichische-bundeswettbewerbsbehoerde
+https://suedzuckergroup.com/de/presse/antrag-oesterreichische-bundeswettbewerbsbehoerde"/>
+https://suedzuckergroup.com/de/presse/bundesminister-altmaier-besucht-suedzucker-standort-zeitz
+https://suedzuckergroup.com/de/presse/bundesminister-altmaier-besucht-suedzucker-standort-zeitz"/>
+https://suedzuckergroup.com/de/presse/corona-ethanol-fuer-desinfektionszwecke
+https://suedzuckergroup.com/de/presse/corona-ethanol-fuer-desinfektionszwecke"/>
+https://suedzuckergroup.com/de/presse/corona-suedzucker-nimmt-versorgungsauftrag-wahr
+https://suedzuckergroup.com/de/presse/corona-suedzucker-nimmt-versorgungsauftrag-wahr"/>
+https://suedzuckergroup.com/de/presse/cropenergies-stellt-vorerst-produktion-bei-ensus-ein
+https://suedzuckergroup.com/de/presse/cropenergies-stellt-vorerst-produktion-bei-ensus-ein"/>
+https://suedzuckergroup.com/de/presse/das-bundeskartellamt-hat
+https://suedzuckergroup.com/de/presse/das-bundeskartellamt-hat"/>
+https://suedzuckergroup.com/de/presse/deutsche-bank-reduziert-suedzucker-beteiligung
+https://suedzuckergroup.com/de/presse/deutsche-bank-reduziert-suedzucker-beteiligung"/>
+https://suedzuckergroup.com/de/presse/deutsches-bundeskartellamt-erlaesst-bussgeldbescheid
+https://suedzuckergroup.com/de/presse/deutsches-bundeskartellamt-erlaesst-bussgeldbescheid"/>
+https://suedzuckergroup.com/de/presse/die-wissenschaftsbasierten-klimaziele-der-suedzucker-gruppe-wurden-von-sbti-validiert
+https://suedzuckergroup.com/de/presse/die-wissenschaftsbasierten-klimaziele-der-suedzucker-gruppe-wurden-von-sbti-validiert"/>
+https://suedzuckergroup.com/de/presse/eu-agrarbeihilfen
+https://suedzuckergroup.com/de/presse/eu-agrarbeihilfen"/>
+https://suedzuckergroup.com/de/presse/feierlicher-spatenstich-fuer-den-neuen-suedzucker-bio-energy-hub-troeglitz-bei-zeitz
+https://suedzuckergroup.com/de/presse/feierlicher-spatenstich-fuer-den-neuen-suedzucker-bio-energy-hub-troeglitz-bei-zeitz"/>
+https://suedzuckergroup.com/de/presse/finanzvorstand-dr-kirsch-geht-ruhestand
+https://suedzuckergroup.com/de/presse/finanzvorstand-dr-kirsch-geht-ruhestand"/>
+https://suedzuckergroup.com/de/presse/grundsteinlegung-suedzucker-bioethanolanlage-zeitz
+https://suedzuckergroup.com/de/presse/grundsteinlegung-suedzucker-bioethanolanlage-zeitz"/>
+https://suedzuckergroup.com/de/presse/highlights-konzernabschluss-200304
+https://suedzuckergroup.com/de/presse/highlights-konzernabschluss-200304"/>
+https://suedzuckergroup.com/de/presse/kaufpreis-der-cropenergies-aktie
+https://suedzuckergroup.com/de/presse/kaufpreis-der-cropenergies-aktie"/>
+https://suedzuckergroup.com/de/presse/keine-stabilisierungsmassnahmen-im-zusammenhang-mit-kapitalerhoehung-der-suedzucker
+https://suedzuckergroup.com/de/presse/keine-stabilisierungsmassnahmen-im-zusammenhang-mit-kapitalerhoehung-der-suedzucker"/>
+https://suedzuckergroup.com/de/presse/kurzfassung-konzernabschluss
+https://suedzuckergroup.com/de/presse/kurzfassung-konzernabschluss"/>
+https://suedzuckergroup.com/de/presse/landwirtschaft-am-limit-zwischen-klimawandel-und-schaedlingsdruck
+[0m
+[0m$ [0mfor sub in api api-v2 api.v2 app apps portal partner customer client my account login auth sso oauth sso api-gateway gateway graphql rest jsonapi webapi internal dev test staging prod; do curl -sI "https://${sub}.suedzuckergroup.com" --max-time 3 -o /dev/null -w "%{http_code} ${sub}.suedzuckergroup.com\n"; done
+000 api.suedzuckergroup.com
+000 api-v2.suedzuckergroup.com
+000 api.v2.suedzuckergroup.com
+000 app.suedzuckergroup.com
+405 apps.suedzuckergroup.com
+000 portal.suedzuckergroup.com
+000 partner.suedzuckergroup.com
+000 customer.suedzuckergroup.com
+000 client.suedzuckergroup.com
+000 my.suedzuckergroup.com
+000 account.suedzuckergroup.com
+000 login.suedzuckergroup.com
+000 auth.suedzuckergroup.com
+000 sso.suedzuckergroup.com
+000 oauth.suedzuckergroup.com
+000 sso.suedzuckergroup.com
+000 api-gateway.suedzuckergroup.com
+000 gateway.suedzuckergroup.com
+000 graphql.suedzuckergroup.com
+000 rest.suedzuckergroup.com
+000 jsonapi.suedzuckergroup.com
+000 webapi.suedzuckergroup.com
+000 internal.suedzuckergroup.com
+000 dev.suedzuckergroup.com
+000 test.suedzuckergroup.com
+000 staging.suedzuckergroup.com
+000 prod.suedzuckergroup.com
+[0m
+[0m$ [0mcurl -sI "https://apps.suedzuckergroup.com" --max-time 5 | head -20
+HTTP/2 405 
+date: Thu, 03 Sep 2026 15:53:35 GMT
+content-type: text/plain; charset=UTF-8
+allow: GET
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+expires: 0
+pragma: no-cache
+server: akka-http/10.5.3
+set-cookie: pac4jCsrfToken=40e5be65-4569-4d72-bbb4-7f317be6d116; Domain=apps.suedzuckergroup.com; Path=/; Secure; HttpOnly; SameSite=Lax
+strict-transport-security: max-age=15768000 ; includeSubDomains
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com" --max-time 10 | head -100
+<!DOCTYPE html>
+<html>
+<head>
+    <link id="favicon" rel="icon" type="image/png" href="/HybridUserInterface/launchpad/assets/fp-340e776/img/logo/favicon-16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Simplifier Launchpad</title>
+    <script id="sap-ui-bootstrap"
+            src="/HybridUserInterface/launchpad/assets/fp-340e776/resources/sap-ui-core.js"
+            data-sap-ui-theme="sf_horizon"
+            data-sap-ui-theme-roots='{
+               "sf_horizon": "/HybridUserInterface/launchpad/assets/fp-340e776/css/theme/sf_horizon/UI5"
+               }'
+            data-sap-ui-resourceroots='{
+                "io.simplifier.launchpad": "/HybridUserInterface/launchpad/assets/fp-340e776/"
+            }'
+            data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+            data-sap-ui-compatVersion="edge"
+            data-sap-ui-async="true"
+    ></script>
+    <script type="text/javascript">
+        window.LAUNCHPAD_SETTINGS = { "root_url": "/HybridUserInterface/launchpad", "login_logo": "/HybridUserInterface/launchpad/assets/fp-340e776/img/logo/simplifier-logo-1x.png", "app_icon": "/HybridUserInterface/launchpad/assets/fp-340e776/img/logo/sim_logo.svg", "custom_stylesheet": "" };
+    </script>
+</head>
+<body class="sapUiBody" id="content">
+<div
+        data-sap-ui-component
+        data-name="io.simplifier.launchpad"
+        data-id="container"
+        data-settings='{"id" : "io.simplifier.launchpad"}'
+        data-handle-validation="true"
+></div>
+</body>
+</html>
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/HybridUserInterface/launchpad" --max-time 10 | head -50
+<!DOCTYPE html>
+<html>
+<head>
+    <link id="favicon" rel="icon" type="image/png" href="./assets/fp-340e776/img/logo/favicon-16.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Simplifier Launchpad</title>
+    <script id="sap-ui-bootstrap"
+            src="./assets/fp-340e776/resources/sap-ui-core.js"
+            data-sap-ui-theme="sf_horizon"
+            data-sap-ui-theme-roots='{
+               "sf_horizon": "./assets/fp-340e776/css/theme/sf_horizon/UI5"
+               }'
+            data-sap-ui-resourceroots='{
+                "io.simplifier.launchpad": "./assets/fp-340e776/"
+            }'
+            data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+            data-sap-ui-compatVersion="edge"
+            data-sap-ui-async="true"
+    ></script>
+    <script type="text/javascript">
+        window.LAUNCHPAD_SETTINGS = { "root_url": ".", "login_logo": "./assets/fp-340e776/img/logo/simplifier-logo-1x.png", "app_icon": "./assets/fp-340e776/img/logo/sim_logo.svg", "custom_stylesheet": "" };
+    </script>
+</head>
+<body class="sapUiBody" id="content">
+<div
+        data-sap-ui-component
+        data-name="io.simplifier.launchpad"
+        data-id="container"
+        data-settings='{"id" : "io.simplifier.launchpad"}'
+        data-handle-validation="true"
+></div>
+</body>
+</html>
+[0m
+[0m$ [0mcurl -sI "https://apps.suedzuckergroup.com/HybridUserInterface/launchpad" --max-time 5 | head -15
+HTTP/2 405 
+date: Thu, 03 Sep 2026 15:55:09 GMT
+content-type: text/plain; charset=UTF-8
+allow: GET
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+expires: 0
+pragma: no-cache
+server: akka-http/10.5.3
+set-cookie: pac4jCsrfToken=38be56ec-bdd9-4f7f-b74c-65ffb083732b; Domain=apps.suedzuckergroup.com; Path=/; Secure; HttpOnly; SameSite=Lax
+strict-transport-security: max-age=15768000 ; includeSubDomains
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/services" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/api" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/launchpad" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/simplifier" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/rest" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/soap" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/auth" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/login" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/HybridUserInterface" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/health" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s "https://apps.suedzuckergroup.com/status" --max-time 10 | head -50
+The requested resource could not be found.
+[0m
