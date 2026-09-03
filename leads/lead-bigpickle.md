@@ -56,3 +56,42 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ suedzucker.de: root renamed to suedzuckergroup.com — passive surface analysis of old zone was targeting dead root; must re-enumerate new TLD.
 [RISK] suedzucker: 68 — broad program (all company infra) newly hit a renamed corpus with several live subsidiary/partner portals (farmer PII, financial trading, e-commerce) that are reachable and not yet scoped in inventory; moderate carrying risk stays acceptable since all steps are read-only/GATE-gated and no live customer data is being touched.
 ## 2026-09-03 19:02:48 UTC [target] (model bigpickle)
+## 2026-09-03 21:51:41 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=tech_exposure+gate — Nuxt SPA, MSAL Entra B2C, documented api-gateway backends (internal-auth + domain services), /association/impersonation route, partnerNo in watermark, switchToPartnerNumber query param
+[PRIO] smartfarming.suedzuckergroup.com,8.0,axis=business_value+tech_exposure — public Swagger for full REST API (fields/actions/orders/media/org user-data), JWT token-gen-with-RSA documented, single-resource numeric-ID BOLA surface
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed infra limits exploitability but high value e-commerce auth)
+[PRIO] bisz.suedzucker.de,5.5,axis=auth — now unreachable-ish (code=000), lower priority
+[PRIO] app.agriconetwork.com,5.0,axis=business_value — still unreachable (code=000)
+[HYP] MyDataPlant REST API BOLA via numeric single-resource IDs
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 60
+reasoning: Public Swagger documents GET/PATCH/DELETE by resource id for fields, actions, persons, vehicles, products, media, orderpositions, organizations, user-data/users. JSON:API single-resource reads by enumerate-able numeric/ULID ids on an org-scoped smart-farming backend are a canonical BOLA vector. Backend returns 400 (not 401) to bare requests, implying auth handled per-request rather than at edge. Auth is JWT ("token (JWT)" + "token generation with RSA signature" documented).
+evidence_needed: Confirm a valid mdp_bgd_api JWT is required per-endpoint and whether GET by id is scoped to the token's organization vs cross-tenant (requires own test account; not live customer data).
+verify_steps: Passive: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already confirms Swagger public). Do NOT issue authed cross-tenant reads without an own test account.
+impact: cross-tenant read/modify/delete of farm field data, orders, persons, media (agri PII + operations) — HIGH.
+testability: AUTH_HELPED
+[HYP] Plant Portal partner-number linking / impersonation BOLA
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 58
+reasoning: Nuxt route /partner-linking/:processPartnerNumber (integer) + ?switchToPartnerNumber=<int> query param (read into state and embedded in anti-screenshot watermark as partnerNo) + /association/impersonation guarded by only-for-partner middleware. The linking/impersonation flow binds an identity to a numeric partner number — predictable numeric IDs and an impersonation route are a systemic BOLA surface. Access token scopes: api://1b7819b0.../external_api_access.
+evidence_needed: Whether supplied Parternummer/switchToPartnerNumber scopes data to session or lets one partner act on another's data (needs own test account).
+verify_steps: Passive: confirmed routes in bundle + runtime config. Active only with own test account.
+impact: cross-tenant access to farmer contract/delivery/settlement data + association impersonation — HIGH.
+testability: AUTH_HELPED
+[HYP] MyDataPlant export-to-configured-URL SSRF / server-side request
+class: SSRF
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 40
+reasoning: Swagger has endpoint "send export to configured URL" (GET) and "Send export to configured URL" where users can configure a target URL (also "user-settings .. url" POST). A server-side fetch to a user-controlled URL is a classic SSRF-to-internal/cloud-metadata vector. Confidence limited: no live confirmation of request behavior; auth-gated.
+evidence_needed: Whether the configured URL is fetched server-side and allows internal/169.254.169.254 targets.
+verify_steps: Passive-only now. Requires own test account + careful, non-destructive testing.
+impact: SSRF to internal services / cloud metadata (169.254.169.254) -> possible credential exposure — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already done — the public Swagger confirms full REST surface reachable without auth; next read-only step is to fetch the token-generation endpoint documentation to understand how mdp_bgd_api JWT is issued) — but strictly passive. Confirm auth before any active id-based read.
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.
+[RISK] suedzucker: 64 — recon now focused on a live, renamed subsidiary/partner cluster (Plant Portal + MyDataPlant REST + SFCC shop). All steps were read-only (GET/HEAD of public docs and 401/302 reach probes, passive JS/Swagger analysis); no live customer data touched, no auth-bypass or mutating tests. Public Swagger and client config exposure raise the attack surface visibly but remain in-scope recon; carrying risk stays moderate and acceptable. Careful to keep all further Plant Portal/MyDataPlant steps on own test accounts only.

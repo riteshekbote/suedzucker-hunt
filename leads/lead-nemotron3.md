@@ -1,2 +1,49 @@
 ## 2026-09-03 16:00:24 UTC [target] (model nemotron3)
 ## 2026-09-03 19:14:24 UTC [target] (model nemotron3)
+## 2026-09-03 21:48:31 UTC [target] (model nemotron3)
+[NEW] plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+[NEW] shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
+[CHANGED] plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
+[PRIO] plantportal.suedzuckergroup.com,7.8,axis=business_value 9 (farmer PII/contracts/settlements) + gate_ease 8 (public Nuxt SPA, partner-link flow) + tech_exposure 8 (custom auth, OTP-by-SMS, predictable partner IDs)
+[PRIO] shop.suedzucker.com,7.5,axis=tech_exposure 9 (Salesforce B2B Commerce, IDOR vectors on OrderSummary/:recordId, Product/:recordId, Cart, Checkout) + business_value 8 (e-commerce orders/payments) + gate_ease 6 (login required)
+[PRIO] suedzucker.mitarbeiterangebote.de,6.2,axis=business_value 7 (employee PII/benefits) + tech_exposure 6 (SSO, session handling) + gate_ease 4 (employee-only)
+[PRIO] bisz.suedzucker.de,5.3,axis=tech_exposure 6 (WordPress wp-json API) + gate_ease 8 (public) + business_value 4 (agri info portal)
+[PRIO] app.agriconetwork.com,4.8,axis=business_value 9 (financial trading) + freshness 3 (unreachable) — cannot score higher without reach
+[PRIO] www.suedzuckergroup.com,4.2,axis=tech_exposure 3 (hardened Drupal) + gate_ease 8 — known REJECTED class
+[HYP] Plant Portal partner-number linking BOLA/IDOR
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 60
+reasoning: Nuxt 3 SPA (epp v1.8.0) with partner-number linking flow documented publicly (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + "link existing partner account" function creates classic BOLA vector for cross-farmer contract/delivery/settlement data access. Nuxt payload shows PrimeVue DataTable, TreeTable, Steps components — likely used for partner data tables.
+evidence_needed: Observe /partner-link or similar endpoint, test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt build payload for API base paths. AUTH_HELPED: register test account, complete partner linking, then test horizontal access to other partner IDs via API.
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary/Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 55
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP shows connect-src to szg-is.prod.apimanagement.eu30.hana.ondemand.com (API gateway).
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED: login test account, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API.
+impact: Cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[HYP] Employee benefits portal session fixation / SSO bypass
+class: AUTH
+asset: suedzucker.mitarbeiterangebote.de
+confidence: 45
+reasoning: Sets HttpOnly session cookie (CBG3FE) on 302 to /login. Third-party corporate benefits platform (likely external vendor). Session fixation or SSO relay state manipulation possible if OAuth/SAML flow not validated. No public registration — employee-only gate limits blast radius.
+evidence_needed: Analyze login flow (SAML/OIDC?), check for relay_state or redirect_uri validation, test session fixation by pre-setting CBG3FE cookie.
+verify_steps: PASSIVE: GET https://suedzucker.mitarbeiterangebote.de/ ; follow 302 to /login ; inspect login form action, hidden fields, SSO provider. AUTH_HELPED: requires employee credentials — cannot test without authorization.
+impact: Employee PII/benefits data access — MEDIUM (limited to employee population)
+testability: HUMAN_ONLY
+[PARKED] Employee benefits portal session fixation / SSO bypass: confidence 45 but testability HUMAN_ONLY (requires employee creds), gate_ease 4 — drop per rules (no auth-bypass on live customer/employee data)
+[FINAL] plantportal.suedzuckergroup.com 60 (IDOR/BOLA, high data value, AUTH_HELPED testable)
+[FINAL] shop.suedzucker.com 55 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable)
+[NEXT] PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.<hash>.js (from Nuxt payload) to extract API base URLs and partner-linking endpoint paths — read-only static asset fetch
+[LEARN] ACCEPTED RECON @ plantportal.info: 301 redirect to plantportal.suedzuckergroup.com (Nuxt 3, PrimeVue, epp v1.8.0) — live farmer portal, not dead asset
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 262.60) with exposed OrderSummary/:recordId and Product/:recordId routes — high-value IDOR surface
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass
+[LEARN] ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: Employee benefits portal with session cookie (CBG3FE) — third-party SSO, employee-only gate
+[LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed) — no further action
+[RISK] suedzucker: 70 — broad program scope now covers 5 newly confirmed live subsidiary/partner portals (farmer PII, e-commerce, financial trading, agri gov data, employee benefits) with distinct tech stacks (Nuxt, Salesforce LWR, WordPress, third-party SSO, Drupal). Two HIGH-value IDOR targets (plantportal, shop) are reachable and AUTH_HELPED testable. Carrying risk acceptable: all probes read-only, no live customer data touched, rate-limited to 1 rps.

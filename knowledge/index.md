@@ -2,3 +2,12 @@
 - 2026-09-03 REJECTED MISCONFIG @ www.suedzuckergroup.com: JSON:API+GraphQL disabled, registration closed, version files 404 — hardened Drupal; not a vuln.
 - 2026-09-03 REJECTED MISCONFIG @ www.suedzuckergroup.com: etracker secure-code in page source is a descriptive/tracking config, not in-scope impact.
 - 2026-09-03 ACCEPTED RECON @ suedzucker.de: root renamed to suedzuckergroup.com — passive surface analysis of old zone was targeting dead root; must re-enumerate new TLD.
+- 2026-09-03 ACCEPTED RECON @ plantportal.info: 301 redirect to plantportal.suedzuckergroup.com (Nuxt 3, PrimeVue, epp v1.8.0) — live farmer portal, not dead asset
+- 2026-09-03 ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 262.60) with exposed OrderSummary/:recordId and Product/:recordId routes — high-value IDOR surface
+- 2026-09-03 REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass
+- 2026-09-03 ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: Employee benefits portal with session cookie (CBG3FE) — third-party SSO, employee-only gate
+- 2026-09-03 CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed) — no further action
+- 2026-09-03 ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+- 2026-09-03 ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+- 2026-09-03 ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+- 2026-09-03 REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.

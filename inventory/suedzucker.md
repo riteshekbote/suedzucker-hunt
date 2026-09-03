@@ -37,3 +37,8 @@ www.suedzucker.de
 - CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
 
 ## 2026-09-03 19:14:36 UTC
+
+## 2026-09-03 21:51:49 UTC
+- NEW plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+- NEW shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
+- CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
