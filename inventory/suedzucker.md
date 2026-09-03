@@ -35,3 +35,5 @@ www.suedzucker.de
 - NEW bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
 - NEW suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
 - CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+
+## 2026-09-03 19:14:36 UTC
