@@ -42,3 +42,20 @@ www.suedzucker.de
 - NEW plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
 - NEW shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
 - CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
+
+## 2026-09-03 23:56:35 UTC
+- NEW plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+- NEW shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
+- CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
+- NEW www.suedzuckergroup.com — corporate site redirect target of suedzucker.de (Drupal 11, live)
+- NEW shop.suedzucker.com — customer shop SPA with /login (e-commerce auth)
+- NEW plantportal.info — Plant Portal (farmer portal, partner-number linking flow)
+- NEW app.agriconetwork.com — Giełda Wysłodkowa byproduct trading platform (financial)
+- NEW bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
+- NEW suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
+- CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+- NEW plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0 SPA confirmed via `_payload.json`; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100); scopes `ap
+- NEW shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 262.60); routes `/OrderSummary/:recordId`, `/product/:recordId`, `/cart`, `/checkout`, `/order`, `/SelfRegister`; CSP connect-src includes 
+- NEW smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant REST API — 574 endpoints in public Swagger UI (no auth to read docs); JSON:API format; JWT token auth (`/tokens` endpoint); requires `X-Sel
+- CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain, confirmed live)
+- CHANGED Inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)

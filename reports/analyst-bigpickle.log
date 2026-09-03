@@ -1323,3 +1323,1475 @@ STEP 7 — RISK:
 ---
 
 All work here was read-only recon (GET on public Swagger/docs and reach probes returning 401/302/400, plus passive analysis of publicly-served JS bundles and runtime config). No auth bypass, no mutating requests, no live customer data accessed.
+===== ANALYST bigpickle 2026-09-03 23:56:35 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead .
+[0m
+[0m$ [0mcat /home/runner/work/suedzucker-hunt/suedzucker-hunt/scope.yml; echo "---LEADS---"; ls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/leads/ 2>/dev/null; echo "---KNOWLEDGE---"; ls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/knowledge/ 2>/dev/null
+programs:
+  suedzucker:
+    name: Südzucker AG / Südzucker Group Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, production systems, supply chain systems, enterprise IT, customer and partner platforms, APIs, websites, and domains operated by Südzucker Group and its subsidiaries"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+---LEADS---
+total 48
+drwxr-xr-x  2 runner runner  4096 Sep  3 23:44 .
+drwxr-xr-x 12 runner runner  4096 Sep  3 23:44 ..
+-rw-r--r--  1 runner runner 11673 Sep  3 23:44 lead-bigpickle.md
+-rw-r--r--  1 runner runner   153 Sep  3 23:44 lead-laguna.md
+-rw-r--r--  1 runner runner   150 Sep  3 23:44 lead-ling3.md
+-rw-r--r--  1 runner runner   156 Sep  3 23:44 lead-longcat.md
+-rw-r--r--  1 runner runner    18 Sep  3 23:44 lead-mimo.md
+-rw-r--r--  1 runner runner  6621 Sep  3 23:44 lead-nemotron3.md
+-rw-r--r--  1 runner runner   436 Sep  3 23:44 reposcan-suedzucker.md
+---KNOWLEDGE---
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  3 23:44 .
+drwxr-xr-x 12 runner runner 4096 Sep  3 23:44 ..
+-rw-r--r--  1 runner runner 2421 Sep  3 23:44 index.md
+[0m
+[0m$ [0mcat /home/runner/work/suedzucker-hunt/suedzucker-hunt/knowledge/index.md; echo "===LEAD-NEMOTRON3==="; cat /home/runner/work/suedzucker-hunt/suedzucker-hunt/leads/lead-nemotron3.md
+# Knowledge Base (seed)
+- 2026-09-03 REJECTED MISCONFIG @ www.suedzuckergroup.com: JSON:API+GraphQL disabled, registration closed, version files 404 — hardened Drupal; not a vuln.
+- 2026-09-03 REJECTED MISCONFIG @ www.suedzuckergroup.com: etracker secure-code in page source is a descriptive/tracking config, not in-scope impact.
+- 2026-09-03 ACCEPTED RECON @ suedzucker.de: root renamed to suedzuckergroup.com — passive surface analysis of old zone was targeting dead root; must re-enumerate new TLD.
+- 2026-09-03 ACCEPTED RECON @ plantportal.info: 301 redirect to plantportal.suedzuckergroup.com (Nuxt 3, PrimeVue, epp v1.8.0) — live farmer portal, not dead asset
+- 2026-09-03 ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 262.60) with exposed OrderSummary/:recordId and Product/:recordId routes — high-value IDOR surface
+- 2026-09-03 REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass
+- 2026-09-03 ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: Employee benefits portal with session cookie (CBG3FE) — third-party SSO, employee-only gate
+- 2026-09-03 CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed) — no further action
+- 2026-09-03 ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+- 2026-09-03 ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+- 2026-09-03 ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+- 2026-09-03 REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.
+===LEAD-NEMOTRON3===
+## 2026-09-03 16:00:24 UTC [target] (model nemotron3)
+## 2026-09-03 19:14:24 UTC [target] (model nemotron3)
+## 2026-09-03 21:48:31 UTC [target] (model nemotron3)
+[NEW] plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+[NEW] shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
+[CHANGED] plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
+[PRIO] plantportal.suedzuckergroup.com,7.8,axis=business_value 9 (farmer PII/contracts/settlements) + gate_ease 8 (public Nuxt SPA, partner-link flow) + tech_exposure 8 (custom auth, OTP-by-SMS, predictable partner IDs)
+[PRIO] shop.suedzucker.com,7.5,axis=tech_exposure 9 (Salesforce B2B Commerce, IDOR vectors on OrderSummary/:recordId, Product/:recordId, Cart, Checkout) + business_value 8 (e-commerce orders/payments) + gate_ease 6 (login required)
+[PRIO] suedzucker.mitarbeiterangebote.de,6.2,axis=business_value 7 (employee PII/benefits) + tech_exposure 6 (SSO, session handling) + gate_ease 4 (employee-only)
+[PRIO] bisz.suedzucker.de,5.3,axis=tech_exposure 6 (WordPress wp-json API) + gate_ease 8 (public) + business_value 4 (agri info portal)
+[PRIO] app.agriconetwork.com,4.8,axis=business_value 9 (financial trading) + freshness 3 (unreachable) — cannot score higher without reach
+[PRIO] www.suedzuckergroup.com,4.2,axis=tech_exposure 3 (hardened Drupal) + gate_ease 8 — known REJECTED class
+[HYP] Plant Portal partner-number linking BOLA/IDOR
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 60
+reasoning: Nuxt 3 SPA (epp v1.8.0) with partner-number linking flow documented publicly (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + "link existing partner account" function creates classic BOLA vector for cross-farmer contract/delivery/settlement data access. Nuxt payload shows PrimeVue DataTable, TreeTable, Steps components — likely used for partner data tables.
+evidence_needed: Observe /partner-link or similar endpoint, test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt build payload for API base paths. AUTH_HELPED: register test account, complete partner linking, then test horizontal access to other partner IDs via API.
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary/Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 55
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP shows connect-src to szg-is.prod.apimanagement.eu30.hana.ondemand.com (API gateway).
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED: login test account, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API.
+impact: Cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[HYP] Employee benefits portal session fixation / SSO bypass
+class: AUTH
+asset: suedzucker.mitarbeiterangebote.de
+confidence: 45
+reasoning: Sets HttpOnly session cookie (CBG3FE) on 302 to /login. Third-party corporate benefits platform (likely external vendor). Session fixation or SSO relay state manipulation possible if OAuth/SAML flow not validated. No public registration — employee-only gate limits blast radius.
+evidence_needed: Analyze login flow (SAML/OIDC?), check for relay_state or redirect_uri validation, test session fixation by pre-setting CBG3FE cookie.
+verify_steps: PASSIVE: GET https://suedzucker.mitarbeiterangebote.de/ ; follow 302 to /login ; inspect login form action, hidden fields, SSO provider. AUTH_HELPED: requires employee credentials — cannot test without authorization.
+impact: Employee PII/benefits data access — MEDIUM (limited to employee population)
+testability: HUMAN_ONLY
+[PARKED] Employee benefits portal session fixation / SSO bypass: confidence 45 but testability HUMAN_ONLY (requires employee creds), gate_ease 4 — drop per rules (no auth-bypass on live customer/employee data)
+[FINAL] plantportal.suedzuckergroup.com 60 (IDOR/BOLA, high data value, AUTH_HELPED testable)
+[FINAL] shop.suedzucker.com 55 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable)
+[NEXT] PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.<hash>.js (from Nuxt payload) to extract API base URLs and partner-linking endpoint paths — read-only static asset fetch
+[LEARN] ACCEPTED RECON @ plantportal.info: 301 redirect to plantportal.suedzuckergroup.com (Nuxt 3, PrimeVue, epp v1.8.0) — live farmer portal, not dead asset
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 262.60) with exposed OrderSummary/:recordId and Product/:recordId routes — high-value IDOR surface
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass
+[LEARN] ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: Employee benefits portal with session cookie (CBG3FE) — third-party SSO, employee-only gate
+[LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed) — no further action
+[RISK] suedzucker: 70 — broad program scope now covers 5 newly confirmed live subsidiary/partner portals (farmer PII, e-commerce, financial trading, agri gov data, employee benefits) with distinct tech stacks (Nuxt, Salesforce LWR, WordPress, third-party SSO, Drupal). Two HIGH-value IDOR targets (plantportal, shop) are reachable and AUTH_HELPED testable. Carrying risk acceptable: all probes read-only, no live customer data touched, rate-limited to 1 rps.
+[0m
+Let me look at the leads and current state to understand where I am and what to probe next.
+Let me review the current state and my own leads file to understand what's been done and where I am.
+[0m$ [0mcat /home/runner/work/suedzucker-hunt/suedzucker-hunt/leads/lead-bigpickle.md
+## 2026-09-03 15:45:20 UTC [target] (model bigpickle)
+[NEW] www.suedzuckergroup.com — corporate site redirect target of suedzucker.de (Drupal 11, live)
+[NEW] shop.suedzucker.com — customer shop SPA with /login (e-commerce auth)
+[NEW] plantportal.info — Plant Portal (farmer portal, partner-number linking flow)
+[NEW] app.agriconetwork.com — Giełda Wysłodkowa byproduct trading platform (financial)
+[NEW] bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
+[NEW] suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
+[CHANGED] inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+[PRIO] plantportal.info,score=8.1,axis=business_value high (farmer PII/contracts) + gate_ease partial (public registration) + tech_exposure (custom auth, OTP-by-SMS-link flow)
+[PRIO] app.agriconetwork.com,score=8.3,axis=business_value high (money/auth trading) + custom app
+[PRIO] shop.suedzucker.com,score=7.8,axis=tech_exposure + auth/e-commerce (IDOR/price tamper)
+[PRIO] www.suedzuckergroup.com,score=6.5,axis=tech known (Drupal11), low gate (mostly 404/403)
+[PRIO] suedzucker.mitarbeiterangebote.de,score=6.0,axis=auth (SSO/benefits, employee data)
+[PRIO] plantportal.info,7.9,farmers+PII+contracts, custom auth/OTP flow, registration gated
+[PRIO] app.agriconetwork.com,7.6,financial trading totals, custom app auth, high biz value
+[PRIO] shop.suedzucker.com,7.2,e-commerce auth/IDOR/price, SPA, gate=login
+[PRIO] suedzucker.mitarbeiterangebote.de,6.4,employee benefits, third-party SSO
+[PRIO] bisz.suedzucker.de,5.8,agri info+PlantPortal entry, Drupal-ish, mostly public
+[PRIO] www.suedzuckergroup.com,5.5,Drupal11 hardened, low attack surface
+[HYP] Plant Portal partner-number linking IDOR/BOLA
+class: IDOR
+asset: plantportal.info
+confidence: 55
+reasoning: Flow doc (bodengesundheitsdienst.de PDF) shows linking to a 7-digit Partnernummer then SMS/post activation. Predictable numeric partner IDs + a "link existing partner account" function is a classic BOLA vector for cross-farmer data (contracts, deliveries, settlement). No live reach confirmed yet.
+evidence_needed: Reach plantportal.info, observe /register + /partnerlink endpoints, test whether a linked partner's data is scoped by the session or by the supplied number.
+verify_steps: PASSIVE-first: GET https://plantportal.info/ ; GET https://plantportal.info/robots.txt ; OPTIONS/GET likely JS SPA — confirm reach before any auth test. Active (auth-gated) would require own test account, not live customer data.
+impact: cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH.
+testability: AUTH_HELPED
+[HYP] agriconetwork byproduct-trading authorization bug
+class: BUSLOGIC
+asset: app.agriconetwork.com
+confidence: 45
+reasoning: Publicly documented as a trading platform where farmers set prices and counterparties buy pulp (Giełda Wysłodkowa). Money-flow + contract + SMS-confirm transactions implies high-value authorization/price logic. Currently transport-error (unreachable), so unverified.
+evidence_needed: reach + enumerate API endpoints (/api, /graphql, swagger), map buy/sell endpoints and authorization model.
+verify_steps: GET https://app.agriconetwork.com/ ; GET /robots.txt ; GET /api ; GET /.well-known/openid-configuration — read-only reach first.
+impact: price manipulation / unauthorized transaction on real byproduct marketplace — HIGH (money).
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com e-commerce IDOR / price-tamper / weak basket logic
+class: BUSLOGIC
+asset: shop.suedzucker.com
+confidence: 50
+reasoning: Customer shop SPA with /login. e-commerce flows (basket, price, order, user profile) are prime IDOR/BUSLOGIC targets. Currently returns empty (heavily JS/anti-bot), so not yet reachable via simple fetch.
+evidence_needed: reach shop SPA, identify API base (XHR), audit price/basket/profile endpoints for vertical/horizontal authz and server-side price validation.
+verify_steps: GET https://shop.suedzucker.com/ ; GET /login ; identify JS bundle paths -> locate API host; read-only reach.
+impact: order/price manipulation, cross-account order data — HIGH (money/auth).
+testability: AUTH_HELPED
+[PARKED] www.suedzuckergroup.com Drupal11 known-CVE: REJECTED class (outdated library w/o program-specific exploit) + site hardened (404/403 on release.txt, node/user, jsonapi, graphql).
+[PARKED] bisz.suedzucker.de: public info portal, no auth-relevant surface confirmed; low value; drop confidence<40.
+[PARKED] etracker secure-code kxgsS9 exposure: descriptive/headers-only class, REJECTED.
+[FINAL] plantportal.info 55 (IDOR/BOLA, high data value)
+[FINAL] shop.suedzucker.com 50 (BUSLOGIC e-commerce)
+[FINAL] app.agriconetwork.com 45 (BUSLOGIC money)
+[NEXT] PROBE: GET https://plantportal.info/ then /robots.txt and /.well-known/openid-configuration to map the farmer-portal tech + auth model (read-only reach scan).
+[LEARN] REJECTED MISCONFIG @ www.suedzuckergroup.com: JSON:API+GraphQL disabled, registration closed, version files 404 — hardened Drupal; not a vuln.
+[LEARN] REJECTED MISCONFIG @ www.suedzuckergroup.com: etracker secure-code in page source is a descriptive/tracking config, not in-scope impact.
+[LEARN] ACCEPTED RECON @ suedzucker.de: root renamed to suedzuckergroup.com — passive surface analysis of old zone was targeting dead root; must re-enumerate new TLD.
+[RISK] suedzucker: 68 — broad program (all company infra) newly hit a renamed corpus with several live subsidiary/partner portals (farmer PII, financial trading, e-commerce) that are reachable and not yet scoped in inventory; moderate carrying risk stays acceptable since all steps are read-only/GATE-gated and no live customer data is being touched.
+## 2026-09-03 19:02:48 UTC [target] (model bigpickle)
+## 2026-09-03 21:51:41 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=tech_exposure+gate — Nuxt SPA, MSAL Entra B2C, documented api-gateway backends (internal-auth + domain services), /association/impersonation route, partnerNo in watermark, switchToPartnerNumber query param
+[PRIO] smartfarming.suedzuckergroup.com,8.0,axis=business_value+tech_exposure — public Swagger for full REST API (fields/actions/orders/media/org user-data), JWT token-gen-with-RSA documented, single-resource numeric-ID BOLA surface
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed infra limits exploitability but high value e-commerce auth)
+[PRIO] bisz.suedzucker.de,5.5,axis=auth — now unreachable-ish (code=000), lower priority
+[PRIO] app.agriconetwork.com,5.0,axis=business_value — still unreachable (code=000)
+[HYP] MyDataPlant REST API BOLA via numeric single-resource IDs
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 60
+reasoning: Public Swagger documents GET/PATCH/DELETE by resource id for fields, actions, persons, vehicles, products, media, orderpositions, organizations, user-data/users. JSON:API single-resource reads by enumerate-able numeric/ULID ids on an org-scoped smart-farming backend are a canonical BOLA vector. Backend returns 400 (not 401) to bare requests, implying auth handled per-request rather than at edge. Auth is JWT ("token (JWT)" + "token generation with RSA signature" documented).
+evidence_needed: Confirm a valid mdp_bgd_api JWT is required per-endpoint and whether GET by id is scoped to the token's organization vs cross-tenant (requires own test account; not live customer data).
+verify_steps: Passive: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already confirms Swagger public). Do NOT issue authed cross-tenant reads without an own test account.
+impact: cross-tenant read/modify/delete of farm field data, orders, persons, media (agri PII + operations) — HIGH.
+testability: AUTH_HELPED
+[HYP] Plant Portal partner-number linking / impersonation BOLA
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 58
+reasoning: Nuxt route /partner-linking/:processPartnerNumber (integer) + ?switchToPartnerNumber=<int> query param (read into state and embedded in anti-screenshot watermark as partnerNo) + /association/impersonation guarded by only-for-partner middleware. The linking/impersonation flow binds an identity to a numeric partner number — predictable numeric IDs and an impersonation route are a systemic BOLA surface. Access token scopes: api://1b7819b0.../external_api_access.
+evidence_needed: Whether supplied Parternummer/switchToPartnerNumber scopes data to session or lets one partner act on another's data (needs own test account).
+verify_steps: Passive: confirmed routes in bundle + runtime config. Active only with own test account.
+impact: cross-tenant access to farmer contract/delivery/settlement data + association impersonation — HIGH.
+testability: AUTH_HELPED
+[HYP] MyDataPlant export-to-configured-URL SSRF / server-side request
+class: SSRF
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 40
+reasoning: Swagger has endpoint "send export to configured URL" (GET) and "Send export to configured URL" where users can configure a target URL (also "user-settings .. url" POST). A server-side fetch to a user-controlled URL is a classic SSRF-to-internal/cloud-metadata vector. Confidence limited: no live confirmation of request behavior; auth-gated.
+evidence_needed: Whether the configured URL is fetched server-side and allows internal/169.254.169.254 targets.
+verify_steps: Passive-only now. Requires own test account + careful, non-destructive testing.
+impact: SSRF to internal services / cloud metadata (169.254.169.254) -> possible credential exposure — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already done — the public Swagger confirms full REST surface reachable without auth; next read-only step is to fetch the token-generation endpoint documentation to understand how mdp_bgd_api JWT is issued) — but strictly passive. Confirm auth before any active id-based read.
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.
+[RISK] suedzucker: 64 — recon now focused on a live, renamed subsidiary/partner cluster (Plant Portal + MyDataPlant REST + SFCC shop). All steps were read-only (GET/HEAD of public docs and 401/302 reach probes, passive JS/Swagger analysis); no live customer data touched, no auth-bypass or mutating tests. Public Swagger and client config exposure raise the attack surface visibly but remain in-scope recon; carrying risk stays moderate and acceptable. Careful to keep all further Plant Portal/MyDataPlant steps on own test accounts only.
+[0m
+[0m$ [0mcat /home/runner/work/suedzucker-hunt/suedzucker-hunt/probe-results.md 2>/dev/null | tail -60; echo "===TRIAGE==="; ls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/triage/ 2>/dev/null; echo "===SCRIPT==="; ls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/scripts/ 2>/dev/null
+## 2026-09-02 21:40:00 UTC
+
+
+## 2026-09-02 23:35:55 UTC
+
+
+## 2026-09-03 01:37:08 UTC
+
+
+## 2026-09-03 06:28:47 UTC
+
+
+## 2026-09-03 11:41:50 UTC
+
+
+## 2026-09-03 16:00:35 UTC
+
+
+## 2026-09-03 19:14:36 UTC
+
+
+## 2026-09-03 21:51:49 UTC
+
+===TRIAGE===
+total 44
+drwxr-xr-x  2 runner runner 4096 Sep  3 23:44 .
+drwxr-xr-x 12 runner runner 4096 Sep  3 23:44 ..
+-rw-r--r--  1 runner runner    0 Sep  3 23:44 .gitkeep
+-rw-r--r--  1 runner runner  143 Sep  3 23:44 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner  701 Sep  3 23:44 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner  201 Sep  3 23:44 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner  159 Sep  3 23:44 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner  152 Sep  3 23:44 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner  182 Sep  3 23:44 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner  245 Sep  3 23:44 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner  276 Sep  3 23:44 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner  172 Sep  3 23:44 run-2026-09-03-23-30.md
+===SCRIPT===
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep  3 23:44 .
+drwxr-xr-x 12 runner runner  4096 Sep  3 23:44 ..
+-rw-r--r--  1 runner runner 16987 Sep  3 23:44 sync-issues.py
+[0m
+Now I understand the state deeply. My last NEXT action was to probe the MyDataPlant token-generation endpoint documentation on smartfarming.suedzuckergroup.com to understand how the mdp_bgd_api JWT is issued. Let me execute that read-only probe, and also continue mapping. Let me first check what's been probed recently in probe-results and triage.
+[0m$ [0mcat /home/runner/work/suedzucker-hunt/suedzucker-hunt/triage/run-2026-09-03-23-30.md; echo "===RECON-NOTES==="; ls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/recon-notes/ 2>/dev/null; echo "===REPORT==="; ls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/reports/ 2>/dev/null
+===== TRIAGE 2026-09-03 23:30:43 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. Please supply the probe results to evaluate against the 7-Question Gate.
+===RECON-NOTES===
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  3 23:44 .
+drwxr-xr-x 12 runner runner 4096 Sep  3 23:44 ..
+-rw-r--r--  1 runner runner  822 Sep  3 23:44 DEDICATED-DEEP.md
+===REPORT===
+total 368
+drwxr-xr-x  2 runner runner   4096 Sep  3 23:44 .
+drwxr-xr-x 12 runner runner   4096 Sep  3 23:44 ..
+-rw-r--r--  1 runner runner  80188 Sep  3 23:44 analyst-bigpickle.log
+-rw-r--r--  1 runner runner    651 Sep  3 23:44 analyst-laguna.log
+-rw-r--r--  1 runner runner    648 Sep  3 23:44 analyst-ling3.log
+-rw-r--r--  1 runner runner    654 Sep  3 23:44 analyst-longcat.log
+-rw-r--r--  1 runner runner 315609 Sep  3 23:44 analyst-nemotron3.log
+-rw-r--r--  1 runner runner   5856 Sep  3 23:44 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner     51 Sep  3 23:44 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner     50 Sep  3 23:44 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner     52 Sep  3 23:44 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   6513 Sep  3 23:44 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner   3270 Sep  3 23:44 hypotheses.md
+-rw-r--r--  1 runner runner     39 Sep  3 23:44 valid-bugs.md
+[0m
+Let me look at the recent triage run to see what was done most recently, and check the recon notes.
+[0m$ [0mcat /home/runner/work/suedzucker-hunt/suedzucker-hunt/recon-notes/DEDICATED-DEEP.md; echo "===MY-HYP==="; cat /home/runner/work/suedzucker-hunt/suedzucker-hunt/reports/hypotheses-bigpickle.txt
+# Dedicated deep surface (wildcard-filtered) 2026-09-03
+
+**Target:** `suedzucker`
+**Root zones:** `suedzucker.de`
+
+## Wildcard analysis
+
+- Total resolving hostnames in zone: 0
+- After shared/wildcard IP filtering: **0 genuinely dedicated hosts**
+- Reason: all resolving hostnames use shared/CDN/wildcard IP signatures
+
+## Honest conclusion
+
+This target's subdomain space is wildcard-dominated. No genuinely dedicated
+subdomain surface was recovered from passive brute + subfinder enumeration.
+The surface either (a) uses wildcard DNS records, (b) all CNAME records
+point to shared CDN/Cloudflare/CloudFront/AWS IPs, or (c) has no
+subdomain program at all. This is the honest exhaustive result.
+
+---
+_Honest framing: passive DNS enumeration + shared-IP wildcard filtering. No finding claimed. No active testing performed._
+===MY-HYP===
+## 2026-09-03 21:51:41 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=tech_exposure+gate — Nuxt SPA, MSAL Entra B2C, documented api-gateway backends (internal-auth + domain services), /association/impersonation route, partnerNo in watermark, switchToPartnerNumber query param
+[PRIO] smartfarming.suedzuckergroup.com,8.0,axis=business_value+tech_exposure — public Swagger for full REST API (fields/actions/orders/media/org user-data), JWT token-gen-with-RSA documented, single-resource numeric-ID BOLA surface
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed infra limits exploitability but high value e-commerce auth)
+[PRIO] bisz.suedzucker.de,5.5,axis=auth — now unreachable-ish (code=000), lower priority
+[PRIO] app.agriconetwork.com,5.0,axis=business_value — still unreachable (code=000)
+[HYP] MyDataPlant REST API BOLA via numeric single-resource IDs
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 60
+reasoning: Public Swagger documents GET/PATCH/DELETE by resource id for fields, actions, persons, vehicles, products, media, orderpositions, organizations, user-data/users. JSON:API single-resource reads by enumerate-able numeric/ULID ids on an org-scoped smart-farming backend are a canonical BOLA vector. Backend returns 400 (not 401) to bare requests, implying auth handled per-request rather than at edge. Auth is JWT ("token (JWT)" + "token generation with RSA signature" documented).
+evidence_needed: Confirm a valid mdp_bgd_api JWT is required per-endpoint and whether GET by id is scoped to the token's organization vs cross-tenant (requires own test account; not live customer data).
+verify_steps: Passive: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already confirms Swagger public). Do NOT issue authed cross-tenant reads without an own test account.
+impact: cross-tenant read/modify/delete of farm field data, orders, persons, media (agri PII + operations) — HIGH.
+testability: AUTH_HELPED
+[HYP] Plant Portal partner-number linking / impersonation BOLA
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 58
+reasoning: Nuxt route /partner-linking/:processPartnerNumber (integer) + ?switchToPartnerNumber=<int> query param (read into state and embedded in anti-screenshot watermark as partnerNo) + /association/impersonation guarded by only-for-partner middleware. The linking/impersonation flow binds an identity to a numeric partner number — predictable numeric IDs and an impersonation route are a systemic BOLA surface. Access token scopes: api://1b7819b0.../external_api_access.
+evidence_needed: Whether supplied Parternummer/switchToPartnerNumber scopes data to session or lets one partner act on another's data (needs own test account).
+verify_steps: Passive: confirmed routes in bundle + runtime config. Active only with own test account.
+impact: cross-tenant access to farmer contract/delivery/settlement data + association impersonation — HIGH.
+testability: AUTH_HELPED
+[HYP] MyDataPlant export-to-configured-URL SSRF / server-side request
+class: SSRF
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 40
+reasoning: Swagger has endpoint "send export to configured URL" (GET) and "Send export to configured URL" where users can configure a target URL (also "user-settings .. url" POST). A server-side fetch to a user-controlled URL is a classic SSRF-to-internal/cloud-metadata vector. Confidence limited: no live confirmation of request behavior; auth-gated.
+evidence_needed: Whether the configured URL is fetched server-side and allows internal/169.254.169.254 targets.
+verify_steps: Passive-only now. Requires own test account + careful, non-destructive testing.
+impact: SSRF to internal services / cloud metadata (169.254.169.254) -> possible credential exposure — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already done — the public Swagger confirms full REST surface reachable without auth; next read-only step is to fetch the token-generation endpoint documentation to understand how mdp_bgd_api JWT is issued) — but strictly passive. Confirm auth before any active id-based read.
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.
+[RISK] suedzucker: 64 — recon now focused on a live, renamed subsidiary/partner cluster (Plant Portal + MyDataPlant REST + SFCC shop). All steps were read-only (GET/HEAD of public docs and 401/302 reach probes, passive JS/Swagger analysis); no live customer data touched, no auth-bypass or mutating tests. Public Swagger and client config exposure raise the attack surface visibly but remain in-scope recon; carrying risk stays moderate and acceptable. Careful to keep all further Plant Portal/MyDataPlant steps on own test accounts only.
+[0m
+Let me look at the dedicated deep-hunt recon notes and my own hypotheses file, plus check the smartfarming API I was about to probe.
+I have full context now. Let me execute my pending NEXT action as read-only probes, being careful about rate (≤1 rps) and only GET/HEAD. My next step was to fetch the MyDataPlant Swagger token-generation endpoint documentation to understand how the mdp_bgd_api JWT is issued. Let me probe the Swagger JSON (public, no auth needed per prior finding) and the Plant Portal static assets to extract API base paths.
+
+Let me run these read-only probes sequentially to respect rate limits.
+[0m$ [0mcurl -sS -o /tmp/mdp-swagger.json -w "HTTP %{http_code} | %{size_download} bytes\n" --max-time 25 "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/swagger.json" 2>&1
+echo "--- try spec variants ---"
+curl -sS -o /tmp/mdp-api-ui -w "api-ui HTTP %{http_code}\n" --max-time 20 "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api" 2>&1
+head -c 400 /tmp/mdp-api-ui 2>/dev/null; echo
+HTTP 400 | 77 bytes
+--- try spec variants ---
+api-ui HTTP 200
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>MyDataPlant - RESTful API</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"><style>@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Inconsolata|Raleway:200');.hljs-comment,.hljs-title{color:#8e908c}.hljs-variable,.hljs-attribute,.hljs-tag,.hljs-regexp,.ruby .hlj
+[0m
+The Swagger UI is served. Let me fetch the actual OpenAPI spec. The swagger-ui page usually references a spec JSON. Let me look for the spec path in the HTML.
+[0m$ [0mgrep -oE '(url|src|href|spec)[^ ]*(json|yml|yaml|spec)[^"'"'"' ]*' /tmp/mdp-api-ui 2>/dev/null | head -20
+echo "---try common spec paths---"
+sleep 1
+for p in "swagger-resources" "v2/api-docs" "openapi.json" "swagger.json"; do
+  curl -sS -o /tmp/spec_$p -w "$p HTTP %{http_code} %{size_download}b\n" --max-time 20 "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/$p" 2>&1
+  sleep 1
+done
+href="https://jsonapi.org/">https://jsonapi.org/</a></p>
+href="https://jsonapi.org/format/#fetching-filtering">https://jsonapi.org/format/#fetching-filtering</a></em>)</p>
+href="https://jsonapi.org/format/#fetching-sorting">https://jsonapi.org/format/#fetching-sorting</a></em>)</p>
+href="https://jsonapi.org/format/#fetching-pagination">https://jsonapi.org/format/#fetching-pagination</a></em>)</p>
+href="https://jsonapi.org/format/#fetching-sparse-fieldsets">https://jsonapi.org/format/#fetching-sparse-fieldsets</a></em>)</p>
+href="https://jsonapi.org/format/#fetching-includes">https://jsonapi.org/format/#fetching-includes</a></em>)</p>
+---try common spec paths---
+swagger-resources HTTP 400 77b
+curl: (23) Failure writing output to destination
+v2/api-docs HTTP 400 0b
+openapi.json HTTP 400 77b
+swagger.json HTTP 400 77b
+[0m
+The spec paths return 400 (consistent with prior finding that backend returns 400 to bare requests). The HTML is an inline documentation page (not standard swagger-ui with external spec). Let me look at the actual HTML content to understand how it loads endpoint data. It may be a custom doc page or reference a spec file.
+[0m$ [0mwc -l /tmp/mdp-api-ui; echo "---script srcs / fetch---"; grep -oiE '(fetch|\.json|\.yml|\.yaml|\.js|api-docs|assetPath|url:)' /tmp/mdp-api-ui | sort | uniq -c | head -30
+15220 /tmp/mdp-api-ui
+---script srcs / fetch---
+     10 fetch
+[0m
+[0m$ [0mgrep -niE 'fetch\(|\.json[,)"'"'"'.;]|swagger|openapi|/api/' /tmp/mdp-api-ui | head -40
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_069aa09890022V2GIDaX9zY2yj
+
+835:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-crop-group-list" class="resource"><h3 class="resource-heading">Crop group list <a href="#standard-data-crop-group-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-crop-group-list-get" class="action get"><h4 class="action-heading"><div class="name">Get crop groups</div><a href="#standard-data-crop-group-list-get" class="method get">GET</a><code class="uri">/catalogCropGroups</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogCropGroups</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+853:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-crop-group" class="resource"><h3 class="resource-heading">Single crop group <a href="#standard-data-single-crop-group" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-crop-group-get" class="action get"><h4 class="action-heading"><div class="name">Get crop group</div><a href="#standard-data-single-crop-group-get" class="method get">GET</a><code class="uri">/catalogCropGroups/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogCropGroups/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+896:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-cultivation-type-list" class="resource"><h3 class="resource-heading">Cultivation type list <a href="#standard-data-cultivation-type-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-cultivation-type-list-get" class="action get"><h4 class="action-heading"><div class="name">Get cultivation types</div><a href="#standard-data-cultivation-type-list-get" class="method get">GET</a><code class="uri">/catalogCultivationTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogCultivationTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+914:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-cultivation-type" class="resource"><h3 class="resource-heading">Single cultivation type <a href="#standard-data-single-cultivation-type" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-cultivation-type-get" class="action get"><h4 class="action-heading"><div class="name">Get cultivation type</div><a href="#standard-data-single-cultivation-type-get" class="method get">GET</a><code class="uri">/catalogCultivationTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogCultivationTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+957:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-crop-list" class="resource"><h3 class="resource-heading">Crop list <a href="#standard-data-crop-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-crop-list-get" class="action get"><h4 class="action-heading"><div class="name">Get crops</div><a href="#standard-data-crop-list-get" class="method get">GET</a><code class="uri">/catalogCrops</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogCrops</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1002:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-crop" class="resource"><h3 class="resource-heading">Single crop <a href="#standard-data-single-crop" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-crop-get" class="action get"><h4 class="action-heading"><div class="name">Get crop</div><a href="#standard-data-single-crop-get" class="method get">GET</a><code class="uri">/catalogCrops/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogCrops/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1168:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-product-types-list" class="resource"><h3 class="resource-heading">Product types list <a href="#standard-data-product-types-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-product-types-list-get" class="action get"><h4 class="action-heading"><div class="name">Get product types</div><a href="#standard-data-product-types-list-get" class="method get">GET</a><code class="uri">/catalogProductTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProductTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1186:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-product-type" class="resource"><h3 class="resource-heading">Single product type <a href="#standard-data-single-product-type" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-product-type-get" class="action get"><h4 class="action-heading"><div class="name">Get product type</div><a href="#standard-data-single-product-type-get" class="method get">GET</a><code class="uri">/catalogProductTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProductTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1229:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-product-subtypes-list" class="resource"><h3 class="resource-heading">Product subtypes list <a href="#standard-data-product-subtypes-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-product-subtypes-list-get" class="action get"><h4 class="action-heading"><div class="name">Get product subtypes</div><a href="#standard-data-product-subtypes-list-get" class="method get">GET</a><code class="uri">/catalogProductSubTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProductSubTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1255:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-product-subtype" class="resource"><h3 class="resource-heading">Single product subtype <a href="#standard-data-single-product-subtype" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-product-subtype-get" class="action get"><h4 class="action-heading"><div class="name">Get product subtype</div><a href="#standard-data-single-product-subtype-get" class="method get">GET</a><code class="uri">/catalogProductSubTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProductSubTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1333:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-product-list" class="resource"><h3 class="resource-heading">Product list <a href="#standard-data-product-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-product-list-get" class="action get"><h4 class="action-heading"><div class="name">Get products</div><a href="#standard-data-product-list-get" class="method get">GET</a><code class="uri">/catalogProducts</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProducts</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1377:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-product" class="resource"><h3 class="resource-heading">Single product <a href="#standard-data-single-product" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-product-get" class="action get"><h4 class="action-heading"><div class="name">Get product</div><a href="#standard-data-single-product-get" class="method get">GET</a><code class="uri">/catalogProducts/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProducts/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1536:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-active-ingredient-list" class="resource"><h3 class="resource-heading">Active ingredient list <a href="#standard-data-active-ingredient-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-active-ingredient-list-get" class="action get"><h4 class="action-heading"><div class="name">Get active ingredients</div><a href="#standard-data-active-ingredient-list-get" class="method get">GET</a><code class="uri">/catalogActiveIngredients</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogActiveIngredients</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1556:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-active-ingredient" class="resource"><h3 class="resource-heading">Single active ingredient <a href="#standard-data-single-active-ingredient" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-active-ingredient-get" class="action get"><h4 class="action-heading"><div class="name">Get active ingredient</div><a href="#standard-data-single-active-ingredient-get" class="method get">GET</a><code class="uri">/catalogActiveIngredients/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogActiveIngredients/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1607:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-product-active-ingredient-list" class="resource"><h3 class="resource-heading">Product active ingredient list <a href="#standard-data-product-active-ingredient-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-product-active-ingredient-list-get" class="action get"><h4 class="action-heading"><div class="name">Get product active ingredients</div><a href="#standard-data-product-active-ingredient-list-get" class="method get">GET</a><code class="uri">/catalogProductActiveIngredients</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProductActiveIngredients</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1639:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-product-active-ingredient" class="resource"><h3 class="resource-heading">Single product active ingredient <a href="#standard-data-single-product-active-ingredient" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-product-active-ingredient-get" class="action get"><h4 class="action-heading"><div class="name">Get product active ingredient</div><a href="#standard-data-single-product-active-ingredient-get" class="method get">GET</a><code class="uri">/catalogProductActiveIngredients/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogProductActiveIngredients/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1745:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-action-types-list" class="resource"><h3 class="resource-heading">Action types list <a href="#standard-data-action-types-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-action-types-list-get" class="action get"><h4 class="action-heading"><div class="name">Get action types</div><a href="#standard-data-action-types-list-get" class="method get">GET</a><code class="uri">/catalogActionTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogActionTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1764:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-action-type" class="resource"><h3 class="resource-heading">Single action type <a href="#standard-data-single-action-type" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-action-type-get" class="action get"><h4 class="action-heading"><div class="name">Get action type</div><a href="#standard-data-single-action-type-get" class="method get">GET</a><code class="uri">/catalogActionTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogActionTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1811:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-action-subtypes-list" class="resource"><h3 class="resource-heading">Action subtypes list <a href="#standard-data-action-subtypes-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-action-subtypes-list-get" class="action get"><h4 class="action-heading"><div class="name">Get action subtypes</div><a href="#standard-data-action-subtypes-list-get" class="method get">GET</a><code class="uri">/catalogActionSubTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogActionSubTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1837:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-action-subtype" class="resource"><h3 class="resource-heading">Single action subtype <a href="#standard-data-single-action-subtype" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-action-subtype-get" class="action get"><h4 class="action-heading"><div class="name">Get action subtype</div><a href="#standard-data-single-action-subtype-get" class="method get">GET</a><code class="uri">/catalogActionSubTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogActionSubTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1915:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-soil-types-list" class="resource"><h3 class="resource-heading">Soil types list <a href="#standard-data-soil-types-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-soil-types-list-get" class="action get"><h4 class="action-heading"><div class="name">Get soil types</div><a href="#standard-data-soil-types-list-get" class="method get">GET</a><code class="uri">/catalogSoilTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogSoilTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1933:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-soil-type" class="resource"><h3 class="resource-heading">Single soil type <a href="#standard-data-single-soil-type" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-soil-type-get" class="action get"><h4 class="action-heading"><div class="name">Get soil type</div><a href="#standard-data-single-soil-type-get" class="method get">GET</a><code class="uri">/catalogSoilTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogSoilTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1976:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-soil-subtypes-list" class="resource"><h3 class="resource-heading">Soil subtypes list <a href="#standard-data-soil-subtypes-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-soil-subtypes-list-get" class="action get"><h4 class="action-heading"><div class="name">Get soil subtypes</div><a href="#standard-data-soil-subtypes-list-get" class="method get">GET</a><code class="uri">/catalogSoilSubTypes</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogSoilSubTypes</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+1995:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-soil-subtype" class="resource"><h3 class="resource-heading">Single soil subtype <a href="#standard-data-single-soil-subtype" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-soil-subtype-get" class="action get"><h4 class="action-heading"><div class="name">Get soil subtype</div><a href="#standard-data-single-soil-subtype-get" class="method get">GET</a><code class="uri">/catalogSoilSubTypes/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/catalogSoilSubTypes/<span class="hljs-attribute" title="id">1</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+2042:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-export-formats-list" class="resource"><h3 class="resource-heading">Export Formats list <a href="#standard-data-export-formats-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-export-formats-list-get" class="action get"><h4 class="action-heading"><div class="name">Get export formats</div><a href="#standard-data-export-formats-list-get" class="method get">GET</a><code class="uri">/exportFormats</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/exportFormats</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+2061:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-single-export-format" class="resource"><h3 class="resource-heading">Single export format <a href="#standard-data-single-export-format" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-single-export-format-get" class="action get"><h4 class="action-heading"><div class="name">Get export format</div><a href="#standard-data-single-export-format-get" class="method get">GET</a><code class="uri">/exportFormats/{id}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/exportFormats/<span class="hljs-attribute" title="id">altina</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>id</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>altina</span></span></dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+2109:</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="standard-data-export-targets-list" class="resource"><h3 class="resource-heading">Export Targets list <a href="#standard-data-export-targets-list" class="permalink">&nbsp;&para;</a></h3><div id="standard-data-export-targets-list-get" class="action get"><h4 class="action-heading"><div class="name">Get export targets</div><a href="#standard-data-export-targets-list-get" class="method get">GET</a><code class="uri">/exportTargets</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://portal.mydataplant.com/api/v3</span>/exportTargets</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/vnd.api+json</span><br><span class="hljs-attribute">Authentication</span>: <span class="hljs-string">Bearer &lt;JWTtoken&gt;</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/vnd.api+json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+[0m
+The HTML page is 15220 lines. Let me inspect it to understand what spec it references and how it's structured. This is documentation for the API I'm tracking.
+[0m$ [0mgrep -oiE 'class="uri">/[^<]*' /tmp/mdp-api-ui | sed 's/class="uri">//' | sort -u | head -200
+/actionPersons
+/actionPersons/{id}
+/actionVehicles
+/actionVehicles/{id}
+/actions
+/actions/{id}
+/applicationSettings
+/applicationSettings/{id}
+/balancedSamplingMaps
+/balancedSamplingMaps/{id}
+/baseMaps
+/baseMaps/{id}
+/baseMaps/{id}/file
+/catalogActionSubTypes
+/catalogActionSubTypes/{id}
+/catalogActionTypes
+/catalogActionTypes/{id}
+/catalogActiveIngredients
+/catalogActiveIngredients/{id}
+/catalogCropCategories
+/catalogCropCategories/{id}
+/catalogCropGroups
+/catalogCropGroups/{id}
+/catalogCropSystematics
+/catalogCropSystematics/{id}
+/catalogCropTypeGroups
+/catalogCropTypeGroups/{id}
+/catalogCropTypes
+/catalogCropTypes/{id}
+/catalogCropUsages
+/catalogCropUsages/{id}
+/catalogCrops
+/catalogCrops/{id}
+/catalogCultivationTypes
+/catalogCultivationTypes/{id}
+/catalogProductActiveIngredients
+/catalogProductActiveIngredients/{id}
+/catalogProductSubTypes
+/catalogProductSubTypes/{id}
+/catalogProductTypes
+/catalogProductTypes/{id}
+/catalogProducts
+/catalogProducts/{id}
+/catalogSoilSubTypes
+/catalogSoilSubTypes/{id}
+/catalogSoilTypes
+/catalogSoilTypes/{id}
+/cropProtectionMaps
+/cropProtectionMaps/{id}
+/cultivationKviMaps
+/cultivationKviMaps/{id}
+/cultivations
+/cultivations/{id}
+/exportFormats
+/exportFormats/{id}
+/exportItems
+/exportTargets
+/exportTargets/{id}
+/exportTypes
+/exportTypes/{id}
+/exports
+/exports/{id}/agrirouter
+/exports/{id}/file
+/exports/{id}/post
+/fertilizationMaps
+/fertilizationMaps/{id}
+/fertilizers
+/fertilizers/{id}
+/fieldBoundaries/{point}
+/fieldSharings
+/fieldSharings/{id}
+/fields
+/fields/{id}
+/fileConverts
+/fileConverts/{id}
+/fileConverts/{id}/file
+/fileUploads
+/fileUploads/{id}
+/importDataMaps
+/importDataMaps/{id}
+/kviMapViews
+/kviMapViews/
+/mapserv/kvi_cultivation?raster_id=&amp;field_cultivation_id=&amp;organization_id=&amp;layers=kvi&amp;format=image/png
+/mapserv/v3/balancedSamplingMaps?application_map_id=&amp;organization_id=&amp;layers=soilsampling&amp;format=image/png
+/mapserv/v3/cropprotection_zone?application_map_id=&amp;organization_id=&amp;layers=cropprotection_zone&amp;format=image/png
+/mapserv/v3/fertilization_zone?application_map_id=&amp;organization_id=&amp;layers=fertilization_zone&amp;format=image/png
+/mapserv/v3/importdata?raster_id=&amp;organization_id=&amp;layers=importdata&amp;format=image/png
+/mapserv/v3/soil_zone?application_map_id=&amp;organization_id=&amp;layers=soil_zone&amp;format=image/png
+/mapserv/v3/soilsampling?application_map_id=&amp;organization_id=&amp;layers=soilsampling&amp;format=image/png
+/media
+/media/{id}
+/orderPositions
+/orderPositions/{id}
+/orders
+/orders/{id}
+/organizations
+/organizations/{id}
+/persons
+/persons/{id}
+/plannedParts
+/plannedParts/{id}
+/pointOfInterestCategories
+/pointOfInterestCategories/{id}
+/pointOfInterests
+/pointOfInterests/{id}
+/productActiveIngredients
+/productActiveIngredients/{id}
+/productInputs
+/productInputs/{id}
+/productUsages
+/productUsages/{id}
+/products
+/products/{id}
+/seedMaps
+/seedMaps/{id}
+/services/outline.py?user_id={user_id}&amp;field_id={field_id}&amp;cultivation_id={cultivation_id}&amp;field_outline=1&amp;width={width}&amp;height={height}
+/services/outline.py?user_id={user_id}&amp;field_id={field_id}&amp;width={width}&amp;height={height}
+/sharings
+/sharings/{id}
+/soilSamplingMaps
+/soilSamplingMaps/{id}
+/strategies
+/strategies/{id}
+/tags
+/tags/{id}
+/tokens
+/users
+/users/{id}
+/vehicles
+/vehicles/{id}
+[0m
+This is a rich full inline API documentation (sphinx/swagger-style HTML). Key facts confirmed:
+- Host in examples: `https://portal.mydataplant.com/api/v3` (the real backend host, separate from the suedzuckergroup.com front-end)
+- Bearer JWT auth per-request
+- Numeric single-resource /{id} with example `1` — canonical BOLA surface
+- Export targets / export formats endpoints — the SSRF surface
+
+Let me now extract the full endpoint map from this documentation to deepen the recon, particularly the auth/token endpoints and the export/settings endpoints (SSRF). Let me grep the HTML for the section list and token/export/user-settings endpoints.
+[0m$ [0mpython3 - <<'EOF'
+import re, html
+data = open('/tmp/mdp-api-ui', encoding='utf-8', errors='ignore').read()
+# Find sections around tokens, users, exportTargets, exports, services/outline, fileUploads
+for pat in ['/tokens', 'id="auth', 'token', 'user-settings', 'exportTargets', 'outline.py']:
+    idxs = [m.start() for m in re.finditer(re.escape(pat), data)][:6]
+    print(f"=== {pat}: {len(idxs)} hits at {idxs[:6]}")
+EOF
+=== /tokens: 4 hits at [55933, 56367, 70445, 72743]
+=== id="auth: 4 hits at [54073, 55525, 55712, 70199]
+=== token: 6 hits at [15698, 15760, 15831, 15921, 15964, 54291]
+=== user-settings: 0 hits at []
+=== exportTargets: 6 hits at [282565, 282761, 284003, 285637, 285838, 287511]
+=== outline.py: 6 hits at [476438, 476742, 477019, 552412, 552772, 553090]
+[0m
+Excellent. This is a very comprehensive endpoint map. I notice:
+- `/tokens` — this is the JWT token endpoint (my pending NEXT action!). 
+- `/users`, `/users/{id}`, `/persons/{id}` — user/person PII single-resource
+- `/orders/{id}`, `/orderPositions/{id}` — order data
+- `/exportTargets/{id}`, `/exportItems`, `/exports/{id}/post`, `/exports/{id}/agrirouter` — the SSRF-relevant surface (export target URL configured)
+- `/fileUploads/{id}` — file upload surface
+- `/organizations/{id}`, `/sharings/{id}`, `/fieldSharings/{id}` — org-scoped BOLA surface
+- `/services/outline.py?user_id={user_id}&field_id={field_id}` — interesting: arbitrary user_id/field_id param on a map outline service (potential IDOR on image-generation)
+
+The `/tokens` endpoint is the auth generation surface. Let me examine it and the user/export/token docs in detail. This directly fulfills my pending NEXT action of understanding how the mdp_bgd_api JWT is issued (the `/tokens` endpoint documents token generation).
+
+Let me grep the specific sections for `/tokens`, `/users`, `/exportTargets`, `/exports`, and `/services/outline.py`.
+Let me extract the content around the tokens section (auth) and the structured text of the relevant endpoints. Let me convert the HTML section to readable text.
+[0m$ [0mpython3 - <<'EOF'
+import re, html
+data = open('/tmp/mdp-api-ui', encoding='utf-8', errors='ignore').read()
+# Auth/token section around 54073-72743
+seg = data[54000:74500]
+# strip tags
+txt = re.sub(r'<br\s*/?>', '\n', seg)
+txt = re.sub(r'<[^>]+>', '', txt)
+txt = html.unescape(txt)
+txt = re.sub(r'\n\s*\n+', '\n', txt)
+print(txt[:3500])
+EOF
+es">https://jsonapi.org/format/#fetching-includes)
+Authentication ¶The authentication is based on JWT (JSON Web Token).
+Token (JWT) ¶
+{
+    "iss": "auth-backend",
+    "sub": <loginName>,
+    "aud": "rest-client",
+    "exp": <timestamp>,
+    "nbf": null,
+    "iat": <timestamp>,
+    "jit": <uuid>,
+    "userId": <userId>,
+    "email": <email>,
+    "access": null
+}
+Token management  ¶Generate tokenPOST/tokens
+ Caution ¶
+Authorization header is not allowed with this request
+Example URIPOST https://portal.mydataplant.com/api/v3/tokensRequest  With user and passwordHideShowHeadersContent-Type: application/vnd.api+json
+Accept: application/vnd.api+jsonBody{
+  "data": {
+    "type": "token",
+    "attributes": {
+      "LOGIN_NAME": "myName",
+      "PASSWORD": "myPassword",
+      "REFRESH_TOKEN_LIFETIME": 24
+    }
+  }
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "LOGIN_NAME": {
+              "type": "string",
+              "description": "user login (email)"
+            },
+            "PASSWORD": {
+              "type": "string",
+              "description": "user password"
+            },
+            "REFRESH_TOKEN_LIFETIME": {
+              "type": "number",
+              "description": "to get a refresh token with limited lifetime"
+            }
+          },
+          "required": [
+            "LOGIN_NAME",
+            "PASSWORD"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "attributes"
+      ]
+    }
+  },
+  "required": [
+    "data"
+  ]
+}Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": {
+    "id": "uuid",
+    "type": "token",
+    "attributes": {
+      "TOKEN": "JWT Token"
+    },
+    "relations": {
+      "tokens": [
+        {
+          "id": "uuid",
+          "type": "token",
+          "attributes": {
+            "TOKEN": "JWT Token"
+          }
+        }
+      ]
+    }
+  }
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "token"
+          ]
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "TOKEN": {
+              "type": "string"
+            }
+          }
+        },
+        "relations": {
+          "type": "object",
+          "properties": {
+            "tokens": {
+              "type": "array"
+            }
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  }
+}Request  With refresh tokenHideShowHeadersContent-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": {
+    "id": "uuid",
+    "type": "token",
+    "attributes": {
+      "TOKEN": "JWT Token"
+    },
+    "relations": {
+      "tokens": [
+        {
+          "id": "uuid",
+          "type": "token",
+          "attributes": {
+            "TOKEN": "JWT Token"
+          }
+        }
+      ]
+    }
+  }
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "obje
+[0m
+This is important recon. Key facts confirmed about MyDataPlant auth:
+- The real backend host is `https://portal.mydataplant.com/api/v3` (NOT suedzuckergroup.com front-end — the doc examples point to the actual API host)
+- Auth: JWT-based
+- `POST /tokens` — generate token with LOGIN_NAME (email) + PASSWORD, no auth header allowed. This is a password-authenticated login endpoint (username enumeration is out of scope; and this would be brute-force out of scope). 
+- JWT payload: `sub`=loginName, `userId`, `email`, `aud: rest-client`, `iss: auth-backend`
+
+This is the mdp_bgd_api auth. Now let me look at the exportTargets and exports endpoints (SSRF surface) and the services/outline.py (potential IDOR).
+
+Let me examine the exportTargets and exports endpoint docs (the configured-URL SSRF surface).
+[0m$ [0mpython3 - <<'EOF'
+import re, html
+data = open('/tmp/mdp-api-ui', encoding='utf-8', errors='ignore').read()
+seg = data[281500:320000]
+txt = re.sub(r'<br\s*/?>', '\n', seg)
+txt = re.sub(r'<[^>]+>', '', txt)
+txt = html.unescape(txt)
+txt = re.sub(r'\n\s*\n+', '\n', txt)
+print(txt[:4500])
+EOF
+-content">HeadersContent-Type: application/vnd.api+jsonBody{
+  "errors": {
+    "status": 404,
+    "title": "item not found"
+  }
+}Export Targets list  ¶Get export targetsGET/exportTargetsExample URIGET https://portal.mydataplant.com/api/v3/exportTargetsRequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": [
+    {
+      "id": 1,
+      "type": "exportTargets",
+      "attributes": {
+        "NAME": "TERMNAL_USB_EXPORT",
+        "EXPORT_TYPES": [
+          "2",
+          "3"
+        ]
+      }
+    }
+  ]
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array"
+    }
+  }
+}Single export target  ¶Get export targetGET/exportTargets/{id}Example URIGET https://portal.mydataplant.com/api/v3/exportTargets/1URI ParametersHideShowidnumber (required) Example: 1RequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": {
+    "id": 1,
+    "type": "exportTargets",
+    "attributes": {
+      "NAME": "TERMNAL_USB_EXPORT",
+      "EXPORT_TYPES": [
+        "2",
+        "3"
+      ]
+    }
+  }
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "exportTargets"
+          ]
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "type": "string"
+            },
+            "EXPORT_TYPES": {
+              "type": "array",
+              "description": "list of expot type ids"
+            }
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  }
+}Response  404HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "errors": {
+    "status": 404,
+    "title": "item not found"
+  }
+}Export Types list  ¶Get export typesGET/exportTypesExample URIGET https://portal.mydataplant.com/api/v3/exportTypesRequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": [
+    {
+      "id": 1,
+      "type": "exportTargets",
+      "attributes": {
+        "NAME": "TERMNAL_USB_EXPORT",
+        "EXPORT_TYPES": [
+          "2",
+          "3"
+        ]
+      }
+    }
+  ]
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "array"
+    }
+  }
+}Single export type  ¶Get export typeGET/exportTypes/{id}Example URIGET https://portal.mydataplant.com/api/v3/exportTypes/1URI ParametersHideShowidnumber (required) Example: 1RequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": {
+    "id": 1,
+    "type": "exportTypes",
+    "attributes": {
+      "NAME": "PDF"
+    }
+  }
+}Schema{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "exportTypes"
+          ]
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  }
+}Response  404HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "errors": {
+    "status": 404,
+    "title": "item not found"
+  }
+}Fertilizer list  ¶Get fertilizersGET/fertilizersExample URIGET https://portal.mydataplant.com/api/v3/fertilizersRequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": [
+    {
+      "id": 1,
+      "type": "fertilizers",
+      "attributes": {
+        "SETTINGS": {
+          "value": 28,
+          "form": "liquid",
+          "pvalue": 0,
+          "kvalue": 0,
+          "svalue": 0,
+          "mgovalue": 0,
+          "density": 1.28,
+          "custom": false,
+          "active": true
+[0m
+The export targets are catalog-style (TERMINAL_USB_EXPORT, PDF), not user-configured arbitrary URLs — the naming suggests USB/file exports, weakening the SSRF hypothesis. Let me check the `/exports/{id}/post` and `/{id}/agrirouter` and `/exports` endpoints, and the `services/outline.py` with user_id param (potential IDOR). Let me also examine `/users`, `/fileUploads`, and `/fieldSharings`. Let me look at the exports and outline sections.
+[0m$ [0mpython3 - <<'EOF'
+import re, html
+data = open('/tmp/mdp-api-ui', encoding='utf-8', errors='ignore').read()
+# exports section and outline services
+for label, start, end in [("EXPORTS", 380000, 420000), ("OUTLINE", 475000, 482000)]:
+    seg = data[start:end]
+    txt = re.sub(r'<br\s*/?>', '\n', seg)
+    txt = re.sub(r'<[^>]+>', '', txt)
+    txt = html.unescape(txt)
+    txt = re.sub(r'\n\s*\n+', '\n', txt)
+    print(f"\n########## {label} ##########")
+    print(txt[:3500])
+EOF
+########## EXPORTS ##########
+                                "properties": {
+                                    "key": {
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "type": "number"
+                                    },
+                                    "label": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "description": "tablet exports"
+                            }
+                          }
+                        },
+                        "controller": {
+                          "type": "string"
+                        },
+                        "usedFormats": {
+                          "type": "object",
+                          "properties": {
+                            "<format>": {
+                              "type": "number",
+                              "description": "how often was this export format used"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "groups": {
+                      "description": "defined groups for fields"
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "unitSystem": {
+                      "type": "string"
+                    },
+                    "fertilizers": {
+                      "type": "object",
+                      "properties": {},
+                      "description": "user defined fertilizers"
+                    },
+                    "useNbalance": {
+                      "type": "boolean"
+                    },
+                    "cropprotection": {
+                      "type": "object",
+                      "properties": {
+                        "lastType": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "readQuickstart": {
+                      "type": "boolean"
+                    },
+                    "usedFertilizers": {
+                      "type": "object",
+                      "properties": {
+                        "<fertilizerId>": {
+                          "type": "number"
+                        }
+                      },
+                      "description": "used fertilizers with their count"
+                    },
+                    "usedGrowthRegulators": {
+                      "type": "object",
+                      "properties": {
+                        "<growthRegulatorId>": {
+                          "type": "number"
+                        }
+                      },
+                      "description": "used growth regulators with their count"
+                    }
+                  }
+                },
+                "version": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  }
+}Response  404HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "errors": {
+    "status": 404,
+    "title": "item not found"
+  }
+}Organization data ¶Organizations  ¶Get organizationGET/organizationsExample URIGET https://portal.mydataplant.com/api/v3/organizationsRequestHideShowH
+
+########## OUTLINE ##########
+rong>URI ParametersHideShowidnumber (required) Example: 1RequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  204Field boundary  ¶You can embed an image of the fields outline/geometry via request to render the field as SVG
+Get field geometry as SVGGET/services/outline.py?user_id={user_id}&field_id={field_id}&width={width}&height={height}<img src="https://portal.mydataplant.com/services/outline.py?user_id=2&field_id=123&width=50&height=50">
+Example URIGET https://portal.mydataplant.com/api/v3/services/outline.py?user_id=user_id&field_id=field_id&width=width&height=heightURI ParametersHideShowuser_idnumber (required) id of the user.
+field_idnumber (required) id of the field.
+widthnumber (required) width of the requested image.
+heightnumber (required) height of the requested image.
+Response  200HideShowHeadersContent-Type: image/svg+xmlCultivations ¶Cultivations  ¶Get cultivationsGET/cultivationsExample URIGET https://portal.mydataplant.com/api/v3/cultivationsRequestHideShowHeadersAccept: application/vnd.api+json
+Authentication: Bearer <JWTtoken>Response  200HideShowHeadersContent-Type: application/vnd.api+jsonBody{
+  "data": [
+    {
+      "id": 6808,
+      "type": "fields",
+      "attributes": {
+        "AREA": 21.66,
+        "BBOX": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                10.827123,
+                50.740424
+              ],
+              [
+                10.841961,
+                50.732245
+              ],
+              [
+                10.845437,
+                50.733277
+              ],
+              [
+                10.841961,
+                50.735233
+              ]
+            ]
+          ]
+        },
+        "CREATED": "2018-10-11 13:29:16",
+        "CROP_ID": 69,
+        "EXTERNAL_ID": "uu
+[0m
+Interesting finding — the `/services/outline.py?user_id={user_id}&field_id={field_id}` endpoint serves an SVG of a field's geometry given a **user_id** and **field_id** as raw numeric parameters. The example even embeds `user_id=2&field_id=123` directly in an `<img>` tag without authentication headers visibly shown in the example. This is a potential **IDOR** — request the field outline geometry of any user/field by numeric ID. The response is `image/svg+xml` — the geometry (field boundary coordinates, which reveal farm field locations = PII/location data).
+
+However, this does require a valid token context (auth is per-request via Bearer). But the parameters are numeric and decoupled — a vertical/horizontal IDOR risk exists if authz isn't enforced on the geometry fetch. This is worth tracking. But it's AUTH_HELPED and requires a test account.
+
+Let me verify the outline.py access — but I must NOT do authenticated cross-tenant reads. A bare unauthenticated GET to test whether it requires auth is a reasonable read-only reach probe (equivalent to the 401/400 probes already done). Let me check reach on the real backend host `portal.mydataplant.com` and the suedzuckergroup front-end gateway.
+
+Let me probe whether the front-end `/mdp-api/v3/api/services/outline.py` path is reachable and its auth behavior (read-only, 1 rps).
+[0m$ [0mecho "=== probe 1: front-end gateway outline.py (unauthed) ==="
+curl -sS -o /tmp/outline1 -w "HTTP %{http_code} | size %{size_download} | type %{content_type}\n" --max-time 20 "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1
+echo "--- body head ---"
+head -c 300 /tmp/outline1 2>/dev/null; echo
+sleep 1
+echo "=== probe 2: real backend host direct ==="
+curl -sS -o /tmp/outline2 -w "HTTP %{http_code} | size %{size_download} | type %{content_type}\n" --max-time 20 "https://portal.mydataplant.com/api/v3/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1
+echo "--- body head ---"
+head -c 300 /tmp/outline2 2>/dev/null; echo
+=== probe 1: front-end gateway outline.py (unauthed) ===
+HTTP 400 | size 77 | type application/vnd.api+json
+--- body head ---
+{"errors":{"status":400,"title":"Missing X-Selected-Partner-Link-Id header"}}
+=== probe 2: real backend host direct ===
+HTTP 403 | size 51 | type application/vnd.api+json
+--- body head ---
+{"errors":{"status":403,"title":"forbidden (149)"}}
+[0m
+Two important recon datapoints:
+
+1. **Front-end gateway** `smartfarming.suedzuckergroup.com/mdp-api/v3/api/...` returns `400 Missing X-Selected-Partner-Link-Id header`. This is notable: the API gateway requires a **`X-Selected-Partner-Link-Id` header** — a header that selects which partner/organization the request acts on. This is EXACTLY the "switchToPartnerNumber"-style BOLA surface: a client-supplied partner-scoping header. If the backend trusts this header to determine tenant scope without cross-checking it against the JWT's own organization membership, that's a cross-tenant BOLA. High-value signal.
+
+2. **Real backend host** `portal.mydataplant.com/api/v3` returns `403 forbidden (149)` unauthenticated — properly gated (no data leak unauthenticated).
+
+The `Missing X-Selected-Partner-Link-Id header` is a strong lead — a partner-scoping header that the SPAs would set per selected partner. Let me confirm this header's role by checking the Plant Portal runtime config / bundle for how it's set, and check the smartfarming gateway behavior. This connects plantportal and mydataplant (both use mdp_bgd_api scope + api-gateway).
+
+Let me probe the gateway a bit more to understand the header handling (read-only). Let me try adding the header with a dummy value to see if it proceeds to auth (401) vs data (which would confirm per-header scope).
+[0m$ [0mecho "=== gateway with dummy X-Selected-Partner-Link-Id, no auth ==="
+curl -sS -o /tmp/o3 -w "HTTP %{http_code} | size %{size_download}\n" --max-time 20 -H "X-Selected-Partner-Link-Id: 1" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1
+head -c 300 /tmp/o3; echo
+sleep 1
+echo "=== gateway with the header on users list, no auth ==="
+curl -sS -o /tmp/o4 -w "HTTP %{http_code} | size %{size_download}\n" --max-time 20 -H "X-Selected-Partner-Link-Id: 1" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/users" 2>&1
+head -c 300 /tmp/o4; echo
+=== gateway with dummy X-Selected-Partner-Link-Id, no auth ===
+HTTP 403 | size 51
+{"errors":{"status":403,"title":"forbidden (177)"}}
+=== gateway with the header on users list, no auth ===
+HTTP 403 | size 51
+{"errors":{"status":403,"title":"forbidden (177)"}}
+[0m
+With the header set but no JWT auth, the gateway returns `403 forbidden (177)`. This confirms: the gateway requires both the JWT Bearer AND the `X-Selected-Partner-Link-Id` header. Unauthenticated access is properly blocked (403), so no passive data leak.
+
+The meaningful security question is whether, **with a valid JWT for partner A**, an attacker can set `X-Selected-Partner-Link-Id` to partner B's id and thereby access B's data — i.e., whether the gateway validates the header against the token's authorized partner links. That requires an authenticated test account — AUTH_HELPED, not something I confirm passively.
+
+This confirms the **`X-Selected-Partner-Link-Id` header as a cross-tenant tenant-scoping BOLA surface**. This is a significant, concrete signal tying the "switchToPartnerNumber" / impersonation concern to the actual API gateway mechanism. Let me verify the Plant Portal bundle sets this header per selected partner to solidify the chain. Let me check the Plant Portal Nuxt payload for how X-Selected-Partner-Link-Id or partner-scoping is set.
+
+Let me do a read-only fetch of the Plant Portal page to look for the header in bundle logic. First let me GET the plantportal root (already known to be a live Nuxt SPA).
+[0m$ [0mcurl -sS -o /tmp/pp -w "HTTP %{http_code} | size %{size_download} | type %{content_type}\n" --max-time 20 "https://plantportal.suedzuckergroup.com/" 2>&1
+echo "--- grep X-Selected / partner-link header refs ---"
+grep -oiE 'X-Selected-Partner-Link-Id|Selected-Partner|partnerLink|switchToPartner' /tmp/pp | sort | uniq -c
+echo "--- nuxt entry refs ---"
+grep -oE '/_nuxt/[^"]*\.js' /tmp/pp | head
+HTTP 200 | size 594346 | type text/html;charset=utf-8
+--- grep X-Selected / partner-link header refs ---
+--- nuxt entry refs ---
+/_nuxt/DpUprWo9.js
+/_nuxt/DpUprWo9.js
+/_nuxt/BPdoNzAO.js
+/_nuxt/DvgO493u.js
+/_nuxt/C8VgmCLt.js
+/_nuxt/D500LsHt.js
+/_nuxt/Dm6a5bET.js
+/_nuxt/O5Eoi5uX.js
+/_nuxt/DXjXk_CU.js
+/_nuxt/BriE48HA.js
+[0m
+The Plant Portal root page (server-rendered HTML, 594KB) doesn't directly contain the header in the static HTML. The header is set client-side in the JS bundles based on selected partner. The HTML references Nuxt entry bundles. Let me check the HTML payload for partner/impersonation strings embedded server-side (the config the SPA uses).
+
+Let me search the main HTML for partner-related state/config and api-gateway references.
+[0m$ [0mgrep -oiE '(partner|impersonal|switchTo|api-gateway|gateway|apim|mdp)' /tmp/pp | sort | uniq -c | sort -rn | head -20
+echo "=== __NUXT__ payload partner refs ==="
+grep -oE '.{80}(switchToPartner|partnerNo|impersonal|Partner-Link|selectedPartner).{80}' /tmp/pp | head -20
+4 mdp
+      4 api-gateway
+=== __NUXT__ payload partner refs ===
+[0m
+[0m$ [0mgrep -oE '.{100}api-gateway.{120}' /tmp/pp | head; echo "=== mdp ctx ==="; grep -oE '.{100}mdp.{120}' /tmp/pp | head
+.Read"]}},auth:{provider:"MICROSOFT_ENTRA_ID",backend:{uri:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/",scopes:["api://1b7819b0-001a-4381-ad51-e4626e5afd31/external_api_access"]},mdpBackend:{uri:"https://sma
+-a3a1-b56cb63e7a00/mdp_bgd_api"]}},imageServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-image-service/images",internalAuthServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/api-g
+es-internal-auth-service",domainBackendServicesApiEndpoint:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services",logLevel:"warn",appInsights:{enabled:false,connectionString:"",application
+=== mdp ctx ===
+-gateway/entra-ext/api/",scopes:["api://1b7819b0-001a-4381-ad51-e4626e5afd31/external_api_access"]},mdpBackend:{uri:"https://smartfarming.suedzuckergroup.com/mdp-api/v3/api",scopes:["api://aad3fee6-9215-4ded-a3a1-b56cb63e7a
+ngRatio:1,logLevel:"error"},mydataplantServiceApiEndpoint:"https://smartfarming.suedzuckergroup.com/mdp-api/v3/api",mydataplantBaseUrl:"https://smartfarming.suedzuckergroup.com",rmpServiceApiEndpoint:"https://plantportal.su
+[0m
+[0m$ [0mcat >> /home/runner/work/suedzucker-hunt/suedzucker-hunt/leads/lead-bigpickle.md <<'EOF'
+## 2026-09-03 23:5x UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,8.4,axis=tech_exposure+gate — CONFIRMED gateway requires X-Selected-Partner-Link-Id header to scope tenant; JWT Bearer scoped mdp_bgd_api; real backend portal.mydataplant.com/api/v3 (403 forbidden(149) unauthed); full endpoint map incl /users /persons /orders /organizations /fieldSharings /tokens
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=business_value+gate — runtime config confirms mdpBackend + ceres-internal-auth / ceres-image-service / ceres-domain-backend-services behind /api-gateway/entra-ext/api/, all 401/403 gated unauthed
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed; OrderSummary/:recordId IDOR AUTH_HELPED)
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Front-end gateway returns 400 "Missing X-Selected-Partner-Link-Id header" on ANY request (incl /services/outline.py?user_id=2&field_id=123). With header set but no Bearer -> 403 forbidden(177). => The gateway scopes requests to a partner/link selected by a CLIENT-SUPPLIED header, in addition to JWT. This mirrors Plant Portal ?switchToPartnerNumber / /partner-linking / /association/impersonation. If the backend does not verify the header value is among the JWT subject's own authorized partner-links, a valid token for partner A can re-scope to partner B -> cross-tenant data. JWT embeds userId+email; real backend portal.mydataplant.com/api/v3 (403 unauthed).
+evidence_needed: With an OWN test account: confirm whether GET /fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> returns another tenant's data or is rejected. (NOT live customer data.)
+verify_steps: Passive done: 400 Missing-X-Selected-Partner-Link-Id on gateway; 403 unauthed. Active (own test account, AUTH_HELPED) only.
+impact: cross-tenant read/modify of farm fields, orders, persons, media, org data (agri PII + ops) — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: read-only next step: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/api-docs (or browse the inline doc) to enumerate which endpoints accept the X-Selected-Partner-Link-Id header and whether POST /tokens (password login) is exposed at the gateway; strictly read-only, do NOT submit credentials or issue authenticated cross-tenant reads.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full public Swagger (inline sphinx-style HTML, 15k lines) previously known; NOW confirms real backend host portal.mydataplant.com/api/v3 (not suedzuckergroup front), Bearer JWT auth with iss=auth-backend aud=rest-client + userId/email in claims, POST /tokens (LOGIN_NAME/PASSWORD, no auth header) token-gen, and a gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, all public docs.
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets /exportTypes: docs show catalog-style targets (TERMINAL_USB_EXPORT, PDF) not user-arbitrary-URL fetch — SSRF-to-metadata hypothesis weakened, deprioritize.
+[RISK] suedzucker: 65 — recon stays read-only (GET of public Swagger/docs + 400/403 reach probes), no authenticated cross-tenant reads, no credentials submitted, no mutations, ~1 rps. The X-Selected-Partner-Link-Id tenant-scoping header is a strong BOLA signal but strictly behind auth; carrying risk stable. Any active test MUST be on an own test account, never live customer data.
+EOF
+echo "appended"; tail -5 /home/runner/work/suedzucker-hunt/suedzucker-hunt/leads/lead-bigpickle.md
+appended
+[NEXT] PROBE: read-only next step: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/api-docs (or browse the inline doc) to enumerate which endpoints accept the X-Selected-Partner-Link-Id header and whether POST /tokens (password login) is exposed at the gateway; strictly read-only, do NOT submit credentials or issue authenticated cross-tenant reads.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full public Swagger (inline sphinx-style HTML, 15k lines) previously known; NOW confirms real backend host portal.mydataplant.com/api/v3 (not suedzuckergroup front), Bearer JWT auth with iss=auth-backend aud=rest-client + userId/email in claims, POST /tokens (LOGIN_NAME/PASSWORD, no auth header) token-gen, and a gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, all public docs.
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets /exportTypes: docs show catalog-style targets (TERMINAL_USB_EXPORT, PDF) not user-arbitrary-URL fetch — SSRF-to-metadata hypothesis weakened, deprioritize.
+[RISK] suedzucker: 65 — recon stays read-only (GET of public Swagger/docs + 400/403 reach probes), no authenticated cross-tenant reads, no credentials submitted, no mutations, ~1 rps. The X-Selected-Partner-Link-Id tenant-scoping header is a strong BOLA signal but strictly behind auth; carrying risk stable. Any active test MUST be on an own test account, never live customer data.
+[0m
+This confirms the concrete chain, all from the seed data itself (the __NUXT__ runtime config, which is public):
+
+- `mdpBackend.uri` = `https://smartfarming.suedzuckergroup.com/mdp-api/v3/api` with scope `api://aad3fee6.../mdp_bgd_api`
+- The gateway (both plantportal `/api-gateway/entra-ext/api/...` and smartfarming `/mdp-api/v3/api`) requires the `X-Selected-Partner-Link-Id` header
+- All read-only; both endpoints properly 401/403 gated without auth
+
+I have now substantially deepened the smartfarming/plantportal cluster understanding. The `X-Selected-Partner-Link-Id` header is the concrete mechanism behind the partner-scoping BOLA hypothesis. Everything is properly auth-gated passively (the gateway returns 403/401 without a valid Bearer + partner header), so no data leak unauthenticated — the vulnerability (if any) is in whether a valid JWT for one partner can be re-scoped to another partner's data via that header, which is AUTH_HELPED and cannot be confirmed passively.
+
+I've completed my pending NEXT action (token-generation endpoint doc) and found a concrete new signal. This is a good point to write my structured analyst output. I've been rate-limited to 1 rps and read-only (GET only), no mutations, no cross-tenant authenticated reads. 
+
+Let me be careful with the SSRF hypothesis: the export target docs are catalog-style (TERMINAL_USB_EXPORT, PDF) — the arbitrary-URL SSRF lead is weakened. I should downgrade/drop it per self-critique.
+
+Let me also verify the front-end `/mdp-api/v3/api` doesn't expose BOLA-relevant unauthenticated data via /users/{id} or /organizations/{id} (bare, no auth) just as a reach probe to confirm proper gating (already know bare requests return 400). I already confirmed the gateway returns 403 with header + no auth, 400 without header. No unauthenticated data leak.
+
+I have enough to produce the structured analysis. Let me write the output now. Let me update my lead file too.
+
+Let me record findings in the lead file.
+I've completed the probes and updated my lead file. Now let me determine the real backend host reach (portal.mydataplant.com) — I already got a 403 corroborating proper gating. Let me now produce the structured analyst output per the 8 steps.
+
+Let me verify one more thing for the final output — whether POST /tokens is exposed on the gateway (this is the password login endpoint; the subject matter of the NEXT probe). Actually, I should not POST credentials. I'll keep NEXT as a read-only enumeration probe. Let me finalize my structured output.
+
+---
+
+STEP 1 — DELTA:
+- [NEW] smartfarming gateway requires `X-Selected-Partner-Link-Id` header (400 when missing) — concrete tenant-scoping surface
+- [NEW] MyDataPlant real backend host identified: `portal.mydataplant.com/api/v3` (returns 403 forbidden unauth)
+- [NEW] Public Swagger confirms full endpoint map: /users /persons /orders /orderPositions /organizations /fieldSharings /fileUploads + /services/outline.py?user_id=&field_id= (SVG geometry), POST /tokens (LOGIN_NAME/PASSWORD) token-gen
+- [CHANGED] SSRF hypothesis downgraded: /exportTargets are catalog-style (TERMINAL_USB_EXPORT/PDF), not arbitrary-URL fetch
+
+STEP 2 — PRIORITIZE (using formula):
+- smartfarming.suedzuckergroup.com/mdp-api/v3/api: a=8(rich REST, header-scoped), b=8(agri PII+ops), t=9(JWT/RSA token-gen, tenant-scoping header, upload, outline geometry), g=4(auth-gated at gateway), c=6(API gateway backends), f=9(fresh). = 0.25*8+0.25*8+0.15*9+0.15*4+0.10*6+0.10*9 = 2+2+1.35+0.6+0.6+0.9=7.45
+- plantportal: a=8,b=8,t=8(MSAL, impersonation, partner-linking),g=4,c=6,f=8 = 2+2+1.2+0.6+0.6+0.8=7.2
+- shop: a=6,b=7,t=7(SFDC/OrderSummary),g=4,c=4,f=5 = 1.5+1.75+1.05+0.6+0.4+0.5=5.8
+
+STEP 3 — HYPOTHESES (top 3, one each):
+1. MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id (IDOR, conf 62)
+2. MyDataPlant outline.py geometry IDOR via numeric user_id/field_id (IDOR, AUTH-scoped)
+3. MyDataPlant JWT token-gen endpoint exposure (AUTH/MISCONFIG — but POST /tokens is a password endpoint; brute-force is out of scope; downgrade)
+
+Actually for step 3, max 1 hypothesis per top-3 assets. The outline.py geometry is a subset of the same smartfarming asset. I'll keep the header-BOLA as primary for smartfarming. Let me keep hypotheses focused.
+
+STEP 4 — SELF-CRITIQUE: drop SSRF (catalog export targets, weakened). Keep the header-BOLA (conf 62, AUTH_HELPED). 
+
+Now write final blocks.
+
+---
+
+STEP 1 — DELTA
+- [NEW] smartfarming.suedzuckergroup.com/mdp-api/v3/api gateway requires `X-Selected-Partner-Link-Id` header (400 "Missing" when absent) in addition to Bearer JWT — concrete client-supplied tenant-scoping mechanism
+- [NEW] MyDataPlant real API backend host identified: `portal.mydataplant.com/api/v3` (returns `403 forbidden (149)` unauthenticated)
+- [NEW] Public Swagger (inline HTML, ~15k lines) confirms full endpoint map: `/users`, `/persons/{id}`, `/orders/{id}`, `/orderPositions/{id}`, `/organizations/{id}`, `/fieldSharings/{id}`, `/fileUploads/{id}`, `/services/outline.py?user_id=&field_id=` (SVG geometry), and `POST /tokens` (LOGIN_NAME/PASSWORD token-gen, no auth header)
+- [NEW] JWT claims documented: `iss=auth-backend`, `aud=rest-client`, embeds `userId` + `email`; scope `mdp_bgd_api`
+- [CHANGED] MyDataPlant SSRF hypothesis downgraded: `/exportTargets` are catalog-style (TERMINAL_USB_EXPORT, PDF), not a user-arbitrary-URL fetch
+
+STEP 2 — PRIORITIZE
+- [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.5,axis=tech_exposure+gate — rich REST (JWT/RSA token-gen, tenant-scoping header, fileUpload, outline geometry, PII users/persons/orders)
+- [PRIO] plantportal.suedzuckergroup.com,7.2,axis=business_value+gate — MSAL Entra B2C, partner-linking/impersonation, connects to same mdpBackend
+- [PRIO] shop.suedzucker.com,5.8,axis=tech_exposure — SFDC Commerce Cloud OrderSummary/:recordId IDOR (AUTH_HELPED)
+
+STEP 3 — HYPOTHESES
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: ANY gateway request without `X-Selected-Partner-Link-Id` returns 400 "Missing X-Selected-Partner-Link-Id header"; with header but no Bearer returns 403 forbidden(177). Gateway scopes requests to a partner-link chosen by a CLIENT-SUPPLIED header on top of the JWT. Mirrors Plant Portal ?switchToPartnerNumber / /partner-linking / /association/impersonation. Real backend portal.mydataplant.com/api/v3 is 403-gated unauthed (no passive leak). If backend does not verify the header is among the JWT subject's own authorized partner-links, a token for partner A can re-scope to partner B.
+evidence_needed: With an OWN test account: does GET /fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> return another tenant's data or get rejected? NOT against live customer data.
+verify_steps: Passive done: 400 Missing-header on gateway, 403 unauthed on gateway+backend. Active only on own test account.
+impact: cross-tenant read/modify/delete of farm fields, orders, persons, media, org data (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant outline geometry IDOR via numeric user_id/field_id
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py
+confidence: 50
+reasoning: Endpoint renders a field's boundary as SVG given raw numeric `user_id` + `field_id` (doc example even embeds user_id=2&field_id=123 in an <img>). Response image/svg+xml reveals field location geometry (agri location PII). Auth is per-request Bearer; but the geometry fetch is an image-service path — possible weaker authz on the map tile/render service vs the JSON API.
+evidence_needed: With own test account: can one request another user's field outline by passing their user_id/field_id and receiving the SVG?
+verify_steps: Passive: 400/403 as probed. Active (own account) only.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant JWT token endpoint / brute-force surface
+class: AUTH
+asset: portal.mydataplant.com/api/v3/tokens
+confidence: 35
+reasoning: POST /tokens accepts LOGIN_NAME(email)+PASSWORD, "Authorization header is not allowed", returns JWT. Publicly documented. This is a login endpoint; brute-force/rate-limit policy is OUT OF SCOPE. Only a logic flaw (e.g., weak refresh-token handling, token scope confusion) would be reportable.
+evidence_needed: Any token/scope/authz logic flaw beyond credential guessing.
+verify_steps: OUT OF SCOPE for brute-force; only passive doc review.
+impact: ATO if a logic flaw exists — HIGH, but no affirmative signal
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] MyDataPlant SSRF via export-to-configured-URL: /exportTargets docs show catalog targets (TERMINAL_USB_EXPORT, PDF), not arbitrary-URL server fetch — no affirmative SSRF signal, drop conf<40.
+- [PARKED] MyDataPlant JWT /tokens brute-force: credential-guessing/rate-limit is explicit OUT OF SCOPE; only a logic flaw would matter and none observed passively — drop conf<40.
+- [PARKED] Plant Portal partner-number linking: already surfaced; now subsumed into the stronger X-Selected-Partner-Link-Id header hypothesis which names the actual mechanism.
+- [FINAL] MyDataPlant header BOLA 62 (AUTH_HELPED, HIGH impact)
+- [FINAL] outline.py geometry IDOR 50 (AUTH_HELPED)
+- [FINAL] shop.suedzucker.com SFDC OrderSummary IDOR ~52 (AUTH_HELPED, not re-probed this round, carried)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (read the full inline Swagger doc already fetched) to enumerate which endpoints accept/propagate X-Selected-Partner-Link-Id and to map /fileUploads + /services/outline.py auth model — strictly read-only doc analysis, no credentials submitted, no authenticated cross-tenant reads.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED RECON @ smartfarming/mdp-api/v3/api: public Swagger confirms real backend host portal.mydataplant.com/api/v3, Bearer JWT (iss=auth-backend, aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, and gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.
+- [LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing-X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+- [LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets: catalog-style export targets (TERMINAL_USB_EXPORT, PDF), not an arbitrary-URL server fetch — no SSRF-to-metadata evidence; deprioritize.
+
+STEP 7 — RISK
+[RISK] suedzucker: 65 — all steps this round were read-only (GET of public Swagger/doc HTML + 400/403 reach probes), no credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. The X-Selected-Partner-Link-Id tenant-scoping header is a strong BOLA signal but sits strictly behind auth; carrying risk stable. Any active confirmation MUST be on an own test account, never live customer data.
+
+Let me update the hypotheses file too, then present.
+[0m$ [0mcat > /home/runner/work/suedzucker-hunt/suedzucker-hunt/reports/hypotheses-bigpickle.txt <<'EOF'
+## 2026-09-03 23:5x UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.5,axis=tech_exposure+gate — rich REST (JWT/RSA token-gen, tenant-scoping X-Selected-Partner-Link-Id header, fileUpload, outline geometry, PII users/persons/orders); real backend portal.mydataplant.com/api/v3 (403 unauthed)
+[PRIO] plantportal.suedzuckergroup.com,7.2,axis=business_value+gate — MSAL Entra B2C, partner-linking/impersonation, same mdpBackend
+[PRIO] shop.suedzucker.com,5.8,axis=tech_exposure — SFDC Commerce Cloud OrderSummary/:recordId IDOR (AUTH_HELPED)
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: ANY gateway request without X-Selected-Partner-Link-Id returns 400 Missing header; with header but no Bearer returns 403 forbidden(177). Gateway scopes requests to a partner-link chosen by CLIENT-SUPPLIED header on top of JWT. Mirrors Plant Portal ?switchToPartnerNumber / /partner-linking / /association/impersonation. Real backend portal.mydataplant.com/api/v3 403-gated unauthed. If backend does not verify header is among JWT subject's own authorized partner-links, token for partner A can re-scope to partner B.
+evidence_needed: With OWN test account: does GET /fields /users/{id} /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> return another tenant's data or get rejected? NOT live customer data.
+verify_steps: Passive done: 400 Missing-header gateway, 403 unauthed gateway+backend. Active on own test account only.
+impact: cross-tenant read/modify/delete of farm fields, orders, persons, media, org data (agri PII+ops) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant outline geometry IDOR via numeric user_id/field_id
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py
+confidence: 50
+reasoning: Endpoint renders field boundary as SVG given raw numeric user_id + field_id (doc example embeds user_id=2&field_id=123 in <img>). Response image/svg+xml reveals field location geometry (agri location PII). Auth per-request Bearer, but image-service path may have weaker authz.
+evidence_needed: With own account: request another user's field outline by their user_id/field_id and receive SVG?
+verify_steps: Passive: 400/403 probed. Active (own account) only.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant JWT token endpoint surface
+class: AUTH
+asset: portal.mydataplant.com/api/v3/tokens
+confidence: 35
+reasoning: POST /tokens accepts LOGIN_NAME+PASSWORD, no auth header, returns JWT. Publicly documented login endpoint. Brute-force/rate-limit OUT OF SCOPE; only a token/scope logic flaw reportable.
+evidence_needed: any token/scope/authz logic flaw beyond credential guessing
+verify_steps: OUT OF SCOPE for brute-force; passive doc review only
+impact: ATO if logic flaw — HIGH, but no affirmative signal
+testability: AUTH_HELPED
+[PARKED] MyDataPlant SSRF via export-to-configured-URL: /exportTargets catalog-style (TERMINAL_USB_EXPORT, PDF), not arbitrary-URL fetch — no SSRF signal, drop conf<40.
+[PARKED] MyDataPlant /tokens brute-force: credential-guessing/rate-limit explicitly OUT OF SCOPE; only logic flaw matters, none observed passively — drop conf<40.
+[PARKED] Plant Portal partner-number linking: subsumed into the X-Selected-Partner-Link-Id header hypothesis that names the actual mechanism.
+[FINAL] smartfarming header BOLA 62 (AUTH_HELPED, HIGH impact)
+[FINAL] outline.py geometry IDOR 50 (AUTH_HELPED)
+[FINAL] shop.suedzucker.com SFDC OrderSummary IDOR ~52 (AUTH_HELPED, carried)
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (full inline Swagger doc) to enumerate which endpoints propagate X-Selected-Partner-Link-Id and map /fileUploads + /services/outline.py auth model — read-only doc analysis, no credentials, no authenticated cross-tenant reads.
+[LEARN] ACCEPTED RECON @ smartfarming/mdp-api/v3/api: public Swagger confirms real backend host portal.mydataplant.com/api/v3, Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing-X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets: catalog-style export targets, not arbitrary-URL server fetch — no SSRF-to-metadata evidence; deprioritize.
+[RISK] suedzucker: 65 — all steps read-only (GET public Swagger/doc + 400/403 reach), no credentials, no authenticated cross-tenant reads, no mutations, ~1 rps. X-Selected-Partner-Link-Id is a strong BOLA signal but behind auth; risk stable. Active confirmation only on own test account.
+EOF
+echo "written"
+written
+[0m
+I've completed the probes and produced the full structured analysis. Here is my output.
+
+---
+
+STEP 1 — DELTA
+- [NEW] smartfarming.suedzuckergroup.com/mdp-api/v3/api gateway requires `X-Selected-Partner-Link-Id` header — bare any-path request returns `400 Missing X-Selected-Partner-Link-Id header`; with header but no Bearer → `403 forbidden (177)`. Concrete client-supplied tenant-scoping mechanism.
+- [NEW] MyDataPlant real backend host identified: `portal.mydataplant.com/api/v3` (returns `403 forbidden (149)` unauthenticated — properly gated).
+- [NEW] Public Swagger (inline ~15k-line doc) confirms full endpoint map: `/users`, `/persons/{id}`, `/orders/{id}`, `/orderPositions/{id}`, `/organizations/{id}`, `/fieldSharings/{id}`, `/fileUploads/{id}`, `/services/outline.py?user_id=&field_id=` (SVG geometry), and `POST /tokens` (LOGIN_NAME/PASSWORD, no auth header).
+- [NEW] JWT claims documented: `iss=auth-backend`, `aud=rest-client`, embeds `userId`+`email`; scope `mdp_bgd_api`.
+- [CHANGED] MyDataPlant SSRF hypothesis downgraded: `/exportTargets` are catalog-style (TERMINAL_USB_EXPORT, PDF), not a user-arbitrary-URL fetch.
+
+STEP 2 — PRIORITIZE
+- [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.5,axis=tech_exposure+gate — rich REST (JWT/RSA token-gen, tenant-scoping header, fileUpload, outline geometry, PII users/persons/orders)
+- [PRIO] plantportal.suedzuckergroup.com,7.2,axis=business_value+gate — MSAL Entra B2C, partner-linking/impersonation, same mdpBackend
+- [PRIO] shop.suedzucker.com,5.8,axis=tech_exposure — SFDC Commerce Cloud OrderSummary/:recordId IDOR (AUTH_HELPED)
+
+STEP 3 — HYPOTHESES (top 3)
+[HYP] MyDataPlant cross-tenant BOLA via `X-Selected-Partner-Link-Id` tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Any gateway request lacking `X-Selected-Partner-Link-Id` → 400 "Missing"; with header but no Bearer → 403 forbidden(177). Gateway scopes requests to a partner-link chosen by a client-supplied header on top of the JWT — mirrors Plant Portal `?switchToPartnerNumber` / `/partner-linking` / `/association/impersonation`. Real backend `portal.mydataplant.com/api/v3` is 403-gated unauthed (no passive leak). If the backend does not verify the header is among the JWT subject's own authorized partner-links, a token for partner A can re-scope to partner B.
+evidence_needed: With an OWN test account: does GET /fields, /users/{id}, /orders/{id} with `X-Selected-Partner-Link-Id=<another org's link id>` return another tenant's data or get rejected? NOT against live customer data.
+verify_steps: Passive done (400/403 reach probes). Active only on own test account, read-only.
+impact: cross-tenant read/modify/delete of farm fields, orders, persons, media, org data (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant outline-geometry IDOR via numeric user_id/field_id
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py
+confidence: 50
+reasoning: Endpoint renders a field boundary as SVG given raw numeric `user_id`+`field_id` (doc example embeds `user_id=2&field_id=123` in an `<img>`). Response `image/svg+xml` reveals field-location geometry (agri location PII). Auth is per-request Bearer, but this is an image/render-service path that may have weaker authz than the JSON API. Reach probed: 400/403 unauthed (gated).
+evidence_needed: With own account: can one request another user's field outline via their user_id/field_id and receive the SVG?
+verify_steps: Passive 400/403 confirmed. Active (own account) only.
+impact: cross-tenant field-boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant JWT token-endpoint surface
+class: AUTH
+asset: portal.mydataplant.com/api/v3/tokens
+confidence: 35
+reasoning: POST /tokens accepts LOGIN_NAME(email)+PASSWORD, "Authorization header is not allowed", returns JWT; publicly documented login. Brute-force/rate-limit is explicit OUT OF SCOPE; only a token/scope logic flaw (e.g. weak refresh-token handling) would be reportable, and none observed passively.
+evidence_needed: any token/scope/authz logic flaw beyond credential guessing
+verify_steps: OUT OF SCOPE for brute-force; passive doc review only
+impact: ATO if a logic flaw exists — HIGH, no affirmative signal
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] MyDataPlant SSRF via export-to-URL: /exportTargets are catalog-style (TERMINAL_USB_EXPORT, PDF), not an arbitrary-URL server fetch — no SSRF evidence, drop conf<40.
+- [PARKED] MyDataPlant /tokens brute-force: credential-guessing/rate-limit is explicit OUT OF SCOPE; only a logic flaw matters and none observed passively — drop conf<40.
+- [PARKED] Plant Portal partner-number linking: subsumed into the `X-Selected-Partner-Link-Id` header hypothesis that names the actual tenant-scoping mechanism.
+- [FINAL] smartfarming header BOLA 62 (AUTH_HELPED, HIGH)
+- [FINAL] outline.py geometry IDOR 50 (AUTH_HELPED)
+- [FINAL] shop.suedzucker.com SFDC OrderSummary IDOR ~52 (AUTH_HELPED, carried)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (inline Swagger doc) to enumerate which endpoints propagate/require `X-Selected-Partner-Link-Id` and map the /fileUploads and /services/outline.py auth model — strictly read-only doc analysis, no credentials, no authenticated cross-tenant reads.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED RECON @ smartfarming/mdp-api/v3/api: public Swagger confirms real backend host `portal.mydataplant.com/api/v3`, Bearer JWT (iss=auth-backend, aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, and gateway-required `X-Selected-Partner-Link-Id` tenant-scoping header — recon value, all public docs.
+- [LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing-X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+- [LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets: catalog-style export targets (TERMINAL_USB_EXPORT, PDF), not an arbitrary-URL server fetch — no SSRF-to-metadata evidence; deprioritize.
+
+STEP 7 — RISK
+[RISK] suedzucker: 65 — all steps this round were read-only (GET of public Swagger/doc HTML + 400/403 reach probes), no credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. The `X-Selected-Partner-Link-Id` tenant-scoping header is a strong BOLA signal but sits strictly behind auth; carrying risk stable. Any active confirmation must be on an own test account, never live customer data.
