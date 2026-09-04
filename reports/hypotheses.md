@@ -89,3 +89,23 @@
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 9999
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in sim
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `A
+
+## RANKED HYPOTHESES 2026-09-04 12:23:16 UTC
+- [62] smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: POST https://portal.mydataplant.com/api/v3/tokens with valid-format JWT containing known userId claims — test if the /tokens endpoint can be used to refr
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.<hash>.js (extract hash from _payload.json) — read-only static asset fetch to enumerate API base 
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: 500 error on non-numeric user_id reveals Apache/2.4.29 (Ubuntu), webmaster@kleffmann.digital — thir
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc 
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand
+- LEARN: ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSES
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Full public Swagger (15k lines) confirms real backend portal.mydataplant.com/api/v3, Bearer JW
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: DOWNGRADE SSRF @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evide
+- LEARN: CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404)
+- LEARN: REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass
+- LEARN: ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 9999
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in sim
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `A
