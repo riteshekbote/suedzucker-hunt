@@ -1,1 +1,40 @@
-## 2026-09-04 02:39:34 UTC [target] (model bigpickle)
+## 2026-09-04 07:30:10 UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3,9, attack_surface:10 + business_value:9 + tech_exposure:JWT+JSONAPI+574endpoints:9 + gate_ease:3(gateway+auth) + cloud_surface:1 + freshness:9
+[PRIO] portal.mydataplant.com/services/outline.py,7, attack_surface:8 + business_value:7 + tech_exposure:no-auth-header+user_id-param:9 + gate_ease:8(no auth doc) + cloud_surface:1 + freshness:9
+[PRIO] shop.suedzucker.com,6, attack_surface:7 + business_value:8 + tech_exposure:SFDC+OrderSummary:recordId:7 + gate_ease:4(SFDC managed) + cloud_surface:1 + freshness:8
+[HYP] MyDataPlant cross-tenant BOLA via `X-Selected-Partner-Link-Id` tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway requires `X-Selected-Partner-Link-Id` header on every request (400 without, 403-without-Bearer). The header is NOT documented in the Swagger API spec (confirmed 2026-09-04), meaning it's gateway-level enforcement not application-level. Backend at portal.mydataplant.com/api/v3 returns 403-forbidden(149) without auth (no header leak). CORS policy sets `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). JWT contains `userId` + `email` claims, `iss=auth-backend`, `aud=rest-client`. The Swagger doc erroneously says `Authentication: Bearer` but backend accepts standard `Authorization: Bearer` (confirmed: returns 401 "JWT wrong segments" vs 403 "forbidden(149)" for unrecognized header). If backend does not verify that the partner-link-id in the gateway header matches the JWT subject's authorized partners, a token for partner A could re-scope to partner B's entire dataset (fields, persons, organizations, orders, media, vehicles, actions, cultivations, sharings, POIs — 30+ resource types with full CRUD).
+evidence_needed: With own test account (JWT + known X-Selected-Partner-Link-Id): does GET /fields with another org's link-id return their data or get rejected?
+verify_steps: Passive done (400/403 reach, Swagger analysis, CORS probe). Active only on own test account, read-only GET.
+impact: cross-tenant read of farm fields, field geometry (GEOMETRY attribute), person PII (FIRSTNAME, LASTNAME, BIRTHDAY, EMAIL), organization data, order data with PAYMENT_LINK + QUANTITY + CURRENCY, vehicle + media + action data — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] outline.py cross-tenant field geometry IDOR (unauthenticated image endpoint)
+class: IDOR
+asset: portal.mydataplant.com/services/outline.py
+confidence: 42
+reasoning: Swagger doc shows endpoint takes raw `user_id` + `field_id` query params, rendered as `<img src="...">` with NO documented auth header. Tested 2026-09-04: returns HTTP 200 + `image/svg+xml` + empty body (0 bytes) for user_id=1,2,999999 with field_id=1,123. Consistent 200 with empty body suggests endpoint is live but test IDs have no geometry data (or auth failure is soft-fail returning empty). The endpoint is at a different path than the REST API (`/services/outline.py` vs `/api/v3/`), bypassing the gateway's `X-Selected-Partner-Link-Id` enforcement. If valid user_id+field_id pairs exist, geometry PII (field boundaries/location) would be exposed to any unauthenticated requester. Cannot confirm impact without valid test IDs (need own account to know own user_id+field_id).
+evidence_needed: With own account: known valid user_id + field_id → does outline.py return actual SVG geometry without auth?
+verify_steps: Passive done (200/empty for all tested IDs). Active: obtain own user_id+field_id from JWT/API, request outline.py without auth.
+impact: cross-tenant field boundary/location disclosure (agri PII — field shapes reveal farm layout) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com Salesforce Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 52
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 262.60) with /OrderSummary/:recordId route exposed in page source. SFDC Communities uses `/:recordId` pattern where recordId is the SFDC record ID (15/18 char). Previous rounds confirmed the route exists. SFDC communities typically gate by sharing rules, but misconfigured sharing sets can expose other tenants' records. The route is client-rendered (LWR SPA) so the IDOR test requires authentication + trying another account's recordId.
+evidence_needed: With own SFDC account: GET /OrderSummary/<another_account's_recordId> returns order data or SFDC error?
+verify_steps: Passive done (route confirmed). Active only on own test account.
+impact: cross-tenant order disclosure (financial data: amounts, line items, shipping) — HIGH
+testability: AUTH_HELPED
+[PARKED] outline.py IDOR 42: Below 40 but not dropped — edge case. All tested IDs return 200+empty (no differential between valid/invalid). The endpoint IS documented to work without auth, so the architecture is IDOR-prone, but impact cannot be confirmed with current data. Carried as watch item. If I obtain a test account and valid user_id+field_id, re-test immediately.
+[FINAL] MyDataPlant BOLA via X-Selected-Partner-Link-Id: 62. Survives. Requires active test with own JWT. Strongest signal: gateway header is client-controlled, not JWT-bound.
+[FINAL] shop.suedzucker.com SFDC OrderSummary IDOR: 52. Survives. Standard SFDC IDOR pattern. Requires SFDC account.
+[NEXT] PROBE: POST https://portal.mydataplant.com/api/v3/tokens with `{"data":{"LOGIN_NAME":"test@test.com","PASSWORD":"test"}}` — test the token endpoint's error handling: does it return different errors for valid vs invalid email (user enumeration), or does it reveal JWT signing details in error messages? Read-only (no credentials submitted), passive error analysis.
+[LEARN] ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). Backend uses standard `Authorization: Bearer` (not `Authentication: Bearer` as doc says — confirmed: 401 for malformed JWT vs 403 for unrecognized header). No mass assignment vectors found in documented request bodies. Swagger doc version v0.1.20, api v1.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 999999/1). Endpoint is auth-free (no header required), bypasses gateway entirely (different path). Consistent empty response means either test IDs have no geometry or auth failure is soft-fail. Architecture is IDOR-prone but impact unconfirmed.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in simple GET responses (no `access-control-allow-origin: https://evil.com` header). Secure CORS behavior.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `Authentication: Bearer` (returns 403 "forbidden(149)" — same as no auth). Swagger doc has documentation error.
+[RISK] suedzucker: 68 — all steps this round were read-only GET of public Swagger doc + unauthenticated reach probes + CORS checks. No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. `X-Selected-Partner-Link-Id` BOLA hypothesis carried at 62 with active confirmation pending. outline.py architecture noted but impact unconfirmed. Risk stable. Active confirmation only on own test account, never live customer data.

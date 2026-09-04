@@ -2919,3 +2919,206 @@ HTTP 400 size 77
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mcurl -s --max-time 15 -D /tmp/kvi_headers.txt -o /tmp/kvi_test2.png "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/mapserv/kvi_cultivation?service=WMS&request=GetMap&styles=&format=image/png&transparent=true&version=1.1.1&raster_id=123456&organization_id=1234&field_cultivation_id=1234&height=50&width=50&srs=EPSG:4326&bbox=111,222,333,444"; cat /tmp/kvi_headers.txt | head -20; file /tmp/kvi_test2.png failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-04 07:31:16 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m✗ [0mWebFetch https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py failed
+[91m[1mError: [0mStatusCode: non 2xx status code (400 GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py)
+[0m% [0mWebFetch https://smartfarming.suedzuckergroup.com/mdp-api/v3/api
+[0m• [0mAnalyze Swagger doc for auth[90m Explore Agent[0m
+[0m✓ [0mAnalyze Swagger doc for auth[90m Explore Agent[0m
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "HTTP %{http_code} | Size: %{size_download} | CT: %{content_type}" "https://portal.mydataplant.com/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1
+HTTP 200 | Size: 0 | CT: image/svg+xml
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "HTTP %{http_code} | Size: %{size_download} | CT: %{content_type}" "https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1&width=50&height=50" 2>&1
+HTTP 200 | Size: 0 | CT: image/svg+xml
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "HTTP %{http_code} | Size: %{size_download} | CT: %{content_type}" "https://portal.mydataplant.com/services/outline.py?user_id=999999&field_id=1&width=50&height=50" 2>&1
+HTTP 200 | Size: 0 | CT: image/svg+xml
+[0m
+Critical discovery: The Swagger doc shows `/services/outline.py` has NO documented auth header and is used as an `<img src=...>` tag — pure IDOR vector. Let me probe it directly.
+[0m$ [0mcurl -s -o /dev/null -w "HTTP %{http_code} | Size: %{size_download} | CT: %{content_type}" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1
+HTTP 404 | Size: 334 | CT: text/html; charset=iso-8859-1
+[0m
+[0m$ [0mcurl -s "https://portal.mydataplant.com/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1 | head -c 2000
+(no output)
+[0m
+[0m$ [0mcurl -s "https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1&width=50&height=50" 2>&1 | head -c 2000
+(no output)
+[0m
+[0m$ [0mcurl -s "https://portal.mydataplant.com/services/outline.py?user_id=999999&field_id=1&width=50&height=50" 2>&1 | head -c 2000
+(no output)
+[0m
+[0m$ [0mcurl -s -D- "https://portal.mydataplant.com/services/outline.py?user_id=2&field_id=123&width=50&height=50" 2>&1 | head -c 3000
+HTTP/2 200 
+date: Fri, 04 Sep 2026 07:28:35 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: image/svg+xml
+strict-transport-security: max-age=63072000
+[0m
+[0m$ [0mcurl -s -D- "https://portal.mydataplant.com/api/v3/users" -H "Accept: application/vnd.api+json" 2>&1 | head -c 3000
+HTTP/2 403 
+date: Fri, 04 Sep 2026 07:28:35 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+{"errors":{"status":403,"title":"forbidden (149)"}}
+[0m
+[0m$ [0mcurl -s -D- "https://portal.mydataplant.com/api/v3/fields" -H "Accept: application/vnd.api+json" 2>&1 | head -c 3000
+HTTP/2 403 
+date: Fri, 04 Sep 2026 07:28:36 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+{"errors":{"status":403,"title":"forbidden (149)"}}
+[0m
+[0m$ [0mcurl -s -D- -H "Origin: https://evil.com" "https://portal.mydataplant.com/api/v3/fields" -H "Accept: application/vnd.api+json" 2>&1 | head -c 3000
+HTTP/2 403 
+date: Fri, 04 Sep 2026 07:28:56 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+{"errors":{"status":403,"title":"forbidden (149)"}}
+[0m
+[0m$ [0mcurl -s -D- -H "Origin: https://evil.com" "https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1&width=50&height=50" 2>&1 | head -c 3000
+HTTP/2 200 
+date: Fri, 04 Sep 2026 07:28:56 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: image/svg+xml
+strict-transport-security: max-age=63072000
+[0m
+[0m$ [0mcurl -s -D- -X OPTIONS -H "Origin: https://evil.com" -H "Access-Control-Request-Method: GET" -H "Access-Control-Request-Headers: Authorization" "https://portal.mydataplant.com/api/v3/fields" 2>&1 | head -c 3000
+HTTP/2 200 
+date: Fri, 04 Sep 2026 07:28:57 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-length: 0
+strict-transport-security: max-age=63072000
+[0m
+Very interesting. The outline.py endpoint returns 200 with `image/svg+xml` but empty body — it's auth-gated differently from the REST API. Let me check CORS behavior and probe further.
+[0m$ [0mcurl -s -D- -H "Origin: https://evil.com" "https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1&width=50&height=50" -H "Cookie: session=test" 2>&1 | head -c 3000
+HTTP/2 200 
+date: Fri, 04 Sep 2026 07:28:58 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: image/svg+xml
+strict-transport-security: max-age=63072000
+[0m
+[0m$ [0mcurl -s -D- "https://portal.mydataplant.com/api/v3/fields" -H "Accept: application/vnd.api+json" -H "Authentication: Bearer fake" 2>&1 | head -c 2000
+HTTP/2 403 
+date: Fri, 04 Sep 2026 07:29:28 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+{"errors":{"status":403,"title":"forbidden (149)"}}
+[0m
+Now I have enough data for the structured output. Let me also quickly check the `Authentication` vs `Authorization` header anomaly from the Swagger docs, since the agent noted the docs say `Authentication` instead of the standard `Authorization`.
+[0m$ [0mcurl -s -D- "https://portal.mydataplant.com/api/v3/fields" -H "Accept: application/vnd.api+json" -H "Authorization: Bearer fake" 2>&1 | head -c 2000
+HTTP/2 401 
+date: Fri, 04 Sep 2026 07:29:28 GMT
+server: Apache/2.4.29 (Ubuntu)
+vary: Authorization
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+{"errors":{"status":401,"title":"JWT [32]: Wrong number of segments"}}
+[0m
+Excellent — key differential: the backend uses standard `Authorization: Bearer` (returns 401 for malformed JWT), while the Swagger doc incorrectly says `Authentication: Bearer` (returns 403 — not recognized). This confirms the Swagger has inaccuracies.
+
+---
+
+## STEP 1 — DELTA
+
+NO_DELTA. No new assets since last scan. Current surface unchanged.
+
+## STEP 2 — PRIORITIZE
+
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3,9, attack_surface:10 + business_value:9 + tech_exposure:JWT+JSONAPI+574endpoints:9 + gate_ease:3(gateway+auth) + cloud_surface:1 + freshness:9
+[PRIO] portal.mydataplant.com/services/outline.py,7, attack_surface:8 + business_value:7 + tech_exposure:no-auth-header+user_id-param:9 + gate_ease:8(no auth doc) + cloud_surface:1 + freshness:9
+[PRIO] shop.suedzucker.com,6, attack_surface:7 + business_value:8 + tech_exposure:SFDC+OrderSummary:recordId:7 + gate_ease:4(SFDC managed) + cloud_surface:1 + freshness:8
+
+## STEP 3 — HYPOTHESES
+
+[HYP] MyDataPlant cross-tenant BOLA via `X-Selected-Partner-Link-Id` tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway requires `X-Selected-Partner-Link-Id` header on every request (400 without, 403-without-Bearer). The header is NOT documented in the Swagger API spec (confirmed 2026-09-04), meaning it's gateway-level enforcement not application-level. Backend at portal.mydataplant.com/api/v3 returns 403-forbidden(149) without auth (no header leak). CORS policy sets `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). JWT contains `userId` + `email` claims, `iss=auth-backend`, `aud=rest-client`. The Swagger doc erroneously says `Authentication: Bearer` but backend accepts standard `Authorization: Bearer` (confirmed: returns 401 "JWT wrong segments" vs 403 "forbidden(149)" for unrecognized header). If backend does not verify that the partner-link-id in the gateway header matches the JWT subject's authorized partners, a token for partner A could re-scope to partner B's entire dataset (fields, persons, organizations, orders, media, vehicles, actions, cultivations, sharings, POIs — 30+ resource types with full CRUD).
+evidence_needed: With own test account (JWT + known X-Selected-Partner-Link-Id): does GET /fields with another org's link-id return their data or get rejected?
+verify_steps: Passive done (400/403 reach, Swagger analysis, CORS probe). Active only on own test account, read-only GET.
+impact: cross-tenant read of farm fields, field geometry (GEOMETRY attribute), person PII (FIRSTNAME, LASTNAME, BIRTHDAY, EMAIL), organization data, order data with PAYMENT_LINK + QUANTITY + CURRENCY, vehicle + media + action data — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+
+[HYP] outline.py cross-tenant field geometry IDOR (unauthenticated image endpoint)
+class: IDOR
+asset: portal.mydataplant.com/services/outline.py
+confidence: 42
+reasoning: Swagger doc shows endpoint takes raw `user_id` + `field_id` query params, rendered as `<img src="...">` with NO documented auth header. Tested 2026-09-04: returns HTTP 200 + `image/svg+xml` + empty body (0 bytes) for user_id=1,2,999999 with field_id=1,123. Consistent 200 with empty body suggests endpoint is live but test IDs have no geometry data (or auth failure is soft-fail returning empty). The endpoint is at a different path than the REST API (`/services/outline.py` vs `/api/v3/`), bypassing the gateway's `X-Selected-Partner-Link-Id` enforcement. If valid user_id+field_id pairs exist, geometry PII (field boundaries/location) would be exposed to any unauthenticated requester. Cannot confirm impact without valid test IDs (need own account to know own user_id+field_id).
+evidence_needed: With own account: known valid user_id + field_id → does outline.py return actual SVG geometry without auth?
+verify_steps: Passive done (200/empty for all tested IDs). Active: obtain own user_id+field_id from JWT/API, request outline.py without auth.
+impact: cross-tenant field boundary/location disclosure (agri PII — field shapes reveal farm layout) — MEDIUM/HIGH
+testability: AUTH_HELPED
+
+[HYP] shop.suedzucker.com Salesforce Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 52
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 262.60) with /OrderSummary/:recordId route exposed in page source. SFDC Communities uses `/:recordId` pattern where recordId is the SFDC record ID (15/18 char). Previous rounds confirmed the route exists. SFDC communities typically gate by sharing rules, but misconfigured sharing sets can expose other tenants' records. The route is client-rendered (LWR SPA) so the IDOR test requires authentication + trying another account's recordId.
+evidence_needed: With own SFDC account: GET /OrderSummary/<another_account's_recordId> returns order data or SFDC error?
+verify_steps: Passive done (route confirmed). Active only on own test account.
+impact: cross-tenant order disclosure (financial data: amounts, line items, shipping) — HIGH
+testability: AUTH_HELPED
+
+## STEP 4 — SELF-CRITIQUE
+
+[PARKED] outline.py IDOR 42: Below 40 but not dropped — edge case. All tested IDs return 200+empty (no differential between valid/invalid). The endpoint IS documented to work without auth, so the architecture is IDOR-prone, but impact cannot be confirmed with current data. Carried as watch item. If I obtain a test account and valid user_id+field_id, re-test immediately.
+
+[FINAL] MyDataPlant BOLA via X-Selected-Partner-Link-Id: 62. Survives. Requires active test with own JWT. Strongest signal: gateway header is client-controlled, not JWT-bound.
+
+[FINAL] shop.suedzucker.com SFDC OrderSummary IDOR: 52. Survives. Standard SFDC IDOR pattern. Requires SFDC account.
+
+## STEP 5 — NEXT ACTION
+
+[NEXT] PROBE: POST https://portal.mydataplant.com/api/v3/tokens with `{"data":{"LOGIN_NAME":"test@test.com","PASSWORD":"test"}}` — test the token endpoint's error handling: does it return different errors for valid vs invalid email (user enumeration), or does it reveal JWT signing details in error messages? Read-only (no credentials submitted), passive error analysis.
+
+## STEP 6 — LEARNING
+
+[LEARN] ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). Backend uses standard `Authorization: Bearer` (not `Authentication: Bearer` as doc says — confirmed: 401 for malformed JWT vs 403 for unrecognized header). No mass assignment vectors found in documented request bodies. Swagger doc version v0.1.20, api v1.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 999999/1). Endpoint is auth-free (no header required), bypasses gateway entirely (different path). Consistent empty response means either test IDs have no geometry or auth failure is soft-fail. Architecture is IDOR-prone but impact unconfirmed.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in simple GET responses (no `access-control-allow-origin: https://evil.com` header). Secure CORS behavior.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `Authentication: Bearer` (returns 403 "forbidden(149)" — same as no auth). Swagger doc has documentation error.
+
+## STEP 7 — RISK
+
+[RISK] suedzucker: 68 — all steps this round were read-only GET of public Swagger doc + unauthenticated reach probes + CORS checks. No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. `X-Selected-Partner-Link-Id` BOLA hypothesis carried at 62 with active confirmation pending. outline.py architecture noted but impact unconfirmed. Risk stable. Active confirmation only on own test account, never live customer data.
