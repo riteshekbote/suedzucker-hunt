@@ -395,3 +395,4 @@ impact: ATO if a logic flaw exists — HIGH, no affirmative signal
 testability: AUTH_HELPED
 [NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (inline Swagger doc) to enumerate which endpoints propagate/require `X-Selected-Partner-Link-Id` and map the /fileUploads and /services/outline.py auth model — strictly read-only doc analysis, no credentials, no authenticated cross-tenant reads.
 [RISK] suedzucker: 65 — all steps this round were read-only (GET of public Swagger/doc HTML + 400/403 reach probes), no credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. The `X-Selected-Partner-Link-Id` tenant-scoping header is a strong BOLA signal but sits strictly behind auth; carrying risk stable. Any active confirmation must be on an own test account, never live customer data.
+## 2026-09-04 02:39:34 UTC [target] (model bigpickle)

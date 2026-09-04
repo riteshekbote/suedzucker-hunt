@@ -98,3 +98,4 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass
 [LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed) — no further action
 [RISK] suedzucker: 72 — broad program scope covers 5 live subsidiary/partner portals (farmer PII, e-commerce, financial trading, agri gov data, employee benefits) with distinct tech stacks (Nuxt, Salesforce LWR, WordPress, third-party SSO, Drupal). Three HIGH-value IDOR targets (plantportal, smartfarming, shop) are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs — largest attack surface. Carrying risk acceptable: all probes read-only, no live customer data touched, rate-limited to 1 rps.
+## 2026-09-04 02:52:26 UTC [target] (model nemotron3)

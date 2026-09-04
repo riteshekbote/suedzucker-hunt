@@ -59,3 +59,5 @@ www.suedzucker.de
 - NEW smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant REST API — 574 endpoints in public Swagger UI (no auth to read docs); JSON:API format; JWT token auth (`/tokens` endpoint); requires `X-Sel
 - CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain, confirmed live)
 - CHANGED Inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+
+## 2026-09-04 02:52:37 UTC
