@@ -109,3 +109,7 @@
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 9999
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in sim
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `A
+
+## RANKED HYPOTHESES 2026-09-04 16:46:06 UTC
+- [62] smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register for a test account on shop.suedzucker.com (/SelfRegister) to obtain SFDC credentials. Then test: (1) GET /OrderSummary/<another_account's_record

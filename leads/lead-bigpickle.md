@@ -477,3 +477,37 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand.com, client_id sb-approuter-sac-saceu10!t3650, redirect_uri /sso/login/callback). SAP API Management at szg-is.prod.apimanagement.eu30.hana.ondemand.com. SFDC community deu84.sfdc-yzvdd4.salesforce.com. Payments: Stripe + PayPal + Adyen. Aura endpoint properly rejects guest access.
 [LEARN] ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSESSIONID + __VCAP_ID__ cookies. 302 redirect chain from Commerce to UAA login. HSTS with includeSubDomains+preload. Well-configured SAP SSO.
 [RISK] suedzucker: 70 — all steps this round were read-only: token endpoint error analysis (malformed JWT tests, ~4 requests), outline.py IDOR probes (numeric IDs only, ~120 requests), SFDC CSP audit (page loads + OPTIONS), SAP Commerce/BTP endpoint discovery (GET only). No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. BOLA hypothesis at 62 strengthened by token endpoint auth confirmation (gateway wraps ALL endpoints). outline.py architecture noted but impact unconfirmed (dropped below 40). SFDC OrderSummary IDOR at 50 requires SFDC account. New SAP BTP surface mapped. Risk stable.
+## 2026-09-04 16:29:51 UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,9.2, attack_surface:10 + business_value:9 + tech_exposure:JWT+JSONAPI+574endpoints:9 + gate_ease:3(gateway+auth) + cloud_surface:1 + freshness:9
+[PRIO] portal.mydataplant.com/services/outline.py,7.3, attack_surface:8 + business_value:7 + tech_exposure:no-auth+user_id-param+500error:8 + gate_ease:8 + cloud_surface:1 + freshness:9
+[PRIO] shop.suedzucker.com,7.1, attack_surface:7 + business_value:8 + tech_exposure:SFDC+SAP+OrderSummary+payments+manage-users:8 + gate_ease:4(SFDC managed) + cloud_surface:1 + freshness:8
+[PRIO] suedzucker.eu10.hcs.cloud.sap,5.5, attack_surface:6 + business_value:6 + tech_exposure:SAP+OAuth+CF+cookies:7 + gate_ease:3(SAP UAA) + cloud_surface:2(SAP BTP) + freshness:8
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway requires X-Selected-Partner-Link-Id on every request (400 without, 403-without-Bearer). Header is NOT in Swagger spec — gateway-level enforcement only. Backend at portal.mydataplant.com returns 403-forbidden(149) without auth. CORS: access-control-allow-credentials: true but does NOT reflect arbitrary Origin. JWT contains userId+email claims, iss=auth-backend, aud=rest-client. POST /tokens also requires Authorization despite Swagger saying "not allowed" — confirms gateway wraps ALL endpoints. JWT error differentiation confirms algorithm allowlist (RS256+ES256 recognized, alg=none blocked). If backend does not verify partner-link-id matches JWT subject's authorized partners, token for partner A could re-scope to partner B's 30+ resource types with full CRUD.
+evidence_needed: With own test account (JWT + known X-Selected-Partner-Link-Id): does GET /fields with another org's link-id return their data or get rejected?
+verify_steps: Passive done (400/403 reach, Swagger analysis, CORS probe, token endpoint auth-gate confirmed, JWT error differentiation confirmed). Active only on own test account, read-only GET.
+impact: cross-tenant read of farm fields, field geometry (GEOMETRY attribute), person PII (FIRSTNAME, LASTNAME, BIRTHDAY, EMAIL), organization data, order data with PAYMENT_LINK + QUANTITY + CURRENCY, vehicle + media + action data — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) confirmed. CSP reveals: SAP Commerce backend suedzucker.eu10.hcs.cloud.sap, SFDC community deu84.sfdc-yzvdd4.salesforce.com, payments via Stripe+PayPal+Adyen. /manage-users route exposed (user management view). Sitemap enumerates ~100+ Product2 IDs (18-char SFDC format). Aura endpoint now returns 404 (previously guest-reject — may indicate reconfiguration). Route /OrderSummary/:recordId is client-rendered LWR SPA. SFDC communities use sharing rules — misconfigured sharing sets can expose cross-tenant records.
+evidence_needed: With own SFDC account: GET /OrderSummary/<another_account's_recordId> returns order data or SFDC error?
+verify_steps: Passive done (route confirmed, CSP audit, sitemap enumeration, Aura 404). Active only on own test account.
+impact: cross-tenant order disclosure (financial data: amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[HYP] outline.py cross-tenant field geometry IDOR (unauthenticated legacy endpoint)
+class: IDOR
+asset: portal.mydataplant.com/services/outline.py
+confidence: 38
+reasoning: Endpoint renders field boundary as SVG given raw user_id+field_id. Returns HTTP 200 + image/svg+xml + 0-byte body for ALL tested numeric IDs (user_id 1-999999, field_id 1-9999). No auth header, no cookie, no Referer required. Non-numeric input returns 500 with verbose Apache error revealing webmaster@kleffmann.digital + Apache/2.4.29 (Ubuntu). POST with JSON body → 500. No params → 200. camelCase params → 200. Architecture is IDOR-prone but impact unconfirmed after extensive testing.
+evidence_needed: With own account: known valid user_id + field_id → does outline.py return actual SVG geometry?
+verify_steps: Passive extensively done (100+ ID combos, param variations, cookie/Referer probes, error analysis, POST/PUT probe). Impact remains unconfirmed.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register for a test account on shop.suedzucker.com (/SelfRegister) to obtain SFDC credentials. Then test: (1) GET /OrderSummary/<another_account's_recordId> for cross-tenant order disclosure, (2) /manage-users behavior when authenticated (admin-only view or accessible to all users?). Self-registration is the only path to obtain SFDC auth for both the BOLA and OrderSummary IDOR hypotheses.
+[RISK] suedzucker: 70 — all steps this round were read-only: token endpoint JWT error differentiation (3 malformed JWT tests), outline.py param variations (4 requests), smartfarming SPA catch-all probing (4 GETs), shop sitemap enumeration (3 XML fetches), shop manage-users route check (1 GET), Aura endpoint check (1 POST). No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. BOLA hypothesis at 62 strengthened by token endpoint JWT error analysis (confirms RS256 expected, algorithm allowlist). outline.py at 38 parked (3 rounds, 100+ probes, no impact confirmed). SFDC OrderSummary IDOR at 50 requires SFDC account (self-registration path identified). New surface: /manage-users exposed. Risk stable.
