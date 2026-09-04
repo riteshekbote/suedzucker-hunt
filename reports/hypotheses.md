@@ -131,3 +131,61 @@
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc 
 - LEARN: ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand
 - LEARN: ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSES
+
+## RANKED HYPOTHESES 2026-09-04 21:36:21 UTC
+- [70] plantportal.suedzuckergroup.com: Plant Portal Partner-Linking BOLA via switchToPartnerNumber (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.DpUprWo9.js — already fetched; extracted MSAL config (clientId ba3120d6-3d54-478b-a048-5f12421961
+- NEXT(hypotheses-nemotron3.txt): PROBE: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com, complete partner linking flow (SMS OTP + Partnernummer), then test horizontal par
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Full public Swagger (15k lines) confirms real backend portal.mydataplant.com/api/v3, Bearer JW
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: DOWNGRADE SSRF @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evide
+- LEARN: CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404).
+- LEARN: REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- LEARN: ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 9999
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in sim
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `A
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc 
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand
+- LEARN: ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSES
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a0
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals e
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level 
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a0
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals e
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level 
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full public Swagger (inline sphinx-style HTML, 15k lines) previously known; NOW confirms real 
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: DOWNGRADE SSRF @ smartfarming /exportTargets /exportTypes: docs show catalog-style targets (TERMINAL_USB_EXPORT, PDF) not user-arbitrary-URL fetch — SSRF-to-met
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full public Swagger (inline sphinx-style HTML, 15k lines) previously known; NOW confirms real 
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: DOWNGRADE SSRF @ smartfarming /exportTargets /exportTypes: docs show catalog-style targets (TERMINAL_USB_EXPORT, PDF) not user-arbitrary-URL fetch — SSRF-to-met
+- LEARN: ACCEPTED RECON @ smartfarming/mdp-api/v3/api: public Swagger confirms real backend host portal.mydataplant.com/api/v3, Bearer JWT (iss=auth-backend aud=rest-cli
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing-X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: DOWNGRADE SSRF @ smartfarming /exportTargets: catalog-style export targets, not arbitrary-URL server fetch — no SSRF-to-metadata evidence; deprioritize.
+- LEARN: ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 9999
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in sim
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `A
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: 500 error on non-numeric user_id reveals Apache/2.4.29 (Ubuntu), webmaster@kleffmann.digital — thir
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc 
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand
+- LEARN: ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSES
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Full public Swagger (15k lines) confirms real backend portal.mydataplant.com/api/v3, Bearer JW
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: DOWNGRADE SSRF @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evide
+- LEARN: CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404).
+- LEARN: REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- LEARN: ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 9999
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in sim
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `A
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc 
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand
+- LEARN: ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSES

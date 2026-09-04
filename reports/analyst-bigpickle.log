@@ -4364,3 +4364,692 @@ Top 2 unchanged survivors: **BOLA via X-Selected-Partner-Link-Id (62)**, **Order
 
 ## STEP 7 — RISK
 [RISK] suedzucker: **65** — ~20 read-only GETs, ~1 rps, no creds/mutations/auth-reads; two dead-ends closed, all live leads AUTH-gated. Stable.
+===== ANALYST bigpickle 2026-09-04 21:36:21 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && git log --oneline -5 && git status
+total 164
+drwxr-xr-x 12 runner runner  4096 Sep  4 21:32 .
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:32 ..
+drwxr-xr-x  7 runner runner  4096 Sep  4 21:32 .git
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:32 .github
+-rw-r--r--  1 runner runner  1852 Sep  4 21:32 README.md
+-rw-r--r--  1 runner runner    32 Sep  4 21:32 analyst-out.txt
+-rw-r--r--  1 runner runner 37131 Sep  4 21:32 analyst-prompt.txt
+-rw-r--r--  1 runner runner 33255 Sep  4 21:32 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 leads
+-rw-r--r--  1 runner runner   406 Sep  4 21:32 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 reports
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  4 21:32 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 scripts
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 triage
+d4b29cb triage 2026-09-04-20-00
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	analyst-out.txt
+	analyst-prompt.txt
+	ctx.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+[0m
+[0m$ [0mls -R art leads 2>/dev/null | head -50
+leads:
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-suedzucker.md
+[0m
+[0m→ [0mRead probe-results.md
+[0m
+[0m$ [0mls -la triage knowledge reports recon-notes inventory && cat analyst-out.txt
+inventory:
+total 16
+drwxr-xr-x  2 runner runner 4096 Sep  4 21:32 .
+drwxr-xr-x 12 runner runner 4096 Sep  4 21:32 ..
+-rw-r--r--  1 runner runner 4125 Sep  4 21:32 suedzucker.md
+
+knowledge:
+total 20
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 .
+drwxr-xr-x 12 runner runner  4096 Sep  4 21:32 ..
+-rw-r--r--  1 runner runner 11423 Sep  4 21:32 index.md
+
+recon-notes:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  4 21:32 .
+drwxr-xr-x 12 runner runner 4096 Sep  4 21:32 ..
+-rw-r--r--  1 runner runner  822 Sep  4 21:32 DEDICATED-DEEP.md
+
+reports:
+total 1220
+drwxr-xr-x  2 runner runner   4096 Sep  4 21:32 .
+drwxr-xr-x 12 runner runner   4096 Sep  4 21:32 ..
+-rw-r--r--  1 runner runner 454579 Sep  4 21:32 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   1953 Sep  4 21:32 analyst-laguna.log
+-rw-r--r--  1 runner runner   1944 Sep  4 21:32 analyst-ling3.log
+-rw-r--r--  1 runner runner   1962 Sep  4 21:32 analyst-longcat.log
+-rw-r--r--  1 runner runner 947568 Sep  4 21:32 analyst-nemotron3.log
+-rw-r--r--  1 runner runner     54 Sep  4 21:32 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner     51 Sep  4 21:32 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner     50 Sep  4 21:32 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner     52 Sep  4 21:32 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner  12011 Sep  4 21:32 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  17932 Sep  4 21:32 hypotheses.md
+-rw-r--r--  1 runner runner     39 Sep  4 21:32 valid-bugs.md
+
+triage:
+total 68
+drwxr-xr-x  2 runner runner 4096 Sep  4 21:32 .
+drwxr-xr-x 12 runner runner 4096 Sep  4 21:32 ..
+-rw-r--r--  1 runner runner    0 Sep  4 21:32 .gitkeep
+-rw-r--r--  1 runner runner  143 Sep  4 21:32 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner  701 Sep  4 21:32 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner  201 Sep  4 21:32 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner  159 Sep  4 21:32 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner  152 Sep  4 21:32 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner  182 Sep  4 21:32 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner  245 Sep  4 21:32 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner  276 Sep  4 21:32 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner  172 Sep  4 21:32 run-2026-09-03-23-30.md
+-rw-r--r--  1 runner runner  189 Sep  4 21:32 run-2026-09-04-01-18.md
+-rw-r--r--  1 runner runner  241 Sep  4 21:32 run-2026-09-04-05-58.md
+-rw-r--r--  1 runner runner  254 Sep  4 21:32 run-2026-09-04-10-34.md
+-rw-r--r--  1 runner runner  232 Sep  4 21:32 run-2026-09-04-14-31.md
+-rw-r--r--  1 runner runner  196 Sep  4 21:32 run-2026-09-04-17-45.md
+-rw-r--r--  1 runner runner  203 Sep  4 21:32 run-2026-09-04-20-00.md
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && git log --oneline -5 && git status
+total 164
+drwxr-xr-x 12 runner runner  4096 Sep  4 21:32 .
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:32 ..
+drwxr-xr-x  7 runner runner  4096 Sep  4 21:32 .git
+drwxr-xr-x  3 runner runner  4096 Sep  4 21:32 .github
+-rw-r--r--  1 runner runner  1852 Sep  4 21:32 README.md
+-rw-r--r--  1 runner runner    32 Sep  4 21:32 analyst-out.txt
+-rw-r--r--  1 runner runner 37131 Sep  4 21:32 analyst-prompt.txt
+-rw-r--r--  1 runner runner 33255 Sep  4 21:32 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 leads
+-rw-r--r--  1 runner runner   406 Sep  4 21:32 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 reports
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  4 21:32 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 scripts
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  4 21:32 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  4 21:32 triage
+d4b29cb triage 2026-09-04-20-00
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	analyst-out.txt
+	analyst-prompt.txt
+	ctx.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+[0m
+[0m$ [0mls -R art leads 2>/dev/null | head -50
+leads:
+lead-bigpickle.md
+lead-laguna.md
+lead-ling3.md
+lead-longcat.md
+lead-mimo.md
+lead-nemotron3.md
+reposcan-suedzucker.md
+[0m
+[0m→ [0mRead probe-results.md
+[0m
+[0m→ [0mRead triage/run-2026-09-04-20-00.md
+[0m
+[0m$ [0mcat reports/hypotheses-nemotron3.txt | head -80
+## 2026-09-04 19:18:34 UTC [target] (model nemotron3)
+[PRIO] plantportal.suedzuckergroup.com,8.5,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=8,freshness=10  
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,8.3,attack_surface=10,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=7,freshness=10  
+[PRIO] portal.mydataplant.com/services/outline.py,7.2,attack_surface=7,business_value=7,tech_exposure=6,gate_ease=10,cloud_surface=5,freshness=8  
+[PRIO] shop.suedzucker.com,7.8,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=5,cloud_surface=9,freshness=9
+[HYP] Plant Portal Partner-Linking BOLA via switchToPartnerNumber  
+class: IDOR  
+asset: plantportal.suedzuckergroup.com  
+confidence: 70  
+reasoning: Nuxt 3 "epp" v1.8.0 SPA with documented partner-number linking (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + switchToPartnerNumber query param + partnerNo in reactive state + /association/impersonation route guarded by only-for-partner middleware. API gateway backends (ceres-domain-backend-services, mdpBackend) behind /api-gateway/entra-ext/api/ all 401-gated but authz scope per partner unverified. PrimeVue DataTable/TreeTable/Steps components suggest partner-scoped data tables.  
+evidence_needed: Observe /partner-linking/:processPartnerNumber endpoint behavior; test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).  
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt _payload.json + entry.DpUprWo9.js for API base paths and partner-linking routes. AUTH_HELPED (own test account): register, complete partner linking, then test horizontal access to other partner IDs via API (GET /api/partners/{other_id}/contracts with valid Bearer token).  
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH  
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header  
+class: IDOR  
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api  
+confidence: 62  
+reasoning: Gateway requires X-Selected-Partner-Link-Id on ALL requests (400 without). With header but no Bearer → 403 forbidden(177). Backend portal.mydataplant.com/api/v3 is 403-gated unauthed. JWT embeds userId+email+mdp_bgd_api scope. Client-supplied header scopes tenant on top of JWT — mirrors Plant Portal switchToPartnerNumber. If backend does not verify header value ∈ JWT subject's authorized partner-links, token for partner A can re-scope to partner B. Swagger v0.1.20/api v1 shows 574 JSON:API endpoints with numeric IDs. X-Selected-Partner-Link-Id is NOT in API documentation — gateway-level enforcement only.  
+evidence_needed: With OWN test account: GET /api/v3/fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> — observe cross-tenant data return vs rejection.  
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (Swagger) — enumerate all endpoints accepting X-Selected-Partner-Link-Id. AUTH_HELPED (own test account only): POST /tokens → JWT; GET /api/v3/fields with JWT + X-Selected-Partner-Link-Id:1; mutate header to 2,3... — read-only, no live customer data.  
+impact: Cross-tenant read/modify/delete of farm fields, cultivation plans, orders, biomass maps, persons, organizations (agri PII + operations) — HIGH  
+testability: AUTH_HELPED
+[HYP] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint  
+class: IDOR  
+asset: portal.mydataplant.com/services/outline.py  
+confidence: 55  
+reasoning: Endpoint returns 200 + image/svg+xml + empty body for all tested user_id+field_id combos (1/1, 2/123, 999999/1). No auth header required — bypasses gateway entirely (different path). Consistent empty response means either test IDs have no geometry or auth failure is soft-fail. Architecture is IDOR-prone: numeric user_id/field_id directly in query params, no tenant-scoping header enforced on this path. 500 error on non-numeric user_id reveals Apache/2.4.29 (Ubuntu), webmaster@kleffmann.digital — third-party vendor (Kleffmann Group).  
+evidence_needed: With OWN test account: GET /services/outline.py?user_id=<own>&field_id=<own_field> → confirm non-empty SVG return; then mutate to other user_id/field_id combos — observe cross-tenant geometry disclosure.  
+verify_steps: PASSIVE: GET https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1 (already done — 200 empty). AUTH_HELPED (own test account): obtain valid JWT, call outline.py with own field IDs to confirm data return, then test horizontal access to other user_id/field_id.  
+impact: Cross-tenant field boundary/location geometry disclosure (agri location PII) — MEDIUM/HIGH  
+testability: AUTH_HELPED
+[PARKED] MyDataPlant JWT Token Endpoint Brute-Force Surface: confidence 35 — credential-guessing/rate-limit OUT OF SCOPE; no logic flaw observed passively; /tokens requires Authorization header (403 without) despite Swagger doc error.  
+[PARKED] MyDataPlant SSRF via Export Targets: confidence 40 → downgraded; Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch.  
+[PARKED] Employee Benefits Portal SSO Bypass: confidence 45 but testability HUMAN_ONLY (requires employee creds), gate_ease 4 — drop per rules (no auth-bypass on live employee data).  
+[PARKED] WordPress wp-json @ bisz.suedzucker.de: REJECTED class (descriptive/public API, no auth bypass impact).  
+[PARKED] www.suedzuckergroup.com Drupal 11: CONFIRMED REJECTED (hardened, JSON:API/GraphQL disabled, registration closed).  
+[FINAL] plantportal.suedzuckergroup.com — 70 (IDOR/BOLA, high data value, AUTH_HELPED testable)  
+[FINAL] smartfarming.suedzuckergroup.com/mdp-api/v3/api — 62 (IDOR/BOLA, massive API surface, AUTH_HELPED testable)  
+[FINAL] portal.mydataplant.com/services/outline.py — 55 (IDOR, auth-free geometry endpoint, AUTH_HELPED testable)  
+[FINAL] shop.suedzucker.com — 60 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable) — held from prior lead
+[NEXT] PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.DpUprWo9.js — already fetched; extracted MSAL config (clientId ba3120d6-3d54-478b-a048-5f1242196100, authority szgrmb2cprod.ciamlogin.com, scopes external_api_access + mdp_bgd_api) and all api-gateway backend URIs (ceres-internal-auth-service, ceres-domain-backend-services, ceres-image-service, mdpBackend). Next concrete probe: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com, complete partner linking flow, then test horizontal partner ID access via /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{id}/contracts with valid Bearer token.
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), scopes api://1b7819b0.../external_api_access + api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure, not a vuln.  
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Full public Swagger (15k lines) confirms real backend portal.mydataplant.com/api/v3, Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.  
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).  
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.  
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evidence.  
+[LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404).  
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.  
+[LEARN] ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). Backend uses standard `Authorization: Bearer` (not `Authentication: Bearer` as doc says — confirmed: 401 for malformed JWT vs 403 for unrecognized header). No mass assignment vectors found in documented request bodies. Swagger doc version v0.1.20, api v1.  
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 999999/1). Endpoint is auth-free (no header required), bypasses gateway entirely (different path). Consistent empty response means either test IDs have no geometry or auth failure is soft-fail. Architecture is IDOR-prone but impact unconfirmed.  
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in simple GET responses (no `access-control-allow-origin: https://evil.com` header). Secure CORS behavior.  
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `Authentication: Bearer` (returns 403 "forbidden(149)" — same as no auth). Swagger doc has documentation error.  
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc stating "Authorization header is not allowed". JWT validation correctly rejects: malformed (401 "Wrong number of segments"), invalid signature (401 "Signature verification failed"), alg=none (401 "Algorithm not supported"). Confirms gateway-level auth wraps ALL endpoints including token generation.  
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand.com, client_id sb-approuter-sac-saceu10!t3650, redirect_uri /sso/login/callback). SAP API Management at szg-is.prod.apimanagement.eu30.hana.ondemand.com. SFDC community deu84.sfdc-yzvdd4.salesforce.com. Payments: Stripe + PayPal + Adyen. Aura endpoint properly rejects guest access.  
+[LEARN] ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSESSIONID + __VCAP_ID__ cookies. 302 redirect chain from Commerce to UAA login. HSTS with includeSubDomains+preload. Well-configured SAP SSO.
+[RISK] suedzucker: 72 — Program scope covers 5 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO). Three HIGH-value IDOR targets (plantportal partner-linking, smartfarming X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts.
+[0m
+[0m$ [0mcat leads/lead-bigpickle.md && echo "=====HYP=====" && cat reports/hypotheses-bigpickle.txt && echo "=====STATE=====" && cat state_bigpickle.json
+...output truncated...
+
+Full output saved to: /home/runner/.local/share/opencode/tool-output/tool_06e56a36a001YIvT2fqRKavk60
+
+[RISK] suedzucker: 68 — broad program (all company infra) newly hit a renamed corpus with several live subsidiary/partner portals (farmer PII, financial trading, e-commerce) that are reachable and not yet scoped in inventory; moderate carrying risk stays acceptable since all steps are read-only/GATE-gated and no live customer data is being touched.
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=tech_exposure+gate — Nuxt SPA, MSAL Entra B2C, documented api-gateway backends (internal-auth + domain services), /association/impersonation route, partnerNo in watermark, switchToPartnerNumber query param
+[PRIO] smartfarming.suedzuckergroup.com,8.0,axis=business_value+tech_exposure — public Swagger for full REST API (fields/actions/orders/media/org user-data), JWT token-gen-with-RSA documented, single-resource numeric-ID BOLA surface
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed infra limits exploitability but high value e-commerce auth)
+[PRIO] bisz.suedzucker.de,5.5,axis=auth — now unreachable-ish (code=000), lower priority
+[PRIO] app.agriconetwork.com,5.0,axis=business_value — still unreachable (code=000)
+[HYP] MyDataPlant REST API BOLA via numeric single-resource IDs
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 60
+reasoning: Public Swagger documents GET/PATCH/DELETE by resource id for fields, actions, persons, vehicles, products, media, orderpositions, organizations, user-data/users. JSON:API single-resource reads by enumerate-able numeric/ULID ids on an org-scoped smart-farming backend are a canonical BOLA vector. Backend returns 400 (not 401) to bare requests, implying auth handled per-request rather than at edge. Auth is JWT ("token (JWT)" + "token generation with RSA signature" documented).
+evidence_needed: Confirm a valid mdp_bgd_api JWT is required per-endpoint and whether GET by id is scoped to the token's organization vs cross-tenant (requires own test account; not live customer data).
+verify_steps: Passive: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already confirms Swagger public). Do NOT issue authed cross-tenant reads without an own test account.
+impact: cross-tenant read/modify/delete of farm field data, orders, persons, media (agri PII + operations) — HIGH.
+testability: AUTH_HELPED
+[HYP] Plant Portal partner-number linking / impersonation BOLA
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 58
+reasoning: Nuxt route /partner-linking/:processPartnerNumber (integer) + ?switchToPartnerNumber=<int> query param (read into state and embedded in anti-screenshot watermark as partnerNo) + /association/impersonation guarded by only-for-partner middleware. The linking/impersonation flow binds an identity to a numeric partner number — predictable numeric IDs and an impersonation route are a systemic BOLA surface. Access token scopes: api://1b7819b0.../external_api_access.
+evidence_needed: Whether supplied Parternummer/switchToPartnerNumber scopes data to session or lets one partner act on another's data (needs own test account).
+verify_steps: Passive: confirmed routes in bundle + runtime config. Active only with own test account.
+impact: cross-tenant access to farmer contract/delivery/settlement data + association impersonation — HIGH.
+testability: AUTH_HELPED
+[HYP] MyDataPlant export-to-configured-URL SSRF / server-side request
+class: SSRF
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 40
+reasoning: Swagger has endpoint "send export to configured URL" (GET) and "Send export to configured URL" where users can configure a target URL (also "user-settings .. url" POST). A server-side fetch to a user-controlled URL is a classic SSRF-to-internal/cloud-metadata vector. Confidence limited: no live confirmation of request behavior; auth-gated.
+evidence_needed: Whether the configured URL is fetched server-side and allows internal/169.254.169.254 targets.
+verify_steps: Passive-only now. Requires own test account + careful, non-destructive testing.
+impact: SSRF to internal services / cloud metadata (169.254.169.254) -> possible credential exposure — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already done — the public Swagger confirms full REST surface reachable without auth; next read-only step is to fetch the token-generation endpoint documentation to understand how mdp_bgd_api JWT is issued) — but strictly passive. Confirm auth before any active id-based read.
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.
+[RISK] suedzucker: 64 — recon now focused on a live, renamed subsidiary/partner cluster (Plant Portal + MyDataPlant REST + SFCC shop). All steps were read-only (GET/HEAD of public docs and 401/302 reach probes, passive JS/Swagger analysis); no live customer data touched, no auth-bypass or mutating tests. Public Swagger and client config exposure raise the attack surface visibly but remain in-scope recon; carrying risk stays moderate and acceptable. Careful to keep all further Plant Portal/MyDataPlant steps on own test accounts only.
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=tech_exposure+gate — Nuxt SPA, MSAL Entra B2C, documented api-gateway backends (internal-auth + domain services), /association/impersonation route, partnerNo in watermark, switchToPartnerNumber query param
+[PRIO] smartfarming.suedzuckergroup.com,8.0,axis=business_value+tech_exposure — public Swagger for full REST API (fields/actions/orders/media/org user-data), JWT token-gen-with-RSA documented, single-resource numeric-ID BOLA surface
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed infra limits exploitability but high value e-commerce auth)
+[PRIO] bisz.suedzucker.de,5.5,axis=auth — now unreachable-ish (code=000), lower priority
+[PRIO] app.agriconetwork.com,5.0,axis=business_value — still unreachable (code=000)
+[HYP] MyDataPlant REST API BOLA via numeric single-resource IDs
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 60
+reasoning: Public Swagger documents GET/PATCH/DELETE by resource id for fields, actions, persons, vehicles, products, media, orderpositions, organizations, user-data/users. JSON:API single-resource reads by enumerate-able numeric/ULID ids on an org-scoped smart-farming backend are a canonical BOLA vector. Backend returns 400 (not 401) to bare requests, implying auth handled per-request rather than at edge. Auth is JWT ("token (JWT)" + "token generation with RSA signature" documented).
+evidence_needed: Confirm a valid mdp_bgd_api JWT is required per-endpoint and whether GET by id is scoped to the token's organization vs cross-tenant (requires own test account; not live customer data).
+verify_steps: Passive: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already confirms Swagger public). Do NOT issue authed cross-tenant reads without an own test account.
+impact: cross-tenant read/modify/delete of farm field data, orders, persons, media (agri PII + operations) — HIGH.
+testability: AUTH_HELPED
+[HYP] Plant Portal partner-number linking / impersonation BOLA
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 58
+reasoning: Nuxt route /partner-linking/:processPartnerNumber (integer) + ?switchToPartnerNumber=<int> query param (read into state and embedded in anti-screenshot watermark as partnerNo) + /association/impersonation guarded by only-for-partner middleware. The linking/impersonation flow binds an identity to a numeric partner number — predictable numeric IDs and an impersonation route are a systemic BOLA surface. Access token scopes: api://1b7819b0.../external_api_access.
+evidence_needed: Whether supplied Parternummer/switchToPartnerNumber scopes data to session or lets one partner act on another's data (needs own test account).
+verify_steps: Passive: confirmed routes in bundle + runtime config. Active only with own test account.
+impact: cross-tenant access to farmer contract/delivery/settlement data + association impersonation — HIGH.
+testability: AUTH_HELPED
+[HYP] MyDataPlant export-to-configured-URL SSRF / server-side request
+class: SSRF
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 40
+reasoning: Swagger has endpoint "send export to configured URL" (GET) and "Send export to configured URL" where users can configure a target URL (also "user-settings .. url" POST). A server-side fetch to a user-controlled URL is a classic SSRF-to-internal/cloud-metadata vector. Confidence limited: no live confirmation of request behavior; auth-gated.
+evidence_needed: Whether the configured URL is fetched server-side and allows internal/169.254.169.254 targets.
+verify_steps: Passive-only now. Requires own test account + careful, non-destructive testing.
+impact: SSRF to internal services / cloud metadata (169.254.169.254) -> possible credential exposure — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (already done — the public Swagger confirms full REST surface reachable without auth; next read-only step is to fetch the token-generation endpoint documentation to understand how mdp_bgd_api JWT is issued) — but strictly passive. Confirm auth before any active id-based read.
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), Bearer scopes api://1b7819b0.../external_api_access and api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — all read-only exposure of public client config, not a vuln.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals endpoint map + JWT token/RSA token-gen endpoints — recon value, public docs not itself a vuln.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level findings hard to prove passively.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — not a vuln.
+[RISK] suedzucker: 64 — recon now focused on a live, renamed subsidiary/partner cluster (Plant Portal + MyDataPlant REST + SFCC shop). All steps were read-only (GET/HEAD of public docs and 401/302 reach probes, passive JS/Swagger analysis); no live customer data touched, no auth-bypass or mutating tests. Public Swagger and client config exposure raise the attack surface visibly but remain in-scope recon; carrying risk stays moderate and acceptable. Careful to keep all further Plant Portal/MyDataPlant steps on own test accounts only.
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,8.4,axis=tech_exposure+gate — CONFIRMED gateway requires X-Selected-Partner-Link-Id header to scope tenant; JWT Bearer scoped mdp_bgd_api; real backend portal.mydataplant.com/api/v3 (403 forbidden(149) unauthed); full endpoint map incl /users /persons /orders /organizations /fieldSharings /tokens
+[PRIO] plantportal.suedzuckergroup.com,8.3,axis=business_value+gate — runtime config confirms mdpBackend + ceres-internal-auth / ceres-image-service / ceres-domain-backend-services behind /api-gateway/entra-ext/api/, all 401/403 gated unauthed
+[PRIO] shop.suedzucker.com,7.6,axis=tech_exposure — SFDC Commerce Cloud (managed; OrderSummary/:recordId IDOR AUTH_HELPED)
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Front-end gateway returns 400 "Missing X-Selected-Partner-Link-Id header" on ANY request (incl /services/outline.py?user_id=2&field_id=123). With header set but no Bearer -> 403 forbidden(177). => The gateway scopes requests to a partner/link selected by a CLIENT-SUPPLIED header, in addition to JWT. This mirrors Plant Portal ?switchToPartnerNumber / /partner-linking / /association/impersonation. If the backend does not verify the header value is among the JWT subject's own authorized partner-links, a valid token for partner A can re-scope to partner B -> cross-tenant data. JWT embeds userId+email; real backend portal.mydataplant.com/api/v3 (403 unauthed).
+evidence_needed: With an OWN test account: confirm whether GET /fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> returns another tenant's data or is rejected. (NOT live customer data.)
+verify_steps: Passive done: 400 Missing-X-Selected-Partner-Link-Id on gateway; 403 unauthed. Active (own test account, AUTH_HELPED) only.
+impact: cross-tenant read/modify of farm fields, orders, persons, media, org data (agri PII + ops) — HIGH.
+testability: AUTH_HELPED
+[NEXT] PROBE: read-only next step: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/api-docs (or browse the inline doc) to enumerate which endpoints accept the X-Selected-Partner-Link-Id header and whether POST /tokens (password login) is exposed at the gateway; strictly read-only, do NOT submit credentials or issue authenticated cross-tenant reads.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full public Swagger (inline sphinx-style HTML, 15k lines) previously known; NOW confirms real backend host portal.mydataplant.com/api/v3 (not suedzuckergroup front), Bearer JWT auth with iss=auth-backend aud=rest-client + userId/email in claims, POST /tokens (LOGIN_NAME/PASSWORD, no auth header) token-gen, and a gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, all public docs.
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets /exportTypes: docs show catalog-style targets (TERMINAL_USB_EXPORT, PDF) not user-arbitrary-URL fetch — SSRF-to-metadata hypothesis weakened, deprioritize.
+[RISK] suedzucker: 65 — recon stays read-only (GET of public Swagger/docs + 400/403 reach probes), no authenticated cross-tenant reads, no credentials submitted, no mutations, ~1 rps. The X-Selected-Partner-Link-Id tenant-scoping header is a strong BOLA signal but strictly behind auth; carrying risk stable. Any active test MUST be on an own test account, never live customer data.
+[NEXT] PROBE: read-only next step: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/api-docs (or browse the inline doc) to enumerate which endpoints accept the X-Selected-Partner-Link-Id header and whether POST /tokens (password login) is exposed at the gateway; strictly read-only, do NOT submit credentials or issue authenticated cross-tenant reads.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full public Swagger (inline sphinx-style HTML, 15k lines) previously known; NOW confirms real backend host portal.mydataplant.com/api/v3 (not suedzuckergroup front), Bearer JWT auth with iss=auth-backend aud=rest-client + userId/email in claims, POST /tokens (LOGIN_NAME/PASSWORD, no auth header) token-gen, and a gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, all public docs.
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets /exportTypes: docs show catalog-style targets (TERMINAL_USB_EXPORT, PDF) not user-arbitrary-URL fetch — SSRF-to-metadata hypothesis weakened, deprioritize.
+[RISK] suedzucker: 65 — recon stays read-only (GET of public Swagger/docs + 400/403 reach probes), no authenticated cross-tenant reads, no credentials submitted, no mutations, ~1 rps. The X-Selected-Partner-Link-Id tenant-scoping header is a strong BOLA signal but strictly behind auth; carrying risk stable. Any active test MUST be on an own test account, never live customer data.
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: ANY gateway request without `X-Selected-Partner-Link-Id` returns 400 "Missing X-Selected-Partner-Link-Id header"; with header but no Bearer returns 403 forbidden(177). Gateway scopes requests to a partner-link chosen by a CLIENT-SUPPLIED header on top of the JWT. Mirrors Plant Portal ?switchToPartnerNumber / /partner-linking / /association/impersonation. Real backend portal.mydataplant.com/api/v3 is 403-gated unauthed (no passive leak). If backend does not verify the header is among the JWT subject's own authorized partner-links, a token for partner A can re-scope to partner B.
+evidence_needed: With an OWN test account: does GET /fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> return another tenant's data or get rejected? NOT against live customer data.
+verify_steps: Passive done: 400 Missing-header on gateway, 403 unauthed on gateway+backend. Active only on own test account.
+impact: cross-tenant read/modify/delete of farm fields, orders, persons, media, org data (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant outline geometry IDOR via numeric user_id/field_id
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py
+confidence: 50
+reasoning: Endpoint renders a field's boundary as SVG given raw numeric `user_id` + `field_id` (doc example even embeds user_id=2&field_id=123 in an <img>). Response image/svg+xml reveals field location geometry (agri location PII). Auth is per-request Bearer; but the geometry fetch is an image-service path — possible weaker authz on the map tile/render service vs the JSON API.
+evidence_needed: With own test account: can one request another user's field outline by passing their user_id/field_id and receiving the SVG?
+verify_steps: Passive: 400/403 as probed. Active (own account) only.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant JWT token endpoint / brute-force surface
+class: AUTH
+asset: portal.mydataplant.com/api/v3/tokens
+confidence: 35
+reasoning: POST /tokens accepts LOGIN_NAME(email)+PASSWORD, "Authorization header is not allowed", returns JWT. Publicly documented. This is a login endpoint; brute-force/rate-limit policy is OUT OF SCOPE. Only a logic flaw (e.g., weak refresh-token handling, token scope confusion) would be reportable.
+evidence_needed: Any token/scope/authz logic flaw beyond credential guessing.
+verify_steps: OUT OF SCOPE for brute-force; only passive doc review.
+impact: ATO if a logic flaw exists — HIGH, but no affirmative signal
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (read the full inline Swagger doc already fetched) to enumerate which endpoints accept/propagate X-Selected-Partner-Link-Id and to map /fileUploads + /services/outline.py auth model — strictly read-only doc analysis, no credentials submitted, no authenticated cross-tenant reads.
+[RISK] suedzucker: 65 — all steps this round were read-only (GET of public Swagger/doc HTML + 400/403 reach probes), no credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. The X-Selected-Partner-Link-Id tenant-scoping header is a strong BOLA signal but sits strictly behind auth; carrying risk stable. Any active confirmation MUST be on an own test account, never live customer data.
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.5,axis=tech_exposure+gate — rich REST (JWT/RSA token-gen, tenant-scoping X-Selected-Partner-Link-Id header, fileUpload, outline geometry, PII users/persons/orders); real backend portal.mydataplant.com/api/v3 (403 unauthed)
+[PRIO] plantportal.suedzuckergroup.com,7.2,axis=business_value+gate — MSAL Entra B2C, partner-linking/impersonation, same mdpBackend
+[PRIO] shop.suedzucker.com,5.8,axis=tech_exposure — SFDC Commerce Cloud OrderSummary/:recordId IDOR (AUTH_HELPED)
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: ANY gateway request without X-Selected-Partner-Link-Id returns 400 Missing header; with header but no Bearer returns 403 forbidden(177). Gateway scopes requests to a partner-link chosen by CLIENT-SUPPLIED header on top of JWT. Mirrors Plant Portal ?switchToPartnerNumber / /partner-linking / /association/impersonation. Real backend portal.mydataplant.com/api/v3 403-gated unauthed. If backend does not verify header is among JWT subject's own authorized partner-links, token for partner A can re-scope to partner B.
+evidence_needed: With OWN test account: does GET /fields /users/{id} /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> return another tenant's data or get rejected? NOT live customer data.
+verify_steps: Passive done: 400 Missing-header gateway, 403 unauthed gateway+backend. Active on own test account only.
+impact: cross-tenant read/modify/delete of farm fields, orders, persons, media, org data (agri PII+ops) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant outline geometry IDOR via numeric user_id/field_id
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py
+confidence: 50
+reasoning: Endpoint renders field boundary as SVG given raw numeric user_id + field_id (doc example embeds user_id=2&field_id=123 in <img>). Response image/svg+xml reveals field location geometry (agri location PII). Auth per-request Bearer, but image-service path may have weaker authz.
+evidence_needed: With own account: request another user's field outline by their user_id/field_id and receive SVG?
+verify_steps: Passive: 400/403 probed. Active (own account) only.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant JWT token endpoint surface
+class: AUTH
+asset: portal.mydataplant.com/api/v3/tokens
+confidence: 35
+reasoning: POST /tokens accepts LOGIN_NAME+PASSWORD, no auth header, returns JWT. Publicly documented login endpoint. Brute-force/rate-limit OUT OF SCOPE; only a token/scope logic flaw reportable.
+evidence_needed: any token/scope/authz logic flaw beyond credential guessing
+verify_steps: OUT OF SCOPE for brute-force; passive doc review only
+impact: ATO if logic flaw — HIGH, but no affirmative signal
+testability: AUTH_HELPED
+[PARKED] MyDataPlant SSRF via export-to-configured-URL: /exportTargets catalog-style (TERMINAL_USB_EXPORT, PDF), not arbitrary-URL fetch — no SSRF signal, drop conf<40.
+[PARKED] MyDataPlant /tokens brute-force: credential-guessing/rate-limit explicitly OUT OF SCOPE; only logic flaw matters, none observed passively — drop conf<40.
+[PARKED] Plant Portal partner-number linking: subsumed into the X-Selected-Partner-Link-Id header hypothesis that names the actual mechanism.
+[FINAL] smartfarming header BOLA 62 (AUTH_HELPED, HIGH impact)
+[FINAL] outline.py geometry IDOR 50 (AUTH_HELPED)
+[FINAL] shop.suedzucker.com SFDC OrderSummary IDOR ~52 (AUTH_HELPED, carried)
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (full inline Swagger doc) to enumerate which endpoints propagate X-Selected-Partner-Link-Id and map /fileUploads + /services/outline.py auth model — read-only doc analysis, no credentials, no authenticated cross-tenant reads.
+[LEARN] ACCEPTED RECON @ smartfarming/mdp-api/v3/api: public Swagger confirms real backend host portal.mydataplant.com/api/v3, Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: unauthenticated requests return 400 Missing-X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated, no unauth data leak.
+[LEARN] DOWNGRADE SSRF @ smartfarming /exportTargets: catalog-style export targets, not arbitrary-URL server fetch — no SSRF-to-metadata evidence; deprioritize.
+[RISK] suedzucker: 65 — all steps read-only (GET public Swagger/doc + 400/403 reach), no credentials, no authenticated cross-tenant reads, no mutations, ~1 rps. X-Selected-Partner-Link-Id is a strong BOLA signal but behind auth; risk stable. Active confirmation only on own test account.
+[HYP] MyDataPlant cross-tenant BOLA via `X-Selected-Partner-Link-Id` tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Any gateway request lacking `X-Selected-Partner-Link-Id` → 400 "Missing"; with header but no Bearer → 403 forbidden(177). Gateway scopes requests to a partner-link chosen by a client-supplied header on top of the JWT — mirrors Plant Portal `?switchToPartnerNumber` / `/partner-linking` / `/association/impersonation`. Real backend `portal.mydataplant.com/api/v3` is 403-gated unauthed (no passive leak). If the backend does not verify the header is among the JWT subject's own authorized partner-links, a token for partner A can re-scope to partner B.
+evidence_needed: With an OWN test account: does GET /fields, /users/{id}, /orders/{id} with `X-Selected-Partner-Link-Id=<another org's link id>` return another tenant's data or get rejected? NOT against live customer data.
+verify_steps: Passive done (400/403 reach probes). Active only on own test account, read-only.
+impact: cross-tenant read/modify/delete of farm fields, orders, persons, media, org data (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant outline-geometry IDOR via numeric user_id/field_id
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api/services/outline.py
+confidence: 50
+reasoning: Endpoint renders a field boundary as SVG given raw numeric `user_id`+`field_id` (doc example embeds `user_id=2&field_id=123` in an `<img>`). Response `image/svg+xml` reveals field-location geometry (agri location PII). Auth is per-request Bearer, but this is an image/render-service path that may have weaker authz than the JSON API. Reach probed: 400/403 unauthed (gated).
+evidence_needed: With own account: can one request another user's field outline via their user_id/field_id and receive the SVG?
+verify_steps: Passive 400/403 confirmed. Active (own account) only.
+impact: cross-tenant field-boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant JWT token-endpoint surface
+class: AUTH
+asset: portal.mydataplant.com/api/v3/tokens
+confidence: 35
+reasoning: POST /tokens accepts LOGIN_NAME(email)+PASSWORD, "Authorization header is not allowed", returns JWT; publicly documented login. Brute-force/rate-limit is explicit OUT OF SCOPE; only a token/scope logic flaw (e.g. weak refresh-token handling) would be reportable, and none observed passively.
+evidence_needed: any token/scope/authz logic flaw beyond credential guessing
+verify_steps: OUT OF SCOPE for brute-force; passive doc review only
+impact: ATO if a logic flaw exists — HIGH, no affirmative signal
+testability: AUTH_HELPED
+[NEXT] PROBE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (inline Swagger doc) to enumerate which endpoints propagate/require `X-Selected-Partner-Link-Id` and map the /fileUploads and /services/outline.py auth model — strictly read-only doc analysis, no credentials, no authenticated cross-tenant reads.
+[RISK] suedzucker: 65 — all steps this round were read-only (GET of public Swagger/doc HTML + 400/403 reach probes), no credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. The `X-Selected-Partner-Link-Id` tenant-scoping header is a strong BOLA signal but sits strictly behind auth; carrying risk stable. Any active confirmation must be on an own test account, never live customer data.
+## 2026-09-04 02:39:34 UTC [target] (model bigpickle)
+## 2026-09-04 07:30:10 UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3,9, attack_surface:10 + business_value:9 + tech_exposure:JWT+JSONAPI+574endpoints:9 + gate_ease:3(gateway+auth) + cloud_surface:1 + freshness:9
+[PRIO] portal.mydataplant.com/services/outline.py,7, attack_surface:8 + business_value:7 + tech_exposure:no-auth-header+user_id-param:9 + gate_ease:8(no auth doc) + cloud_surface:1 + freshness:9
+[PRIO] shop.suedzucker.com,6, attack_surface:7 + business_value:8 + tech_exposure:SFDC+OrderSummary:recordId:7 + gate_ease:4(SFDC managed) + cloud_surface:1 + freshness:8
+[HYP] MyDataPlant cross-tenant BOLA via `X-Selected-Partner-Link-Id` tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway requires `X-Selected-Partner-Link-Id` header on every request (400 without, 403-without-Bearer). The header is NOT documented in the Swagger API spec (confirmed 2026-09-04), meaning it's gateway-level enforcement not application-level. Backend at portal.mydataplant.com/api/v3 returns 403-forbidden(149) without auth (no header leak). CORS policy sets `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). JWT contains `userId` + `email` claims, `iss=auth-backend`, `aud=rest-client`. The Swagger doc erroneously says `Authentication: Bearer` but backend accepts standard `Authorization: Bearer` (confirmed: returns 401 "JWT wrong segments" vs 403 "forbidden(149)" for unrecognized header). If backend does not verify that the partner-link-id in the gateway header matches the JWT subject's authorized partners, a token for partner A could re-scope to partner B's entire dataset (fields, persons, organizations, orders, media, vehicles, actions, cultivations, sharings, POIs — 30+ resource types with full CRUD).
+evidence_needed: With own test account (JWT + known X-Selected-Partner-Link-Id): does GET /fields with another org's link-id return their data or get rejected?
+verify_steps: Passive done (400/403 reach, Swagger analysis, CORS probe). Active only on own test account, read-only GET.
+impact: cross-tenant read of farm fields, field geometry (GEOMETRY attribute), person PII (FIRSTNAME, LASTNAME, BIRTHDAY, EMAIL), organization data, order data with PAYMENT_LINK + QUANTITY + CURRENCY, vehicle + media + action data — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] outline.py cross-tenant field geometry IDOR (unauthenticated image endpoint)
+class: IDOR
+asset: portal.mydataplant.com/services/outline.py
+confidence: 42
+reasoning: Swagger doc shows endpoint takes raw `user_id` + `field_id` query params, rendered as `<img src="...">` with NO documented auth header. Tested 2026-09-04: returns HTTP 200 + `image/svg+xml` + empty body (0 bytes) for user_id=1,2,999999 with field_id=1,123. Consistent 200 with empty body suggests endpoint is live but test IDs have no geometry data (or auth failure is soft-fail returning empty). The endpoint is at a different path than the REST API (`/services/outline.py` vs `/api/v3/`), bypassing the gateway's `X-Selected-Partner-Link-Id` enforcement. If valid user_id+field_id pairs exist, geometry PII (field boundaries/location) would be exposed to any unauthenticated requester. Cannot confirm impact without valid test IDs (need own account to know own user_id+field_id).
+evidence_needed: With own account: known valid user_id + field_id → does outline.py return actual SVG geometry without auth?
+verify_steps: Passive done (200/empty for all tested IDs). Active: obtain own user_id+field_id from JWT/API, request outline.py without auth.
+impact: cross-tenant field boundary/location disclosure (agri PII — field shapes reveal farm layout) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com Salesforce Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 52
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 262.60) with /OrderSummary/:recordId route exposed in page source. SFDC Communities uses `/:recordId` pattern where recordId is the SFDC record ID (15/18 char). Previous rounds confirmed the route exists. SFDC communities typically gate by sharing rules, but misconfigured sharing sets can expose other tenants' records. The route is client-rendered (LWR SPA) so the IDOR test requires authentication + trying another account's recordId.
+evidence_needed: With own SFDC account: GET /OrderSummary/<another_account's_recordId> returns order data or SFDC error?
+verify_steps: Passive done (route confirmed). Active only on own test account.
+impact: cross-tenant order disclosure (financial data: amounts, line items, shipping) — HIGH
+testability: AUTH_HELPED
+[PARKED] outline.py IDOR 42: Below 40 but not dropped — edge case. All tested IDs return 200+empty (no differential between valid/invalid). The endpoint IS documented to work without auth, so the architecture is IDOR-prone, but impact cannot be confirmed with current data. Carried as watch item. If I obtain a test account and valid user_id+field_id, re-test immediately.
+[FINAL] MyDataPlant BOLA via X-Selected-Partner-Link-Id: 62. Survives. Requires active test with own JWT. Strongest signal: gateway header is client-controlled, not JWT-bound.
+[FINAL] shop.suedzucker.com SFDC OrderSummary IDOR: 52. Survives. Standard SFDC IDOR pattern. Requires SFDC account.
+[NEXT] PROBE: POST https://portal.mydataplant.com/api/v3/tokens with `{"data":{"LOGIN_NAME":"test@test.com","PASSWORD":"test"}}` — test the token endpoint's error handling: does it return different errors for valid vs invalid email (user enumeration), or does it reveal JWT signing details in error messages? Read-only (no credentials submitted), passive error analysis.
+[LEARN] ACCEPTED RECON @ smartfarming Swagger analysis: `X-Selected-Partner-Link-Id` is NOT in the API documentation — gateway-level enforcement only. CORS has `access-control-allow-credentials: true` but does NOT reflect arbitrary Origin (secure). Backend uses standard `Authorization: Bearer` (not `Authentication: Bearer` as doc says — confirmed: 401 for malformed JWT vs 403 for unrecognized header). No mass assignment vectors found in documented request bodies. Swagger doc version v0.1.20, api v1.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + `image/svg+xml` + empty body for all tested user_id+field_id combos (1/1, 2/123, 999999/1). Endpoint is auth-free (no header required), bypasses gateway entirely (different path). Consistent empty response means either test IDs have no geometry or auth failure is soft-fail. Architecture is IDOR-prone but impact unconfirmed.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com CORS: `access-control-allow-credentials: true` + allows Origin in preflight but does NOT reflect arbitrary origin in simple GET responses (no `access-control-allow-origin: https://evil.com` header). Secure CORS behavior.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts `Authorization: Bearer` (returns 401 "JWT wrong segments" for malformed token). Does NOT accept `Authentication: Bearer` (returns 403 "forbidden(149)" — same as no auth). Swagger doc has documentation error.
+[RISK] suedzucker: 68 — all steps this round were read-only GET of public Swagger doc + unauthenticated reach probes + CORS checks. No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. `X-Selected-Partner-Link-Id` BOLA hypothesis carried at 62 with active confirmation pending. outline.py architecture noted but impact unconfirmed. Risk stable. Active confirmation only on own test account, never live customer data.
+## 2026-09-04 12:23:04 UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,9.2, attack_surface:10 + business_value:9 + tech_exposure:JWT+JSONAPI+574endpoints:9 + gate_ease:3(gateway+auth) + cloud_surface:1 + freshness:9
+[PRIO] portal.mydataplant.com/services/outline.py,7.3, attack_surface:8 + business_value:7 + tech_exposure:no-auth+user_id-param+500error:8 + gate_ease:8 + cloud_surface:1 + freshness:9
+[PRIO] shop.suedzucker.com,6.8, attack_surface:7 + business_value:8 + tech_exposure:SFDC+SAP+OrderSummary+payments:8 + gate_ease:4(SFDC managed) + cloud_surface:1 + freshness:8
+[PRIO] suedzucker.eu10.hcs.cloud.sap,5.5, attack_surface:6 + business_value:6 + tech_exposure:SAP+OAuth+CF+cookies:7 + gate_ease:3(SAP UAA) + cloud_surface:2(SAP BTP) + freshness:8
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway requires X-Selected-Partner-Link-Id on every request (400 without, 403-without-Bearer). Header is NOT in Swagger spec — gateway-level enforcement only. Backend at portal.mydataplant.com returns 403-forbidden(149) without auth. CORS: access-control-allow-credentials: true but does NOT reflect arbitrary Origin. JWT contains userId+email claims, iss=auth-backend, aud=rest-client. New finding: POST /tokens also requires Authorization despite Swagger saying "not allowed" — confirms gateway-level auth enforcement wraps all endpoints. If backend does not verify partner-link-id matches JWT subject's authorized partners, token for partner A could re-scope to partner B's 30+ resource types with full CRUD.
+evidence_needed: With own test account (JWT + known X-Selected-Partner-Link-Id): does GET /fields with another org's link-id return their data or get rejected?
+verify_steps: Passive done (400/403 reach, Swagger analysis, CORS probe, token endpoint auth-gate confirmed). Active only on own test account, read-only GET.
+impact: cross-tenant read of farm fields, field geometry (GEOMETRY attribute), person PII (FIRSTNAME, LASTNAME, BIRTHDAY, EMAIL), organization data, order data with PAYMENT_LINK + QUANTITY + CURRENCY, vehicle + media + action data — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) confirmed. CSP reveals: SAP Commerce backend suedzucker.eu10.hcs.cloud.sap, SFDC community deu84.sfdc-yzvdd4.salesforce.com, payments via Stripe+PayPal+Adyen. Aura endpoint properly rejects guest user access ("Guest user access is not allowed"). Route /OrderSummary/:recordId is client-rendered LWR SPA. SFDC communities use sharing rules for record access — misconfigured sharing sets can expose cross-tenant records. OrderSummary exposes financial data (amounts, line items, shipping, payment links).
+evidence_needed: With own SFDC account: GET /OrderSummary/<another_account's_recordId> returns order data or SFDC error?
+verify_steps: Passive done (route confirmed, CSP audit, Aura guest-reject confirmed). Active only on own test account.
+impact: cross-tenant order disclosure (financial data: amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[HYP] outline.py cross-tenant field geometry IDOR (unauthenticated legacy endpoint)
+class: IDOR
+asset: portal.mydataplant.com/services/outline.py
+confidence: 38
+reasoning: Endpoint renders field boundary as SVG given raw user_id+field_id. Returns HTTP 200 + image/svg+xml + 0-byte body for ALL tested numeric IDs (user_id 1-999999, field_id 1-9999). No auth header, no cookie, no Referer required. Non-numeric input returns 500 with verbose Apache error revealing webmaster@kleffmann.digital + Apache/2.4.29 (Ubuntu). Consistent 200+empty means either all test IDs have no geometry, or the endpoint requires server-side session state not captured by curl. Architecture is IDOR-prone but impact unconfirmed after extensive testing.
+evidence_needed: With own account: known valid user_id + field_id → does outline.py return actual SVG geometry?
+verify_steps: Passive extensively done (100+ ID combos, cookie/Referer probes, error analysis). Impact remains unconfirmed.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[FINAL] MyDataPlant BOLA via X-Selected-Partner-Link-Id: 62. Survives. Confirmed: POST /tokens ALSO requires auth (gateway wraps all endpoints), strengthening hypothesis that partner-link-id is client-controlled while JWT is auth-controlled. Requires active test with own JWT.
+[FINAL] shop.suedzucker.com SFDC OrderSummary IDOR: 50. Survives. Standard SFDC IDOR pattern. Requires SFDC account. New CSP data enriches the attack surface map (payments, SAP backend).
+[PARKED] outline.py IDOR: 38. Dropped below 40. 100+ ID combos across 2 rounds all return 200+empty. The endpoint IS auth-free but either requires valid server-side state, session cookie from browser flow, or the IDs are sequential integers starting from a much higher range. Cannot confirm impact without own account.
+[NEXT] PROBE: POST https://portal.mydataplant.com/api/v3/tokens with valid-format JWT containing known userId claims — test if the /tokens endpoint can be used to refresh/rotate tokens, and whether the error response reveals additional token-structure details (e.g., expected issuer, audience, or custom claims). Read-only: malformed JWT analysis only, no credential submission. If the Swagger's "LOGIN_NAME+PASSWORD without auth" is actually handled by a different path, discover it.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: 500 error on non-numeric user_id reveals Apache/2.4.29 (Ubuntu), webmaster@kleffmann.digital — third-party vendor identity (Kleffmann Group, German agri data company). All numeric IDs return 200+empty SVG (0 bytes). Architecture is IDOR-prone but impact unconfirmed after 100+ probe combinations.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (returns 403 "forbidden(149)" without it) despite Swagger doc stating "Authorization header is not allowed". JWT validation correctly rejects: malformed (401 "Wrong number of segments"), invalid signature (401 "Signature verification failed"), alg=none (401 "Algorithm not supported"). Confirms gateway-level auth wraps ALL endpoints including token generation.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com CSP audit: SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap (OAuth via suedzucker.authentication.eu10.hana.ondemand.com, client_id sb-approuter-sac-saceu10!t3650, redirect_uri /sso/login/callback). SAP API Management at szg-is.prod.apimanagement.eu30.hana.ondemand.com. SFDC community deu84.sfdc-yzvdd4.salesforce.com. Payments: Stripe + PayPal + Adyen. Aura endpoint properly rejects guest access.
+[LEARN] ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime, __VCAP_ID__ cookie). Sets X-Uaa-Csrf + __Host-JSESSIONID + __VCAP_ID__ cookies. 302 redirect chain from Commerce to UAA login. HSTS with includeSubDomains+preload. Well-configured SAP SSO.
+[RISK] suedzucker: 70 — all steps this round were read-only: token endpoint error analysis (malformed JWT tests, ~4 requests), outline.py IDOR probes (numeric IDs only, ~120 requests), SFDC CSP audit (page loads + OPTIONS), SAP Commerce/BTP endpoint discovery (GET only). No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. BOLA hypothesis at 62 strengthened by token endpoint auth confirmation (gateway wraps ALL endpoints). outline.py architecture noted but impact unconfirmed (dropped below 40). SFDC OrderSummary IDOR at 50 requires SFDC account. New SAP BTP surface mapped. Risk stable.
+## 2026-09-04 16:29:51 UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,9.2, attack_surface:10 + business_value:9 + tech_exposure:JWT+JSONAPI+574endpoints:9 + gate_ease:3(gateway+auth) + cloud_surface:1 + freshness:9
+[PRIO] portal.mydataplant.com/services/outline.py,7.3, attack_surface:8 + business_value:7 + tech_exposure:no-auth+user_id-param+500error:8 + gate_ease:8 + cloud_surface:1 + freshness:9
+[PRIO] shop.suedzucker.com,7.1, attack_surface:7 + business_value:8 + tech_exposure:SFDC+SAP+OrderSummary+payments+manage-users:8 + gate_ease:4(SFDC managed) + cloud_surface:1 + freshness:8
+[PRIO] suedzucker.eu10.hcs.cloud.sap,5.5, attack_surface:6 + business_value:6 + tech_exposure:SAP+OAuth+CF+cookies:7 + gate_ease:3(SAP UAA) + cloud_surface:2(SAP BTP) + freshness:8
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway requires X-Selected-Partner-Link-Id on every request (400 without, 403-without-Bearer). Header is NOT in Swagger spec — gateway-level enforcement only. Backend at portal.mydataplant.com returns 403-forbidden(149) without auth. CORS: access-control-allow-credentials: true but does NOT reflect arbitrary Origin. JWT contains userId+email claims, iss=auth-backend, aud=rest-client. POST /tokens also requires Authorization despite Swagger saying "not allowed" — confirms gateway wraps ALL endpoints. JWT error differentiation confirms algorithm allowlist (RS256+ES256 recognized, alg=none blocked). If backend does not verify partner-link-id matches JWT subject's authorized partners, token for partner A could re-scope to partner B's 30+ resource types with full CRUD.
+evidence_needed: With own test account (JWT + known X-Selected-Partner-Link-Id): does GET /fields with another org's link-id return their data or get rejected?
+verify_steps: Passive done (400/403 reach, Swagger analysis, CORS probe, token endpoint auth-gate confirmed, JWT error differentiation confirmed). Active only on own test account, read-only GET.
+impact: cross-tenant read of farm fields, field geometry (GEOMETRY attribute), person PII (FIRSTNAME, LASTNAME, BIRTHDAY, EMAIL), organization data, order data with PAYMENT_LINK + QUANTITY + CURRENCY, vehicle + media + action data — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) confirmed. CSP reveals: SAP Commerce backend suedzucker.eu10.hcs.cloud.sap, SFDC community deu84.sfdc-yzvdd4.salesforce.com, payments via Stripe+PayPal+Adyen. /manage-users route exposed (user management view). Sitemap enumerates ~100+ Product2 IDs (18-char SFDC format). Aura endpoint now returns 404 (previously guest-reject — may indicate reconfiguration). Route /OrderSummary/:recordId is client-rendered LWR SPA. SFDC communities use sharing rules — misconfigured sharing sets can expose cross-tenant records.
+evidence_needed: With own SFDC account: GET /OrderSummary/<another_account's_recordId> returns order data or SFDC error?
+verify_steps: Passive done (route confirmed, CSP audit, sitemap enumeration, Aura 404). Active only on own test account.
+impact: cross-tenant order disclosure (financial data: amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[HYP] outline.py cross-tenant field geometry IDOR (unauthenticated legacy endpoint)
+class: IDOR
+asset: portal.mydataplant.com/services/outline.py
+confidence: 38
+reasoning: Endpoint renders field boundary as SVG given raw user_id+field_id. Returns HTTP 200 + image/svg+xml + 0-byte body for ALL tested numeric IDs (user_id 1-999999, field_id 1-9999). No auth header, no cookie, no Referer required. Non-numeric input returns 500 with verbose Apache error revealing webmaster@kleffmann.digital + Apache/2.4.29 (Ubuntu). POST with JSON body → 500. No params → 200. camelCase params → 200. Architecture is IDOR-prone but impact unconfirmed after extensive testing.
+evidence_needed: With own account: known valid user_id + field_id → does outline.py return actual SVG geometry?
+verify_steps: Passive extensively done (100+ ID combos, param variations, cookie/Referer probes, error analysis, POST/PUT probe). Impact remains unconfirmed.
+impact: cross-tenant field boundary/location disclosure (agri PII) — MEDIUM/HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register for a test account on shop.suedzucker.com (/SelfRegister) to obtain SFDC credentials. Then test: (1) GET /OrderSummary/<another_account's_recordId> for cross-tenant order disclosure, (2) /manage-users behavior when authenticated (admin-only view or accessible to all users?). Self-registration is the only path to obtain SFDC auth for both the BOLA and OrderSummary IDOR hypotheses.
+[RISK] suedzucker: 70 — all steps this round were read-only: token endpoint JWT error differentiation (3 malformed JWT tests), outline.py param variations (4 requests), smartfarming SPA catch-all probing (4 GETs), shop sitemap enumeration (3 XML fetches), shop manage-users route check (1 GET), Aura endpoint check (1 POST). No credentials submitted, no authenticated cross-tenant reads, no mutations, ~1 rps. BOLA hypothesis at 62 strengthened by token endpoint JWT error analysis (confirms RS256 expected, algorithm allowlist). outline.py at 38 parked (3 rounds, 100+ probes, no impact confirmed). SFDC OrderSummary IDOR at 50 requires SFDC account (self-registration path identified). New surface: /manage-users exposed. Risk stable.
+## 2026-09-04 19:11:21 UTC [target] (model bigpickle)
+=====HYP=====
+## 2026-09-04 19:11:21 UTC [target] (model bigpickle)
+=====STATE=====
+{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mcurl -sS -m 20 -o /tmp/pp_payload.json -w "payload: %{http_code} %{size_download}b\n" "https://plantportal.suedzuckergroup.com/_payload.json" ; curl -sS -m 20 -D /tmp/pp_hdr.txt -o /dev/null -w "root: %{http_code}\n" "https://plantportal.suedzuckergroup.com/"
+payload: 200 594346b
+root: 200
+[0m
+[0m$ [0mgrep -o 'switchToPartnerNumber[^,}]\{0,120\}' /tmp/pp_payload.json | head -20; echo "----"; grep -o 'partner-[a-zA-Z]*' /tmp/pp_payload.json | sort -u | head -20; echo "----"; grep -o 'ceres[^"]\{0,80\}' /tmp/pp_payload.json | sort -u | head -30
+----
+----
+ceres-domain-backend-services
+ceres-external-plant-portal
+ceres-image-service/images
+ceres-internal-auth-service
+ceres-screenshot-watermark'
+ceresWatermark = controller
+ceresWatermark === controller && root.parentNode) {
+ceresWatermark === controller) delete global.ceresWatermark
+[0m
+[0m$ [0mgrep -o '[^"]\{0,40\}partner[^"]\{0,60\}' /tmp/pp_payload.json | sort -u | head -40
+(no output)
+[0m
+[0m$ [0mgrep -oi 'partner[^" ,\\]\{0,50\}' /tmp/pp_payload.json | sort -u | head -40; echo "===="; grep -o 'api-gateway[^"]\{0,90\}' /tmp/pp_payload.json | sort -u | head -20
+====
+api-gateway/entra-ext/api/
+api-gateway/entra-ext/api/ceres-domain-backend-services
+api-gateway/entra-ext/api/ceres-image-service/images
+api-gateway/entra-ext/api/ceres-internal-auth-service
+[0m
+[0m$ [0mgrep -oi '[a-zA-Z-]\{0,30\}linking[a-zA-Z-]\{0,30\}' /tmp/pp_payload.json | sort -u | head; echo "===="; grep -oi 'impersonat[a-z]*' /tmp/pp_payload.json | sort -u | head; echo "===="; grep -oi 'associat[a-z]*' /tmp/pp_payload.json | sort -u | head; echo "===="; grep -o 'authenticate[^"]\{0,80\}' /tmp/pp_payload.json | sort -u | head
+====
+====
+====
+[0m
+[0m$ [0mgrep -o '"[A-Za-z0-9_.:/ -]\{6,100\}"' /tmp/pp_payload.json | sort -u | grep -iE 'http|azure|auth|token|scope|url|endpoint|server|portal|mydataplant' | head -40
+"/auth-callback"
+"ceres-external-plant-portal"
+"https://graph.microsoft.com/v1.0"
+"https://plantportal.suedzuckergroup.com"
+"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/"
+"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services"
+"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-image-service/images"
+"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-internal-auth-service"
+"https://plantportal.suedzuckergroup.com/rmp"
+"https://smartfarming.suedzuckergroup.com"
+"https://smartfarming.suedzuckergroup.com/mdp-api/v3/api"
+"https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb135611267c"
+"serverRendered"
+[0m
+[0m$ [0mgrep -oi 'selected[^"]\{0,40\}' /tmp/pp_payload.json | sort -u | head; echo "===="; grep -oi 'link[-a-z]\{0,20\}[- ]id[^"]\{0,30\}' /tmp/pp_payload.json | sort -u | head; echo "===="; grep -oi 'partner[- ]number[a-zA-Z ]\{0,30\}' /tmp/pp_payload.json | sort -u | head; echo "===="; grep -o 'ceres-external[^"]\{0,60\}' /tmp/pp_payload.json | sort -u | head
+SelectedBackground:
+SelectedColor:
+selected .p-datatable-row-toggle-button:hover{ba
+selected .p-tree-node-icon{color:var(--p-tree-no
+selected .p-tree-node-toggle-button:hover{backgr
+selected .p-tree-node-toggle-button{color:inheri
+selected .p-treetable-node-toggle-button:hover{b
+selected .p-treetable-node-toggle-button{color:i
+selected > .p-cascadeselect-option-content{backg
+selected > td{border-block-end-color:var(--p-dat
+====
+====
+====
+ceres-external-plant-portal
+[0m
+[0m$ [0msleep 1; curl -sS -m 20 -o /dev/null -w "no-hdr: %{http_code}\n" "https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/v1/partners"; sleep 1; curl -sS -m 20 -o /dev/null -w "hdr=1: %{http_code}\n" -H "X-Selected-Partner-Link-Id: 1" "https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/v1/partners"; sleep 1; curl -sS -m 20 -o /dev/null -w "smartfarming no-hdr: %{http_code}\n" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields"
+no-hdr: 401
+hdr=1: 401
+smartfarming no-hdr: 400
+[0m
+[0m$ [0msleep 1; curl -sS -m 20 -D - -o /dev/null "https://szg-is.prod.apimanagement.eu30.hana.ondemand.com/" 2>&1 | head -20; sleep 1; curl -sS -m 20 -o /dev/null -w "api-mgmt /api/v1: %{http_code}\n" "https://szg-is.prod.apimanagement.eu30.hana.ondemand.com/api/v1"
+HTTP/1.1 404 Not Found
+Date: Fri, 04 Sep 2026 21:34:02 GMT
+Content-Type: application/json
+Content-Length: 185
+Connection: keep-alive
+X-Frame-Options: DENY
+Strict-Transport-Security: max-age=86400
+X-Content-Type-Options: nosniff
+Content-Security-Policy: frame-ancestors 'none'
+X-XSS-Protection: 1
+
+api-mgmt /api/v1: 404
+[0m
+STEP 1 — DELTA
+- [NEW] plantportal api-gateway differential: `ceres-domain-backend-services/v1/partners` → **401 both with and without** `X-Selected-Partner-Link-Id` → plantportal gateway is a pure MSAL auth-gate; the 400-Missing-header tenant-scoping primitive is specific to the smartfarming mdp-api gateway. Same partner-link family, different enforcement layers.
+- [CHANGED] Aggregated top hypothesis is now nemotron3's plantportal `switchToPartnerNumber` BOLA at 70, above my smartfarming header BOLA at 62 — the two describe one root cause exposed two ways (query param in SPA vs header at gateway).
+- [NEW] SAP APIM `szg-is.prod.apimanagement.eu30.hana.ondemand.com`: root + `/api/v1` → 404 with secure headers (HSTS/XFO-DENY/nosniff) — no public catalog, deprioritize.
+- [NO_DELTA] `_payload.json` (594KB) re-confirms api-gateway base + 3 service URIs + B2C tenant `516d27c9-70e5-49b6-8ca4-fb135611267c`, but contains **zero** partner-linking/impersonation route traces (client-side JS only). No new vuln-level signal this round.
+
+STEP 2 — PRIORITIZE
+- [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.7, attack_surface:10+business:9+tech:JWT+JSONAPI+574ep+tenant-header:9+gate:4+cloud:1+fresh:9
+- [PRIO] plantportal.suedzuckergroup.com,7.5, attack_surface:8+business:9+tech:switchToPartnerNumber+B2C+BOLA-route:8+gate:6+cloud:2+fresh:9
+- [PRIO] portal.mydataplant.com/services/outline.py,7.3, attack_surface:8+business:7+tech:no-auth+user_id+500err:8+gate:9+cloud:1+fresh:9
+- [PRIO] shop.suedzucker.com,6.5, attack_surface:7+business:8+tech:SFDC+OrderSummary+payments:8+gate:4+cloud:1+fresh:8
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal partner-link scoping BOLA (switchToPartnerNumber / partner-linking) — consolidated cross-front-end
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 68
+reasoning: Nuxt "epp" SPA exposes `/partner-linking/:processPartnerNumber` + `?switchToPartnerNumber=<int>` used directly in client state; /association/impersonation route present. All data flows through `/api-gateway/entra-ext/api/` base (confirmed in fresh _payload.json: ceres-domain-backend-services, ceres-image-service/images, ceres-internal-auth-service). Gateway returns 401 unauthed (pure auth-gate, no tenant header at this layer). Partner number is predictable (7-digit). Same family as smartfarming's gateway-required `X-Selected-Partner-Link-Id` — if the backend trusts client-supplied partner scope over JWT/bound partner-links, both portals share one BOLA.
+evidence_needed: Own account + linked partner: does supplier `partner_number` (or partner-link id) scoped by client input let a request read another partner's contracts/deliveries/settlements?
+verify_steps: Passive done (api-gateway URIs, 401 gate, route set, payload). Active on own test account only: authenticate via B2C, complete linking, then GET `/api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{id}/contracts` swapping partner ids; read-only GETs.
+impact: cross-tenant farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id tenant-scoping header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: mdp-api gateway returns 400 "Missing X-Selected-Partner-Link-Id" (re-confirmed this round on /fields), header NOT in Swagger spec, POST /tokens also auth-gated, JWT carries userId+email + mdp_bgd_api scope. Client-supplied header scopes tenant on top of JWT; backend portal.mydataplant.com 403-gated unauthed. If header value is not validated against JWT subject's authorized partner-links, token for partner A re-scopes to B across 574 JSON:API endpoints.
+evidence_needed: Own JWT + another org's link-id → GET /fields, /users/{id}, /orders/{id} returns cross-tenant data vs rejection.
+verify_steps: Passive done (400/403 differential, CORS, JWT error differentiation, header-vs-bearer behavior). Active on own test account, read-only GET.
+impact: cross-tenant read/CRUD of fields, geometry, person PII (BIRTHDAY/EMAIL), orders+PAYMENT_LINK — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0), /OrderSummary/:recordId + /manage-users routes, sitemap yields ~100 Product2 18-char ids, CSP maps SAP Commerce + SFDC community + Stripe/PayPal/Adyen. Aura guest access rejected. SFDC sharing-set misconfig is the whole ballgame for this class.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another_account's_recordId> → order data or SFDC error.
+verify_steps: Passive done. Active only on own test account (self-registration path exists via /SelfRegister).
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] outline.py geometry IDOR (38): 4th round, still parked — auth-free but 200+empty for 100+ combos; impact unconfirmed without own valid user_id/field_id.
+- [PARKED] SAP APIM szg-is gateway: root/api/v1 404 secure — not a sink, drop.
+- [PARKED] /tokens brute-force & employee-benefits portal: explicit OUT OF SCOPE (credential/employee-data classes).
+- [FINAL] plantportal partner-link BOLA 68 (was 70; slight trim after gateway differential shows plantportal layer is auth-gated before tenant logic — still the top target).
+- [FINAL] smartfarming header BOLA 62 — survives; same root-cause family as plantportal.
+- [FINAL] shop OrderSummary IDOR 50 — survives, SFDC account required.
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.DpUprWo9.js (hash already known to nemotron3) and extract the exact partner-linking request shape: the path under ceres-domain-backend-services that accepts `switchToPartnerNumber`/partner_number and whether it maps to mdp-api's `X-Selected-Partner-Link-Id` header at the gateway — read-only static fetch, no auth, no mutations. This converts the two BOLA leads into a single testable endpoint list for the own-account verification.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED RECON @ plantportal/api-gateway: ceres-domain-backend-services/v1/partners → 401 unauthed with AND without X-Selected-Partner-Link-Id — plantportal gateway is pure MSAL auth-gate (no tenant header enforced at this layer); contrast with smartfarming mdp-api (400 Missing header). Same partner-link family, different enforcement.
+- [LEARN] ACCEPTED RECON @ szg-is.prod.apimanagement.eu30.hana.ondemand.com: root + /api/v1 → 404 with secure headers (HSTS/XFO DENY/nosniff/CSP); no exposed APIM catalog — deprioritize.
+- [LEARN] ACCEPTED RECON @ plantportal _payload.json: api-gateway base + 3 service URIs + B2C authority tenant confirmed; zero partner-linking/impersonation traces in server payload → those routes are client-side-only, so the endpoint map lives in the JS bundle, not the payload.
+
+STEP 7 — RISK
+[RISK] suedzucker: 70 — this round: 7 read-only GETs (payload fetch, plantportal gateway differential x2, smartfarming 400 re-check, SAP APIM x2, bundle-plan). All unauthenticated, no mutations, no live customer data, ~1 rps. BOLA family now unified across two portals (plantportal query-param + smartfarming header) with top hypothesis at 68; all active confirmation gated behind own test accounts. Risk stable.

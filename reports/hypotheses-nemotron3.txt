@@ -1,8 +1,8 @@
-## 2026-09-04 19:18:34 UTC [target] (model nemotron3)
+## 2026-09-04 21:36:10 UTC [target] (model nemotron3)
 [PRIO] plantportal.suedzuckergroup.com,8.5,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=8,freshness=10  
 [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,8.3,attack_surface=10,business_value=8,tech_exposure=9,gate_ease=5,cloud_surface=7,freshness=10  
+[PRIO] shop.suedzucker.com,7.8,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=5,cloud_surface=9,freshness=9  
 [PRIO] portal.mydataplant.com/services/outline.py,7.2,attack_surface=7,business_value=7,tech_exposure=6,gate_ease=10,cloud_surface=5,freshness=8  
-[PRIO] shop.suedzucker.com,7.8,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=5,cloud_surface=9,freshness=9
 [HYP] Plant Portal Partner-Linking BOLA via switchToPartnerNumber  
 class: IDOR  
 asset: plantportal.suedzuckergroup.com  
@@ -30,6 +30,15 @@ evidence_needed: With OWN test account: GET /services/outline.py?user_id=<own>&f
 verify_steps: PASSIVE: GET https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1 (already done — 200 empty). AUTH_HELPED (own test account): obtain valid JWT, call outline.py with own field IDs to confirm data return, then test horizontal access to other user_id/field_id.  
 impact: Cross-tenant field boundary/location geometry disclosure (agri location PII) — MEDIUM/HIGH  
 testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR  
+class: IDOR  
+asset: shop.suedzucker.com  
+confidence: 60  
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP connect-src includes API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com. SelfRegister route suggests public registration possible.  
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.  
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED (own test account via SelfRegister): login, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API (GET /services/data/vXX.X/sobjects/OrderSummary/{other_id}).  
+impact: Cross-account order/PII/payment data access — HIGH  
+testability: AUTH_HELPED
 [PARKED] MyDataPlant JWT Token Endpoint Brute-Force Surface: confidence 35 — credential-guessing/rate-limit OUT OF SCOPE; no logic flaw observed passively; /tokens requires Authorization header (403 without) despite Swagger doc error.  
 [PARKED] MyDataPlant SSRF via Export Targets: confidence 40 → downgraded; Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch.  
 [PARKED] Employee Benefits Portal SSO Bypass: confidence 45 but testability HUMAN_ONLY (requires employee creds), gate_ease 4 — drop per rules (no auth-bypass on live employee data).  
@@ -38,8 +47,8 @@ testability: AUTH_HELPED
 [FINAL] plantportal.suedzuckergroup.com — 70 (IDOR/BOLA, high data value, AUTH_HELPED testable)  
 [FINAL] smartfarming.suedzuckergroup.com/mdp-api/v3/api — 62 (IDOR/BOLA, massive API surface, AUTH_HELPED testable)  
 [FINAL] portal.mydataplant.com/services/outline.py — 55 (IDOR, auth-free geometry endpoint, AUTH_HELPED testable)  
-[FINAL] shop.suedzucker.com — 60 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable) — held from prior lead
-[NEXT] PROBE: GET https://plantportal.suedzuckergroup.com/_nuxt/entry.DpUprWo9.js — already fetched; extracted MSAL config (clientId ba3120d6-3d54-478b-a048-5f1242196100, authority szgrmb2cprod.ciamlogin.com, scopes external_api_access + mdp_bgd_api) and all api-gateway backend URIs (ceres-internal-auth-service, ceres-domain-backend-services, ceres-image-service, mdpBackend). Next concrete probe: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com, complete partner linking flow, then test horizontal partner ID access via /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{id}/contracts with valid Bearer token.
+[FINAL] shop.suedzucker.com — 60 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable)
+[NEXT] PROBE: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com, complete partner linking flow (SMS OTP + Partnernummer), then test horizontal partner ID access via GET /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token (read-only, rate-limited 1 rps, own test account only).
 [LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), scopes api://1b7819b0.../external_api_access + api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure, not a vuln.  
 [LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Full public Swagger (15k lines) confirms real backend portal.mydataplant.com/api/v3, Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.  
 [LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).  
