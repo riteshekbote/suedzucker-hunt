@@ -6348,3 +6348,34 @@ access-control-allow-origin: *
 [93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
 [0m✗ [0mwc -c /tmp/mapserv_root.txt; cat /tmp/mapserv_root.txt | head -c 1200; echo failed
 [91m[1mError: [0mThe user rejected permission to use this specific tool call.
+===== ANALYST bigpickle 2026-09-05 05:51:00 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s -m 15 -A "Mozilla/5.0" -o /dev/null -w "cc head %{http_code} %{content_type} %{size_download}\n" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api" 2>&1; echo "exit=$?"
+cc head 200 text/html 1542868
+exit=0
+[0m
+[0m$ [0mfor p in "openapi.json" "swagger.json" "?format=openapi" ; do curl -s -m 20 -A "Mozilla/5.0" -o /dev/null -w "sf/api/$p -> %{http_code} %{content_type} %{size_download}\n" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/$p"; sleep 1; done
+curl -s -m 20 -A "Mozilla/5.0" -o /dev/null -w "sf/v3/ -> %{http_code} %{content_type} %{size_download}\n" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/"; sleep 1
+curl -s -m 20 -A "Mozilla/5.0" -o /dev/null -w "sf/root -> %{http_code} %{content_type} %{size_download}\n" "https://smartfarming.suedzuckergroup.com/"
+sf/api/openapi.json -> 400 application/vnd.api+json 77
+sf/api/swagger.json -> 400 application/vnd.api+json 77
+sf/api/?format=openapi -> 200 text/html 1542868
+sf/v3/ -> 404 text/html; charset=iso-8859-1 334
+sf/root -> 200 text/html 6335
+[0m
+[0m$ [0mcurl -s -m 20 -A "Mozilla/5.0" -o /tmp/gw400.txt -w "gw400 -> %{http_code} %{content_type} %{size_download}\n" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/openapi.json"; sleep 1
+curl -s -m 20 -A "Mozilla/5.0" -o /tmp/sfroot.html -w "sfroot -> %{http_code} %{content_type} %{size_download}\n" "https://smartfarming.suedzuckergroup.com/"; sleep 1
+curl -s -m 20 -A "Mozilla/5.0" -o /tmp/portalservices.txt -w "portal/services/ -> %{http_code} %{content_type} %{size_download}\n" "https://portal.mydataplant.com/services/"; sleep 1
+curl -s -m 20 -A "Mozilla/5.0" -o /tmp/srvstatus.txt -w "portal/server-status -> %{http_code} %{content_type} %{size_download}\n" "https://portal.mydataplant.com/server-status"; sleep 1
+curl -s -m 20 -A "Mozilla/5.0" -o /tmp/gwroot.txt -w "pp/api-gateway/ -> %{http_code} %{content_type} %{size_download}\n" "https://plantportal.suedzuckergroup.com/api-gateway/"
+gw400 -> 400 application/vnd.api+json 77
+sfroot -> 200 text/html 6335
+portal/services/ -> 403 text/html; charset=iso-8859-1 287
+portal/server-status -> 403 text/html; charset=iso-8859-1 287
+pp/api-gateway/ -> 200 text/html;charset=utf-8 594346
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mecho "=== gw400 ==="; cat /tmp/gw400.txt; echo; echo "=== sfroot head ==="; head -c 800 /tmp/sfroot.html; echo; echo "=== portalservices 403 ==="; cat /tmp/portalservices.txt; echo; echo "=== gwroot head ==="; head -c 1500 /tmp/gwroot.txt failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.

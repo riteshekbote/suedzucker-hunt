@@ -1140,3 +1140,4 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ plantportal/_nuxt (C8VgmCLt/BIRtYruH/pinia store BPdoNzAO): switchToPartnerNumber captured from query in globalInit into client state only; no auto setCurrentPartner — header cannot be primed with arbitrary partnerNo
 [RISK] suedzucker: 70 — this round: ~16 read-only GETs (Nuxt entry + 10 lazy chunk fetches, /api/catalog/companies, /rmp/ probe, no auth, no mutations, ~1 rps). All new material is static client bundle analysis + one public catalog read; zero credential submission, zero authenticated cross-tenant reads, zero writes. epp BOLA top at 64 but strictly own-account-gated (HUMAN). mdp-api BOLA stable at 62 (family provenance now stronger via epp client). Subsurface /api/catalog surfaced but is public config (non-finding). Risk stable.
 ## 2026-09-05 01:07:10 UTC [target] (model bigpickle)
+## 2026-09-05 05:50:02 UTC [target] (model bigpickle)
