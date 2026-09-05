@@ -555,3 +555,61 @@ testability: AUTH_HELPED
 [LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404).
 [LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
 [RISK] suedzucker: 72 — Program scope covers 5 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts.
+## 2026-09-05 13:15:25 UTC [target] (model nemotron3)
+[PRIO] portal.mydataplant.com/api/v3,8.1,a=9,b=9,t=8,g=6,c=8,f=7
+[PRIO] plantportal.suedzuckergroup.com,8.0,a=8,b=9,t=7,g=8,c=7,f=8
+[PRIO] shop.suedzucker.com,7.6,a=8,b=8,t=7,g=7,c=8,f=7
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.2,a=7,b=8,t=7,g=6,c=8,f=7
+[PRIO] portal.mydataplant.com/services/outline.py,7.0,a=7,b=7,t=6,g=10,c=5,f=6
+[PRIO] suedzucker.mitarbeiterangebote.de,4.2,a=4,b=5,t=4,g=3,c=4,f=5
+[PRIO] bisz.suedzucker.de,3.6,a=4,b=4,t=3,g=5,c=2,f=2
+[PRIO] www.suedzuckergroup.com,2.8,a=3,b=3,t=2,g=4,c=2,f=2
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: portal.mydataplant.com/api/v3
+confidence: 65
+reasoning: Gateway requires X-Selected-Partner-Link-Id on ALL requests (400 without). Backend returns 403 forbidden(177) with header but no Bearer. JWT embeds userId+email+mdp_bgd_api scope. Client-supplied header scopes tenant on top of JWT — mirrors Plant Portal switchToPartnerNumber. X-Selected-Partner-Link-Id NOT in API documentation (gateway-level only). 574 JSON:API endpoints with numeric IDs. If backend does not verify header value ∈ JWT subject's authorized partner-links, token for partner A can re-scope to partner B.
+evidence_needed: With own test account: GET /api/v3/fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> — observe cross-tenant data return vs rejection.
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (Swagger) — enumerate all endpoints accepting X-Selected-Partner-Link-Id. AUTH_HELPED (own test account only): POST /tokens → JWT; GET /api/v3/fields with JWT + X-Selected-Partner-Link-Id:1; mutate header to 2,3... — read-only, no live customer data, rate-limited 1 rps.
+impact: Cross-tenant read/modify/delete of farm fields, cultivation plans, orders, biomass maps, persons, organizations (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 70
+reasoning: Nuxt 3 "epp" v1.8.0 SPA with documented partner-number linking (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + switchToPartnerNumber query param captured in client state + /association/impersonation route guarded only by client middleware (is-authenticated/logged-in-user/only-for-partner). Endpoints: GET /external-partner-impersonations?partnerSearch + POST {partnerNo}. API gateway backends (ceres-domain-backend-services, mdpBackend) behind /api-gateway/entra-ext/api/ all 401-gated but authz scope per partner unverified. PrimeVue DataTable/TreeTable components suggest partner-scoped data tables.
+evidence_needed: Observe /partner-linking/:processPartnerNumber endpoint behavior; test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt _payload.json + entry.DpUprWo9.js for API base paths and partner-linking routes. AUTH_HELPED (own test account): register, complete partner linking (SMS OTP + Partnernummer), then test horizontal access to other partner IDs via API (GET /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token).
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP connect-src includes API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com. SelfRegister route suggests public registration possible.
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED (own test account via SelfRegister): login, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API (GET /services/data/vXX.X/sobjects/OrderSummary/{other_id}).
+impact: Cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[PARKED] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint: confidence 55 but outline.py returns 200+empty SVG for all tested combos (1/1, 2/123, 999999/1) after 100+ probes — either no geometry exists for test IDs or soft-fail; needs valid account to confirm data return before horizontal testing viable.
+[PARKED] MyDataPlant JWT Token Endpoint Brute-Force Surface: confidence 35 — credential-guessing/rate-limit OUT OF SCOPE; no logic flaw observed passively; /tokens requires Authorization header (403 without) despite Swagger doc error.
+[PARKED] MyDataPlant SSRF via Export Targets: confidence 40 → downgraded; Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch.
+[PARKED] Employee Benefits Portal SSO Bypass: confidence 45 but testability HUMAN_ONLY (requires employee creds), gate_ease 4 — drop per rules (no auth-bypass on live employee data).
+[PARKED] WordPress wp-json @ bisz.suedzucker.de: REJECTED class (descriptive/public API, no auth bypass impact).
+[PARKED] www.suedzuckergroup.com Drupal 11: CONFIRMED REJECTED (hardened, JSON:API/GraphQL disabled, registration closed).
+[FINAL] plantportal.suedzuckergroup.com — 70 (IDOR/BOLA, high data value, AUTH_HELPED testable)
+[FINAL] portal.mydataplant.com/api/v3 — 65 (IDOR/BOLA, massive API surface, AUTH_HELPED testable)
+[FINAL] shop.suedzucker.com — 60 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable)
+[NEXT] PROBE: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com, complete partner linking flow (SMS OTP + Partnernummer), then test horizontal partner ID access via GET /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token (read-only, rate-limited 1 rps, own test account only).
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), scopes api://1b7819b0.../external_api_access + api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure, not a vuln.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/api/v3: Full public Swagger (15k lines) confirms real backend, Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).
+[LEARN] REJECTED NOT-VULN @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + image/svg+xml + empty body for all tested user_id+field_id combos; auth-free, bypasses gateway; 500 on non-numeric reveals Apache/2.4.29 (Ubuntu), webmaster@kleffmann.digital — IDOR-prone architecture but impact unconfirmed.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts Authorization: Bearer (401 for malformed JWT). Does NOT accept Authentication: Bearer (403 forbidden(149)). Swagger doc has documentation error.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (403 without) despite Swagger doc stating "Authorization header is not allowed". JWT validation correctly rejects: malformed (401), invalid signature (401), alg=none (401). Gateway-level auth wraps ALL endpoints.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com, SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+[LEARN] ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime). Sets X-Uaa-Csrf + __Host-JSESSIONID + __VCAP_ID__ cookies. HSTS with includeSubDomains+preload.
+[LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404).
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+[RISK] suedzucker: 72 — Program scope covers 5 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts.
