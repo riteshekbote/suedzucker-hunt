@@ -6981,3 +6981,133 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 70 — zero active probes this round (read-only inventory only). All three top hypotheses AUTH_HELPED, blocked on human test-account registration; no machine-producible path forward. Risk stable, no data touched.
+===== ANALYST bigpickle 2026-09-05 16:21:14 UTC =====
+STEP 1 — DELTA
+NO_DELTA: no new hosts, tech, or behavioral changes on any of the 7 in-scope assets since last scan (2026-09-05 09:52:59 UTC reconfirmed at 09:54:40; delta scans at 12:00/14:46 produced no leads). Top-3 hypothesis set and all LEARN entries unchanged.
+
+STEP 2 — PRIORITIZE
+[PRIO] portal.mydataplant.com/api/v3,7.1,existing(BOLA 65)
+[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,7.0,existing(BOLA 64)
+[PRIO] shop.suedzucker.com/OrderSummary,5.3,existing(IDOR 50)
+No new assets; re-scored existing high-value targets only.
+
+STEP 3 — HYPOTHESES
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api (backend portal.mydataplant.com/api/v3)
+confidence: 65
+reasoning: mdp-api gateway returns 400 "Missing X-Selected-Partner-Link-Id" on every unauth request; header absent from Swagger (gateway-level only). POST /tokens is auth-gated (403 without Authorization). JWT carries userId+email+mdp_bgd_api scope. epp client confirms same header family (x-selected-partner-link-id) fed from persisted current partner. Gateway tenant scope is decoupled from JWT subject claims — cross-tenant is decided by header validation, not by token.
+evidence_needed: Own JWT + a non-owned org's link-id → GET /fields or /users/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account, read-only GET only, permute X-Selected-Partner-Link-Id (own vs non-owned).
+impact: cross-tenant read/CRUD of fields, geometry, person PII (BIRTHDAY/EMAIL), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp v1.8.0 sends x-selected-partner-link-id only on POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations. Header value is server-issued partnerLinkId from own /external-account. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId-vs-JWT-subject unverified.
+evidence_needed: Own token + 2 owned links: does POST current-partner with a non-owned link-id persist; does POST external-partner-impersonations {partnerNo} with unassociated partnerNo succeed.
+verify_steps: Active on own test account: (1) POST current-partner (own vs non-owned link-id); (2) GET /external-partner-impersonations?partnerSearch=<rare surname>.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0); routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4; Aura guest access rejected (404). Sharing-set misconfig is whole ballgame; no code-level evidence either way passively.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another account's recordId> returns record vs SFDC rejection.
+verify_steps: Active on own SFDC test account only (self-register via /SelfRegister).
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+No candidate dropped below 40 or falls in a REJECTED class; all three remain AUTH_HELPED and legitimately gated (no passive path to differentiate). Prior dead-ends re-confirmed unchanged: outline.py IDOR (100+ probes, all 200+empty), mdp-api /exportTargets SSRF (catalog-only), Drupal hardened, bisz wp-json, UAA config, /tokens (correctly gated), current-partner predictable-partnerNo (server-issued link-id only).
+[PARKED] outline.py auth-free IDOR (all combos 200+empty; no differential this round).
+[PARKED] mdp-api SSRF /exportTargets — catalog-only targets, no arbitrary-URL fetch.
+[PARKED] switchToPartnerNumber→header BOLA (old form) — server-issued link-id, predictable partnerNo never reaches header.
+[FINAL] mdp-api X-Selected-Partner-Link-Id BOLA: 65 (top)
+[FINAL] epp partner-scope BOLA (impersonation + current-partner): 64
+[FINAL] SFDC OrderSummary IDOR: 50
+All three unchanged, blocked on live credential.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation; on own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id swapped between two owned links AND one syntactically-valid non-owned link-id, observe persistence then GET /access-rights; (2) if association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname> then read-only POST impersonate of a list member. Same JWT (mdp_bgd_api scope) unlocks the smartfarming mdp-api header-permutation GET test. Blocked until account+linked partner exists.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ suedzucker inventory: delta scans 09:52:59 & 09:54:40 UTC confirm 7 in-scope assets stable — no new hosts/tech/behaviors; repeated passive scans yield no new leads.
+[LEARN] ACCEPTED RECON @ all three top targets: epp BOLA (64), mdp-api BOLA (65), SFDC IDOR (50) all re-confirmed AUTH_HELPED with no machine-producible passive differentiator; only a live test account can advance.
+
+STEP 7 — RISK
+[RISK] suedzucker: 70 — zero active probes this round (read-only inventory/static only, no auth, no mutations, ~0 rps). All three top hypotheses AUTH_HELPED and blocked on human test-account registration; no machine-producible path forward under passive-first rules. No data touched, no customer impact. Risk stable vs prior rounds.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   STEP 1 — DELTA
+NO_DELTA: no new hosts, tech, or behavioral changes on any of the 7 in-scope assets since last scan (2026-09-05 09:52:59 UTC reconfirmed at 09:54:40; delta scans at 12:00/14:46 produced no leads). Top-3 hypothesis set and all LEARN entries unchanged.
+
+STEP 2 — PRIORITIZE
+[PRIO] portal.mydataplant.com/api/v3,7.1,existing(BOLA 65)
+[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,7.0,existing(BOLA 64)
+[PRIO] shop.suedzucker.com/OrderSummary,5.3,existing(IDOR 50)
+No new assets; re-scored existing high-value targets only.
+
+STEP 3 — HYPOTHESES
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api (backend portal.mydataplant.com/api/v3)
+confidence: 65
+reasoning: mdp-api gateway returns 400 "Missing X-Selected-Partner-Link-Id" on every unauth request; header absent from Swagger (gateway-level only). POST /tokens is auth-gated (403 without Authorization). JWT carries userId+email+mdp_bgd_api scope. epp client confirms same header family (x-selected-partner-link-id) fed from persisted current partner. Gateway tenant scope is decoupled from JWT subject claims — cross-tenant is decided by header validation, not by token.
+evidence_needed: Own JWT + a non-owned org's link-id → GET /fields or /users/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account, read-only GET only, permute X-Selected-Partner-Link-Id (own vs non-owned).
+impact: cross-tenant read/CRUD of fields, geometry, person PII (BIRTHDAY/EMAIL), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp v1.8.0 sends x-selected-partner-link-id only on POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations. Header value is server-issued partnerLinkId from own /external-account. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId-vs-JWT-subject unverified.
+evidence_needed: Own token + 2 owned links: does POST current-partner with a non-owned link-id persist; does POST external-partner-impersonations {partnerNo} with unassociated partnerNo succeed.
+verify_steps: Active on own test account: (1) POST current-partner (own vs non-owned link-id); (2) GET /external-partner-impersonations?partnerSearch=<rare surname>.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0); routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4; Aura guest access rejected (404). Sharing-set misconfig is whole ballgame; no code-level evidence either way passively.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another account's recordId> returns record vs SFDC rejection.
+verify_steps: Active on own SFDC test account only (self-register via /SelfRegister).
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+No candidate dropped below 40 or falls in a REJECTED class; all three remain AUTH_HELPED and legitimately gated (no passive path to differentiate). Prior dead-ends re-confirmed parked/unchangeed: outline.py IDOR (100+ probes, all 200+empty), mdp-api /exportTargets SSRF (catalog-only), Drupal hardened, bisz wp-json, UAA config, /tokens (correctly gated), current-partner predictable-partnerNo (server-issued link-id only).
+[PARKED] outline.py auth-free IDOR (1/1,2/123,999999/1 all 200+empty; no differential this round).
+[PARKED] mdp-api SSRF /exportTargets — catalog-only targets, no arbitrary-URL fetch.
+[PARKED] switchToPartnerNumber→header BOLA (old form) — server-issued link-id, predictable partnerNo never reaches header.
+[FINAL] mdp-api X-Selected-Partner-Link-Id BOLA: 65 (top)
+[FINAL] epp partner-scope BOLA (impersonation + current-partner): 64
+[FINAL] SFDC OrderSummary IDOR: 50
+All three unchanged, blocked on live credential.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation; on own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id swapped between two owned links AND one syntactically-valid non-owned link-id, observe persistence then GET /access-rights; (2) if association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname> then read-only POST impersonate of a list member. Same JWT (mdp_bgd_api scope) unlocks the smartfarming mdp-api header-permutation GET test. Blocked until account+linked partner exists.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ suedzucker inventory: delta scans 09:52:59 & 09:54:40 UTC confirm 7 in-scope assets stable — no new hosts/tech/behaviors; repeated passive scans yield no new leads.
+[LEARN] ACCEPTED RECON @ all three top targets: epp BOLA (64), mdp-api BOLA (65), SFDC IDOR (50) all re-confirmed AUTH_HELPED with no machine-producible passive differentiator; only a live test account can advance.
+
+STEP 7 — RISK
+[RISK] suedzucker: 70 — zero active probes this round (read-only inventory/static only, no auth, no mutations, ~0 rps). All three top hypotheses AUTH_HELPED and blocked on human test-account registration; no machine-producible path forward under passive-first rules. No data touched, no customer impact. Risk stable vs prior rounds.
+[0m← [0mWrite analyst-out.txt
+Wrote file successfully.
+[0m
+Analysis complete. Summary of this round:
+
+**Delta:** NO_DELTA — all 7 in-scope assets stable since last scan; no new leads produced by the two delta scan iterations (12:00, 14:46).
+
+**Ranking unchanged (all AUTH_HELPED, blocked on live credential):**
+- [65] mdp-api `X-Selected-Partner-Link-Id` cross-tenant BOLA
+- [64] plantportal epp partner-scope BOLA (impersonation + current-partner)
+- [50] SFDC OrderSummary IDOR
+
+**Next action:** [HUMAN] — only a registered plantportal test account (Entra B2C + linked 7-digit Partnernummer) can advance any of the three top hypotheses. The same JWT (`mdp_bgd_api` scope) also unlocks the smartfarming mdp-api header-permutation test.
+
+**Risk:** 70, stable. Zero active probes, no data touched, no customer impact. The passive machine-producible surface for this program is fully exhausted; progression is gated on human test-account registration.
