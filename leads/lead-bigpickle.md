@@ -1141,3 +1141,33 @@ testability: AUTH_HELPED
 [RISK] suedzucker: 70 — this round: ~16 read-only GETs (Nuxt entry + 10 lazy chunk fetches, /api/catalog/companies, /rmp/ probe, no auth, no mutations, ~1 rps). All new material is static client bundle analysis + one public catalog read; zero credential submission, zero authenticated cross-tenant reads, zero writes. epp BOLA top at 64 but strictly own-account-gated (HUMAN). mdp-api BOLA stable at 62 (family provenance now stronger via epp client). Subsurface /api/catalog surfaced but is public config (non-finding). Risk stable.
 ## 2026-09-05 01:07:10 UTC [target] (model bigpickle)
 ## 2026-09-05 05:50:02 UTC [target] (model bigpickle)
+## 2026-09-05 09:53:07 UTC [target] (model bigpickle)
+[HYP] Plant Portal epp partner-scope BOLA (impersonation + current-partner)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp v1.8.0 client uses x-selected-partner-link-id only on POST /external-account/current-partner, GET /access-rights, and GET|POST /external-partner-impersonations. Header value is server-issued partnerLinkId from own /external-account list. Route /association/impersonation guarded only by client middleware. Backend authorization of partnerLinkId vs JWT subject is unverified.
+evidence_needed: Own token + partner link: does POST current-partner with a non-owned link-id persist, and does POST external-partner-impersonations {partnerNo} with unassociated partnerNo succeed?
+verify_steps: Passive done. Active on own test account: (1) POST current-partner with own vs non-owned link-id; (2) GET /external-partner-impersonations?partnerSearch=<rare surname>.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant scope switch — HIGH (agri PII + financial)
+testability: AUTH_HELPED
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: mdp-api gateway returns 400 "Missing X-Selected-Partner-Link-Id" on every request. Header absent from Swagger (gateway-level only). POST /tokens auth-gated (403 without). JWT carries userId+email+mdp_bgd_api scope. epp client confirms same header family (x-selected-partner-link-id) from persisted current partner. Gateway tenant scope decoupled from JWT claims — cross-tenant access determined by header validation.
+evidence_needed: Own JWT + another org's link-id → GET /fields, /users/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account, read-only GET with X-Selected-Partner-Link-Id permutation.
+impact: cross-tenant read/CRUD of fields, geometry, person PII (BIRTHDAY/EMAIL), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 50
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0); routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community; Aura guest access rejected. Sharing-set misconfig is the entire ballgame — no code-level evidence either way passively.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another_account's_recordId> vs rejection.
+verify_steps: Passive done. Active on own SFDC test account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup at szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation code. Then on own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with header x-selected-partner-link-id swapped between two owned links AND a syntactically-valid non-owned link-id (observe persistence + later GET /access-rights result); (2) if account maps to association/partner role, GET /external-partner-impersonations?partnerSearch=<rare surname> and attempt POST impersonate of a list member. Capture full request/response. This also yields the JWT whose mdp_bgd_api scope unlocks smartfarming header-permutation test.
+[RISK] suedzucker: 70 — this round: zero active probes, zero new passive surface. All three top hypotheses remain AUTH_HELPED with no machine-producible path forward. epp BOLA at 64 (top), mdp-api BOLA at 62, SFDC IDOR at 50. Blocked on human test account registration. Risk stable; no data touched, no customer impact.

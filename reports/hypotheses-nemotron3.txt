@@ -1,11 +1,12 @@
-## 2026-09-05 05:50:39 UTC [target] (model nemotron3)
-[PRIO] portal.mydataplant.com/api/v3,8.6,a=9,b=9,t=8,g=9,c=8,f=7  
-[PRIO] plantportal.suedzuckergroup.com,8.0,a=8,b=9,t=7,g=8,c=7,f=8  
-[PRIO] shop.suedzucker.com,7.6,a=8,b=8,t=7,g=7,c=8,f=7  
-[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.2,a=7,b=8,t=7,g=6,c=8,f=7  
-[PRIO] portal.mydataplant.com/services/outline.py,7.0,a=7,b=7,t=6,g=10,c=5,f=6  
-[PRIO] suedzucker.mitarbeiterangebote.de,4.2,a=4,b=5,t=4,g=3,c=4,f=5  
-[PRIO] bisz.suedzucker.de,3.6,a=4,b=4,t=3,g=5,c=2,f=2  
+## 2026-09-05 09:54:32 UTC [target] (model nemotron3)
+[NEW] 2026-09-05 09:52:59 UTC: No new hosts or technology changes observed since last scan 2026-09-05 05:51:00 UTC. Inventory stable across 7 in-scope assets. Knowledge base entries since last run are confirmatory repeats (Drupal hardened, WordPress wp-json descriptive, MyDataPlant Swagger/portal auth behavior reconfirmed). NO_DELTA on attack surface.
+[PRIO] portal.mydataplant.com/api/v3,8.1,a=9,b=9,t=8,g=6,c=8,f=7
+[PRIO] plantportal.suedzuckergroup.com,8.0,a=8,b=9,t=7,g=8,c=7,f=8
+[PRIO] shop.suedzucker.com,7.6,a=8,b=8,t=7,g=7,c=8,f=7
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.2,a=7,b=8,t=7,g=6,c=8,f=7
+[PRIO] portal.mydataplant.com/services/outline.py,7.0,a=7,b=7,t=6,g=10,c=5,f=6
+[PRIO] suedzucker.mitarbeiterangebote.de,4.2,a=4,b=5,t=4,g=3,c=4,f=5
+[PRIO] bisz.suedzucker.de,3.6,a=4,b=4,t=3,g=5,c=2,f=2
 [PRIO] www.suedzuckergroup.com,2.8,a=3,b=3,t=2,g=4,c=2,f=2
 [HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
 class: IDOR
