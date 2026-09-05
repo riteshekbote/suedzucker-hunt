@@ -1333,3 +1333,96 @@ impact: cross-tenant order disclosure (amounts, line items, shipping, payment li
 testability: AUTH_HELPED
 [NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation code. On own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with header x-selected-partner-link-id swapped between two owned links AND a syntactically-valid non-owned link-id; observe persistence + follow-up GET /access-rights. (2) If mapped to association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname>, then POST impersonate one listed partnerNo. Capture full request/response; read-only GETs for impact. Same JWT (mdp_bgd_api scope) unlocks the mdp-api X-Selected-Partner-Link-Id permutation. Cheaper alternative: shop.suedzucker.com /SelfRegister → GET /OrderSummary/<guessed_recordId> without ordering.
 [RISK] suedzucker: 70 — this round: 16 read-only GETs (~1 rps; 11 sibling 404s, 4 gateway-spec 400s, 1 outline baseline 200+empty), zero credentials, zero authenticated reads, zero writes. Repeated scans yield no new passive leads — true plateau; all three top hypotheses AUTH_HELPED and strictly own-account-gated (HUMAN). Risk stable; no data touched, no customer impact.
+## 2026-09-05 20:46:57 UTC [target] (model bigpickle)
+confidence: 65
+reasoning: Gateway 400 Missing-X-Selected-Partner-Link-Id on EVERY request (incl /services/* non-gateway paths intercepted under /mdp-api); with header+no Bearer -> 403 forbidden(177). Header absent from Swagger (gateway-level only). POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api. epp client confirms same header family from persisted current-partner. Tenant scope decoupled from JWT claims — cross-tenant access decided by header validation. This round re-confirmed gateway intercepts openapi/swagger.json too.
+evidence_needed: Own JWT + another org's link-id -> GET /api/v3/fields, /users/{id}, /orders/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account, read-only GET, header permutation (own -> non-owned -> syntactically-valid unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; ~100 Product2 18-char IDs in sitemap; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Sharing-set misconfig is the decider — no code-level evidence either way passively. Public /SelfRegister makes own test account feasible.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another_account's_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[PARKED] outline.py geometry IDOR: sample sweep 11 siblings all 404 — outline.py is the sole exposed auth-free service but 200+empty persists across 100+ probes; no data-exfil evidence; sibling-enumeration door now closed. Needs valid account geometry to distinguish soft-fail vs no-data; parked pending HUMAN.
+[PARKED] /tokens brute-force: OUT OF SCOPE (rate-limit) — no logic flaw observed passively.
+[PARKED] employee benefits SSO / reposcan / Drupal hardening / bisz wp-json / exportTargets SSRF: unchanged from prior REJECTED/PARKED.
+[FINAL] mdp-api header BOLA 65 (AUTH_HELPED)
+[FINAL] plantportal epp BOLA 64 (AUTH_HELPED)
+[FINAL] shop SFDC OrderSummary IDOR 55 (AUTH_HELPED)
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation code. On own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with header x-selected-partner-link-id = own link vs a second owned link vs a syntactically-valid NON-owned link-id; observe persistence + follow-up GET /access-rights. (2) If mapped to association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname>, then POST impersonate one listed partnerNo. Capture full request/response; read-only GETs only for impact. Same JWT (mdp_bgd_api scope) unlocks mdp-api X-Selected-Partner-Link-Id permutation test. Alternate cheaper path: shop.suedzucker.com /SelfRegister -> place no order, GET /OrderSummary/<guessed_recordId>.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/: 11 sibling *.py paths 404 — outline.py is the sole auth-free gateway-bypassing service; sibling enumeration closed.
+[LEARN] ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json -> 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readable OpenAPI exposed; inline HTML doc is full surface.
+[LEARN] ACCEPTED RECON @ reposcan 2026-09-05 18:19: no public GitHub org configured for suedzucker — repo-scan is a structural no-op, no repo surface.
+[RISK] suedzucker: 70 — this round: 16 read-only GETs (11 outline.py siblings, 4 gateway spec paths, 1 outline baseline) at ~1 rps, all 404/400/200-empty; zero credentials, zero authenticated reads, zero writes. Surface fully mapped; all three top hypotheses AUTH_HELPED and strictly own-account-gated (HUMAN). No new passive lead produced by repeated scanning — consistent with plateau. Risk stable; no data touched, no customer impact.
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation code. On own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with header x-selected-partner-link-id = own link vs a second owned link vs a syntactically-valid NON-owned link-id; observe persistence + follow-up GET /access-rights. (2) If mapped to association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname>, then POST impersonate one listed partnerNo. Capture full request/response; read-only GETs only for impact. Same JWT (mdp_bgd_api scope) unlocks mdp-api X-Selected-Partner-Link-Id permutation test. Alternate cheaper path: shop.suedzucker.com /SelfRegister -> place no order, GET /OrderSummary/<guessed_recordId>.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/: 11 sibling *.py paths 404 — outline.py is the sole auth-free gateway-bypassing service; sibling enumeration closed.
+[LEARN] ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json -> 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readable OpenAPI exposed; inline HTML doc is full surface.
+[LEARN] ACCEPTED RECON @ reposcan 2026-09-05 18:19: no public GitHub org configured for suedzucker — repo-scan is a structural no-op, no repo surface.
+[RISK] suedzucker: 70 — this round: 16 read-only GETs (11 outline.py siblings, 4 gateway spec paths, 1 outline baseline) at ~1 rps, all 404/400/200-empty; zero credentials, zero authenticated reads, zero writes. Surface fully mapped; all three top hypotheses AUTH_HELPED and strictly own-account-gated (HUMAN). No new passive lead produced by repeated scanning — consistent with plateau. Risk stable; no data touched, no customer impact.
+[HYP] Plant Portal epp partner-scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp v1.8.0 client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; header value=server-issued partnerLinkId. /association/impersonation guarded only by client middleware (is-authenticated/logged-in-user/only-for-partner). Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only (never auto-primes header) — but current-partner + impersonation still take raw partnerNo.
+evidence_needed: Own token + 2 owned links: does POST current-partner with a non-owned link-id persist, and does POST external-partner-impersonations {partnerNo} on an unassociated partnerNo succeed; follow-up GET /access-rights reflects wrong scope.
+verify_steps: Passive done (bundle + routes + header map). Active on own test account only; read-only GETs for impact.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
+confidence: 65
+reasoning: Gateway 400 Missing-X-Selected-Partner-Link-Id on every request; with header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only). POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api, no partner/link claims. Tenant scope decoupled from JWT claims — decided by a client-supplied header. epp client confirms same header family from persisted current-partner. This round re-confirmed gateway intercepts openapi/swagger.json too.
+evidence_needed: Own JWT + another org's link-id → GET /api/v3/fields, /users/{id}, /orders/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account, read-only GET, header permutation (own → non-owned → syntactically-valid unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; ~100 Product2 18-char IDs in sitemap; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Sharing-set misconfig is the decider — no code-level evidence either way passively. Public /SelfRegister makes own test account feasible.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another_account's_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation code. On own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with header x-selected-partner-link-id swapped between two owned links AND a syntactically-valid non-owned link-id; observe persistence + follow-up GET /access-rights. (2) If mapped to association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname>, then POST impersonate one listed partnerNo. Capture full request/response; read-only GETs for impact. Same JWT (mdp_bgd_api scope) unlocks the mdp-api X-Selected-Partner-Link-Id permutation. Cheaper alternative: shop.suedzucker.com /SelfRegister → GET /OrderSummary/<guessed_recordId> without ordering.
+[RISK] suedzucker: 70 — this round: 16 read-only GETs (~1 rps; 11 sibling 404s, 4 gateway-spec 400s, 1 outline baseline 200+empty), zero credentials, zero authenticated reads, zero writes. Repeated scans yield no new passive leads — true plateau; all three top hypotheses AUTH_HELPED and strictly own-account-gated (HUMAN). Risk stable; no data touched, no customer impact.
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
+confidence: 65
+reasoning: Gateway 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only). POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api, no partner claims — tenant scope decided by a client-supplied header. epp client persists same header family from current-partner.
+evidence_needed: Own JWT + a non-owned link-id → GET /api/v3/fields, /users/{id}, /orders/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account only; read-only GET; header permutation (own → non-owned → syntactically-valid unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; header=server-issued partnerLinkId. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only.
+evidence_needed: Own token + swapped links: does POST current-partner with a non-owned link-id persist; does GET /access-rights reflect wrong scope.
+verify_steps: Active on own test account; read-only GETs for impact.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] CropChart (AgricoNetwork) cross-tenant BOLA after public email self-registration
+class: IDOR
+asset: app.cropchart.net/api (access/agro/general/orders/premium services)
+confidence: 55
+reasoning: All CRUD behind uniform 401 MISSING_AUTHORIZATION_HEADER; gateway discriminates services only by path prefix; public registration flow /access/users/cropchart-registration/createAccount + activateAccount. finance-adjacent modules (premium/subscription/payment, ordersFolder+contractorsFolder) in bundle. Spring Boot services: multi-tenant org model (landShare, orgentity) — BOLA decider unobservable passively.
+evidence_needed: Own account: does GET /api/orders/{foreign-id}, /api/agro/event/{id}, /api/general/information/contact/{id}, /api/premium/subscription/get with swapped org ids return foreign data; does createAccount accept org/role mass-assignment fields.
+verify_steps: Passive done. Active: register (POST createAccount email flow + activateAccount via code) on OWN account only, then read-only GETs with id permutation. Capture createAccount request body fields for mass-assignment review.
+impact: cross-tenant read of trading orders/contracts, agro treatment + land PII, premium subscription/payment state — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Cheapest own-account path in the program: register on app.cropchart.net — POST /api/access/users/cropchart-registration/createAccount (capture full JSON body; inspect for organizationId/partner/role mass-assignment fields), activate with emailed code via POST /api/access/users/cropchart-registration/activateAccount, login via POST /api/access/authentication/issueSessionToken. On own account ONLY, read-only: GET /api/orders, /api/orders/{id}, /api/agro/event, /api/general/information/contact, /api/general/information/userId, /api/premium/subscription/get then swap ids with syntactically-valid foreign values. Fallback to plantportal Entra B2C (szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100) + SMS Partnernummer linking if cropchart register is closed.
+[LEARN] ACCEPTED RECON @ app.cropchart.net: AgricoNetwork's real app host (linked from agriconetwork.com homepage); "Moro" React SPA + Spring Boot microservices behind OpenResty/Envoy on GKE cropchart-2-0-prod; gateway/agro/access/general/premium/assets services; uniform 401 MISSING_AUTHORIZATION_HEADER without JWT; actuator+Swagger disabled; endpoint map recovered from /assets/index.bd3e3a65.js — large, well-gated tier-2 asset.
+[LEARN] REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history (certspotter complete set = only agriconetwork.com/www). Inventory entry was stale by 09-05; real platform lives at cropchart.net.
+[LEARN] ACCEPTED RECON @ app.cropchart.net/api/assets/fedora/getPublicFile/{r}: auth-free gateway-bypassing file-resolver (200 application/octet-stream "Resource /public/{id} not found" for all scanned ids) — sole unauth service exposed; sibling/doc surface closed (actuator, per-service api-docs, swagger-resources all 404/empty).
+[RISK] suedzucker: 70 — this round ~40 read-only GETs at ≤1 rps against public endpoints of one newly-identified asset (401 gates hit, one 200-empty auth-free oracle, several 404s); zero credentials, zero authenticated reads, zero writes, no customer data. No DoS, no mutation; registration deferred to own-account phase. Risk stable; discovery of a large new in-scope platform raises expected impact of future AUTH_HELPED testing but not current exposure.
