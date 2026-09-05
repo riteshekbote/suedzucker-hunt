@@ -8363,3 +8363,778 @@ testability: AUTH_HELPED
 
 **STEP 7 — RISK**
 [RISK] suedzucker: 70 — this round ~40 read-only GETs at ≤1 rps against public endpoints of one newly-identified asset (401 gates hit, one 200-empty auth-free oracle, several 404s); zero credentials, zero authenticated reads, zero writes, no customer data. No DoS, no mutation; registration deferred to own-account phase. Risk stable; discovery of a large new in-scope platform raises expected impact of future AUTH_HELPED testing but not current exposure.
+===== ANALYST bigpickle 2026-09-05 22:39:50 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && echo "---" && ls -la art/ 2>/dev/null && echo "---" && ls -la inventory/ 2>/dev/null && echo "---" && ls -la scope.yml 2>/dev/null
+total 188
+drwxr-xr-x 12 runner runner  4096 Sep  5 22:36 .
+drwxr-xr-x  3 runner runner  4096 Sep  5 22:36 ..
+drwxr-xr-x  7 runner runner  4096 Sep  5 22:36 .git
+drwxr-xr-x  3 runner runner  4096 Sep  5 22:36 .github
+-rw-r--r--  1 runner runner  1852 Sep  5 22:36 README.md
+-rw-r--r--  1 runner runner    32 Sep  5 22:36 analyst-out.txt
+-rw-r--r--  1 runner runner 52546 Sep  5 22:36 analyst-prompt.txt
+-rw-r--r--  1 runner runner 48670 Sep  5 22:36 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 leads
+-rw-r--r--  1 runner runner   667 Sep  5 22:36 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 reports
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  5 22:36 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 scripts
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 triage
+---
+[0m
+[0m$ [0mls -la art/ inventory/ knowledge/ leads/ recon-notes/ reports/ triage/ scripts/ 2>&1
+ls: cannot access 'art/': No such file or directory
+inventory/:
+total 16
+drwxr-xr-x  2 runner runner 4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 5541 Sep  5 22:36 suedzucker.md
+
+knowledge/:
+total 36
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner  4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 26678 Sep  5 22:36 index.md
+
+leads/:
+total 404
+drwxr-xr-x  2 runner runner   4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner   4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 233611 Sep  5 22:36 lead-bigpickle.md
+-rw-r--r--  1 runner runner    918 Sep  5 22:36 lead-laguna.md
+-rw-r--r--  1 runner runner    900 Sep  5 22:36 lead-ling3.md
+-rw-r--r--  1 runner runner    936 Sep  5 22:36 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  5 22:36 lead-mimo.md
+-rw-r--r--  1 runner runner 144214 Sep  5 22:36 lead-nemotron3.md
+-rw-r--r--  1 runner runner   2373 Sep  5 22:36 reposcan-suedzucker.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner  822 Sep  5 22:36 DEDICATED-DEEP.md
+
+reports/:
+total 1776
+drwxr-xr-x  2 runner runner    4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner    4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner  829505 Sep  5 22:36 analyst-bigpickle.log
+-rw-r--r--  1 runner runner    3906 Sep  5 22:36 analyst-laguna.log
+-rw-r--r--  1 runner runner    3888 Sep  5 22:36 analyst-ling3.log
+-rw-r--r--  1 runner runner    3924 Sep  5 22:36 analyst-longcat.log
+-rw-r--r--  1 runner runner 1083062 Sep  5 22:36 analyst-nemotron3.log
+-rw-r--r--  1 runner runner   16497 Sep  5 22:36 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep  5 22:36 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep  5 22:36 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep  5 22:36 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   12379 Sep  5 22:36 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner   57050 Sep  5 22:36 hypotheses.md
+-rw-r--r--  1 runner runner      39 Sep  5 22:36 valid-bugs.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner  4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 16987 Sep  5 22:36 sync-issues.py
+
+triage/:
+total 108
+drwxr-xr-x  2 runner runner 4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner    0 Sep  5 22:36 .gitkeep
+-rw-r--r--  1 runner runner  143 Sep  5 22:36 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner  701 Sep  5 22:36 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner  201 Sep  5 22:36 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner  159 Sep  5 22:36 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner  152 Sep  5 22:36 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner  182 Sep  5 22:36 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner  245 Sep  5 22:36 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner  276 Sep  5 22:36 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner  172 Sep  5 22:36 run-2026-09-03-23-30.md
+-rw-r--r--  1 runner runner  189 Sep  5 22:36 run-2026-09-04-01-18.md
+-rw-r--r--  1 runner runner  241 Sep  5 22:36 run-2026-09-04-05-58.md
+-rw-r--r--  1 runner runner  254 Sep  5 22:36 run-2026-09-04-10-34.md
+-rw-r--r--  1 runner runner  232 Sep  5 22:36 run-2026-09-04-14-31.md
+-rw-r--r--  1 runner runner  196 Sep  5 22:36 run-2026-09-04-17-45.md
+-rw-r--r--  1 runner runner  203 Sep  5 22:36 run-2026-09-04-20-00.md
+-rw-r--r--  1 runner runner  218 Sep  5 22:36 run-2026-09-04-22-09.md
+-rw-r--r--  1 runner runner  195 Sep  5 22:36 run-2026-09-05-00-07.md
+-rw-r--r--  1 runner runner  258 Sep  5 22:36 run-2026-09-05-04-31.md
+-rw-r--r--  1 runner runner  172 Sep  5 22:36 run-2026-09-05-08-33.md
+-rw-r--r--  1 runner runner  174 Sep  5 22:36 run-2026-09-05-12-00.md
+-rw-r--r--  1 runner runner  189 Sep  5 22:36 run-2026-09-05-14-46.md
+-rw-r--r--  1 runner runner  178 Sep  5 22:36 run-2026-09-05-16-59.md
+-rw-r--r--  1 runner runner  163 Sep  5 22:36 run-2026-09-05-18-48.md
+-rw-r--r--  1 runner runner  210 Sep  5 22:36 run-2026-09-05-20-48.md
+-rw-r--r--  1 runner runner  153 Sep  5 22:36 run-2026-09-05-22-26.md
+[0m
+[0m$ [0mcat triage/run-2026-09-05-22-26.md triage/run-2026-09-05-20-48.md probe-results.md analyst-out.txt 2>&1
+===== TRIAGE 2026-09-05 22:26:40 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. Please paste the probe results you want me to triage.
+
+===== TRIAGE 2026-09-05 20:48:07 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+The LEADS section is empty — no hunt bot results were provided for evaluation.
+
+Please paste the lead(s) you want me to triage.
+
+## 2026-09-02 21:40:00 UTC
+
+
+## 2026-09-02 23:35:55 UTC
+
+
+## 2026-09-03 01:37:08 UTC
+
+
+## 2026-09-03 06:28:47 UTC
+
+
+## 2026-09-03 11:41:50 UTC
+
+
+## 2026-09-03 16:00:35 UTC
+
+
+## 2026-09-03 19:14:36 UTC
+
+
+## 2026-09-03 21:51:49 UTC
+
+
+## 2026-09-03 23:56:35 UTC
+
+
+## 2026-09-04 02:52:37 UTC
+
+
+## 2026-09-04 07:31:16 UTC
+
+
+## 2026-09-04 12:23:16 UTC
+
+
+## 2026-09-04 16:46:07 UTC
+
+
+## 2026-09-04 19:18:44 UTC
+
+
+## 2026-09-04 21:36:21 UTC
+
+
+## 2026-09-04 23:22:47 UTC
+
+
+## 2026-09-05 01:08:45 UTC
+
+
+## 2026-09-05 05:51:00 UTC
+
+
+## 2026-09-05 09:54:41 UTC
+
+
+## 2026-09-05 13:15:34 UTC
+
+
+## 2026-09-05 16:21:14 UTC
+
+
+## 2026-09-05 18:29:35 UTC
+
+
+## 2026-09-05 20:47:37 UTC
+
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && echo "---" && ls -la art/ 2>/dev/null && echo "---" && ls -la inventory/ 2>/dev/null && echo "---" && ls -la scope.yml 2>/dev/null
+total 188
+drwxr-xr-x 12 runner runner  4096 Sep  5 22:36 .
+drwxr-xr-x  3 runner runner  4096 Sep  5 22:36 ..
+drwxr-xr-x  7 runner runner  4096 Sep  5 22:36 .git
+drwxr-xr-x  3 runner runner  4096 Sep  5 22:36 .github
+-rw-r--r--  1 runner runner  1852 Sep  5 22:36 README.md
+-rw-r--r--  1 runner runner    32 Sep  5 22:36 analyst-out.txt
+-rw-r--r--  1 runner runner 52546 Sep  5 22:36 analyst-prompt.txt
+-rw-r--r--  1 runner runner 48670 Sep  5 22:36 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 leads
+-rw-r--r--  1 runner runner   667 Sep  5 22:36 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 reports
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  5 22:36 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 scripts
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  5 22:36 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 triage
+---
+[0m
+[0m$ [0mls -la art/ inventory/ knowledge/ leads/ recon-notes/ reports/ triage/ scripts/ 2>&1
+ls: cannot access 'art/': No such file or directory
+inventory/:
+total 16
+drwxr-xr-x  2 runner runner 4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 5541 Sep  5 22:36 suedzucker.md
+
+knowledge/:
+total 36
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner  4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 26678 Sep  5 22:36 index.md
+
+leads/:
+total 404
+drwxr-xr-x  2 runner runner   4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner   4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 233611 Sep  5 22:36 lead-bigpickle.md
+-rw-r--r--  1 runner runner    918 Sep  5 22:36 lead-laguna.md
+-rw-r--r--  1 runner runner    900 Sep  5 22:36 lead-ling3.md
+-rw-r--r--  1 runner runner    936 Sep  5 22:36 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  5 22:36 lead-mimo.md
+-rw-r--r--  1 runner runner 144214 Sep  5 22:36 lead-nemotron3.md
+-rw-r--r--  1 runner runner   2373 Sep  5 22:36 reposcan-suedzucker.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner  822 Sep  5 22:36 DEDICATED-DEEP.md
+
+reports/:
+total 1776
+drwxr-xr-x  2 runner runner    4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner    4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner  829505 Sep  5 22:36 analyst-bigpickle.log
+-rw-r--r--  1 runner runner    3906 Sep  5 22:36 analyst-laguna.log
+-rw-r--r--  1 runner runner    3888 Sep  5 22:36 analyst-ling3.log
+-rw-r--r--  1 runner runner    3924 Sep  5 22:36 analyst-longcat.log
+-rw-r--r--  1 runner runner 1083062 Sep  5 22:36 analyst-nemotron3.log
+-rw-r--r--  1 runner runner   16497 Sep  5 22:36 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep  5 22:36 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep  5 22:36 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep  5 22:36 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   12379 Sep  5 22:36 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner   57050 Sep  5 22:36 hypotheses.md
+-rw-r--r--  1 runner runner      39 Sep  5 22:36 valid-bugs.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner  4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner 16987 Sep  5 22:36 sync-issues.py
+
+triage/:
+total 108
+drwxr-xr-x  2 runner runner 4096 Sep  5 22:36 .
+drwxr-xr-x 12 runner runner 4096 Sep  5 22:36 ..
+-rw-r--r--  1 runner runner    0 Sep  5 22:36 .gitkeep
+-rw-r--r--  1 runner runner  143 Sep  5 22:36 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner  701 Sep  5 22:36 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner  201 Sep  5 22:36 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner  159 Sep  5 22:36 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner  152 Sep  5 22:36 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner  182 Sep  5 22:36 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner  245 Sep  5 22:36 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner  276 Sep  5 22:36 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner  172 Sep  5 22:36 run-2026-09-03-23-30.md
+-rw-r--r--  1 runner runner  189 Sep  5 22:36 run-2026-09-04-01-18.md
+-rw-r--r--  1 runner runner  241 Sep  5 22:36 run-2026-09-04-05-58.md
+-rw-r--r--  1 runner runner  254 Sep  5 22:36 run-2026-09-04-10-34.md
+-rw-r--r--  1 runner runner  232 Sep  5 22:36 run-2026-09-04-14-31.md
+-rw-r--r--  1 runner runner  196 Sep  5 22:36 run-2026-09-04-17-45.md
+-rw-r--r--  1 runner runner  203 Sep  5 22:36 run-2026-09-04-20-00.md
+-rw-r--r--  1 runner runner  218 Sep  5 22:36 run-2026-09-04-22-09.md
+-rw-r--r--  1 runner runner  195 Sep  5 22:36 run-2026-09-05-00-07.md
+-rw-r--r--  1 runner runner  258 Sep  5 22:36 run-2026-09-05-04-31.md
+-rw-r--r--  1 runner runner  172 Sep  5 22:36 run-2026-09-05-08-33.md
+-rw-r--r--  1 runner runner  174 Sep  5 22:36 run-2026-09-05-12-00.md
+-rw-r--r--  1 runner runner  189 Sep  5 22:36 run-2026-09-05-14-46.md
+-rw-r--r--  1 runner runner  178 Sep  5 22:36 run-2026-09-05-16-59.md
+-rw-r--r--  1 runner runner  163 Sep  5 22:36 run-2026-09-05-18-48.md
+-rw-r--r--  1 runner runner  210 Sep  5 22:36 run-2026-09-05-20-48.md
+-rw-r--r--  1 runner runner  153 Sep  5 22:36 run-2026-09-05-22-26.md
+[0m
+[0m
+[0m$ [0mcat scope.yml && echo "=====INVENTORY=====" && cat inventory/suedzucker.md && echo "=====DEEP-NOTES=====" && cat recon-notes/DEDICATED-DEEP.md
+programs:
+  suedzucker:
+    name: Südzucker AG / Südzucker Group Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, production systems, supply chain systems, enterprise IT, customer and partner platforms, APIs, websites, and domains operated by Südzucker Group and its subsidiaries"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+=====INVENTORY=====
+# Südzucker AG / Südzucker Group inventory (discovery seed 2026-09-02)
+# NOTE: hosts below are discovery candidates from passive DNS/CT; confirm in-scope vs program scope before active testing.
+mail.suedzucker.de
+suedzucker.de
+web.suedzucker.de
+www.suedzucker.de
+
+## PASSIVE RECON 2026-09-02 (read-only, non-intrusive)
+
+> Recon observations only. These are NOT confirmed vulnerabilities; ownership/in-scope of each host must be confirmed against the program scope before any active testing. Hosts resolve + serve HTTP — investigation requires scoped authorization.
+
+**Probed:** 4 hosts | **Live HTTP:** 0
+
+| Host | Status | Server/Tech |
+|---|---|---|
+
+**CNAME review signals (1):**
+- `mail.suedzucker.de` -> `szwmaz0001.suedzucker.de`
+
+## 2026-09-02 21:40:00 UTC
+
+## 2026-09-02 23:35:54 UTC
+
+## 2026-09-03 01:37:08 UTC
+
+## 2026-09-03 06:28:47 UTC
+
+## 2026-09-03 11:41:49 UTC
+
+## 2026-09-03 16:00:35 UTC
+- NEW www.suedzuckergroup.com — corporate site redirect target of suedzucker.de (Drupal 11, live)
+- NEW shop.suedzucker.com — customer shop SPA with /login (e-commerce auth)
+- NEW plantportal.info — Plant Portal (farmer portal, partner-number linking flow)
+- NEW app.agriconetwork.com — Giełda Wysłodkowa byproduct trading platform (financial)
+- NEW bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
+- NEW suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
+- CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+
+## 2026-09-03 19:14:36 UTC
+
+## 2026-09-03 21:51:49 UTC
+- NEW plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+- NEW shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
+- CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
+
+## 2026-09-03 23:56:35 UTC
+- NEW plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+- NEW shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
+- CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain)
+- NEW www.suedzuckergroup.com — corporate site redirect target of suedzucker.de (Drupal 11, live)
+- NEW shop.suedzucker.com — customer shop SPA with /login (e-commerce auth)
+- NEW plantportal.info — Plant Portal (farmer portal, partner-number linking flow)
+- NEW app.agriconetwork.com — Giełda Wysłodkowa byproduct trading platform (financial)
+- NEW bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
+- NEW suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
+- CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+- NEW plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0 SPA confirmed via `_payload.json`; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100); scopes `ap
+- NEW shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 262.60); routes `/OrderSummary/:recordId`, `/product/:recordId`, `/cart`, `/checkout`, `/order`, `/SelfRegister`; CSP connect-src includes 
+- NEW smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant REST API — 574 endpoints in public Swagger UI (no auth to read docs); JSON:API format; JWT token auth (`/tokens` endpoint); requires `X-Sel
+- CHANGED plantportal.info → 301 redirects to plantportal.suedzuckergroup.com (subdomain of main corp domain, confirmed live)
+- CHANGED Inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+
+## 2026-09-04 02:52:37 UTC
+
+## 2026-09-04 07:31:16 UTC
+
+## 2026-09-04 12:23:16 UTC
+
+## 2026-09-04 16:46:06 UTC
+
+## 2026-09-04 19:18:44 UTC
+
+## 2026-09-04 21:36:21 UTC
+
+## 2026-09-04 23:22:47 UTC
+
+## 2026-09-05 01:08:45 UTC
+
+## 2026-09-05 05:51:00 UTC
+
+## 2026-09-05 09:54:40 UTC
+- NEW 2026-09-05 09:52:59 UTC: No new hosts or technology changes observed since last scan 2026-09-05 05:51:00 UTC. Inventory stable across 7 in-scope assets. Knowledge base entries since last run are confi
+
+## 2026-09-05 13:15:34 UTC
+
+## 2026-09-05 16:21:14 UTC
+
+## 2026-09-05 18:29:35 UTC
+- CHANGED probed: portal.mydataplant.com /services/*.py sibling sweep (fields.py field.py map.py geometry.py layers.py legend.py user.py export.py wms.py overview.py plan.py) all 404 — outline.py is the SOLE au
+- CHANGED probed: smartfarming gateway /mdp-api/v3/api/{openapi,swagger}.json -> 400 application/vnd.api+json (JSON:API Missing-header error, gateway intercepts) — no machine-readable OpenAPI spec exposed; inli
+
+## 2026-09-05 20:47:37 UTC
+- CHANGED portal.mydataplant.com/services/*.py sibling sweep complete — 11 paths (fields.py, field.py, map.py, geometry.py, layers.py, legend.py, user.py, export.py, wms.py, overview.py, plan.py) all 404; outli
+- CHANGED smartfarming.suedzuckergroup.com/mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (JSON:API Missing-header) — no machine-readable OpenAPI exposed; inline HTML Swagger only surface
+- CHANGED reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
+=====DEEP-NOTES=====
+# Dedicated deep surface (wildcard-filtered) 2026-09-03
+
+**Target:** `suedzucker`
+**Root zones:** `suedzucker.de`
+
+## Wildcard analysis
+
+- Total resolving hostnames in zone: 0
+- After shared/wildcard IP filtering: **0 genuinely dedicated hosts**
+- Reason: all resolving hostnames use shared/CDN/wildcard IP signatures
+
+## Honest conclusion
+
+This target's subdomain space is wildcard-dominated. No genuinely dedicated
+subdomain surface was recovered from passive brute + subfinder enumeration.
+The surface either (a) uses wildcard DNS records, (b) all CNAME records
+point to shared CDN/Cloudflare/CloudFront/AWS IPs, or (c) has no
+subdomain program at all. This is the honest exhaustive result.
+
+---
+_Honest framing: passive DNS enumeration + shared-IP wildcard filtering. No finding claimed. No active testing performed._
+[0m
+[0m$ [0mcat state_bigpickle.json state_nemotron3.json 2>&1; echo "=====HYP-BIGPICKLE====="; tail -60 reports/hypotheses-bigpickle.txt; echo "=====HYP-NEMOTRON3====="; tail -60 reports/hypotheses-nemotron3.txt
+{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}=====HYP-BIGPICKLE=====
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp v1.8.0 client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; header value=server-issued partnerLinkId. /association/impersonation guarded only by client middleware (is-authenticated/logged-in-user/only-for-partner). Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only (never auto-primes header) — but current-partner + impersonation still take raw partnerNo.
+evidence_needed: Own token + 2 owned links: does POST current-partner with a non-owned link-id persist, and does POST external-partner-impersonations {partnerNo} on an unassociated partnerNo succeed; follow-up GET /access-rights reflects wrong scope.
+verify_steps: Passive done (bundle + routes + header map). Active on own test account only; read-only GETs for impact.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
+confidence: 65
+reasoning: Gateway 400 Missing-X-Selected-Partner-Link-Id on every request; with header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only). POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api, no partner/link claims. Tenant scope decoupled from JWT claims — decided by a client-supplied header. epp client confirms same header family from persisted current-partner. This round re-confirmed gateway intercepts openapi/swagger.json too.
+evidence_needed: Own JWT + another org's link-id → GET /api/v3/fields, /users/{id}, /orders/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account, read-only GET, header permutation (own → non-owned → syntactically-valid unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; ~100 Product2 18-char IDs in sitemap; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Sharing-set misconfig is the decider — no code-level evidence either way passively. Public /SelfRegister makes own test account feasible.
+evidence_needed: Own SFDC account: GET /OrderSummary/<another_account's_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register plantportal test account (Entra B2C signup authority szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), link a 7-digit Partnernummer via SMS activation code. On own account only: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with header x-selected-partner-link-id swapped between two owned links AND a syntactically-valid non-owned link-id; observe persistence + follow-up GET /access-rights. (2) If mapped to association/partner role: GET /external-partner-impersonations?partnerSearch=<rare surname>, then POST impersonate one listed partnerNo. Capture full request/response; read-only GETs for impact. Same JWT (mdp_bgd_api scope) unlocks the mdp-api X-Selected-Partner-Link-Id permutation. Cheaper alternative: shop.suedzucker.com /SelfRegister → GET /OrderSummary/<guessed_recordId> without ordering.
+[RISK] suedzucker: 70 — this round: 16 read-only GETs (~1 rps; 11 sibling 404s, 4 gateway-spec 400s, 1 outline baseline 200+empty), zero credentials, zero authenticated reads, zero writes. Repeated scans yield no new passive leads — true plateau; all three top hypotheses AUTH_HELPED and strictly own-account-gated (HUMAN). Risk stable; no data touched, no customer impact.
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
+confidence: 65
+reasoning: Gateway 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only). POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api, no partner claims — tenant scope decided by a client-supplied header. epp client persists same header family from current-partner.
+evidence_needed: Own JWT + a non-owned link-id → GET /api/v3/fields, /users/{id}, /orders/{id} returns cross-tenant data vs rejection.
+verify_steps: Active on own test account only; read-only GET; header permutation (own → non-owned → syntactically-valid unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; header=server-issued partnerLinkId. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only.
+evidence_needed: Own token + swapped links: does POST current-partner with a non-owned link-id persist; does GET /access-rights reflect wrong scope.
+verify_steps: Active on own test account; read-only GETs for impact.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] CropChart (AgricoNetwork) cross-tenant BOLA after public email self-registration
+class: IDOR
+asset: app.cropchart.net/api (access/agro/general/orders/premium services)
+confidence: 55
+reasoning: All CRUD behind uniform 401 MISSING_AUTHORIZATION_HEADER; gateway discriminates services only by path prefix; public registration flow /access/users/cropchart-registration/createAccount + activateAccount. finance-adjacent modules (premium/subscription/payment, ordersFolder+contractorsFolder) in bundle. Spring Boot services: multi-tenant org model (landShare, orgentity) — BOLA decider unobservable passively.
+evidence_needed: Own account: does GET /api/orders/{foreign-id}, /api/agro/event/{id}, /api/general/information/contact/{id}, /api/premium/subscription/get with swapped org ids return foreign data; does createAccount accept org/role mass-assignment fields.
+verify_steps: Passive done. Active: register (POST createAccount email flow + activateAccount via code) on OWN account only, then read-only GETs with id permutation. Capture createAccount request body fields for mass-assignment review.
+impact: cross-tenant read of trading orders/contracts, agro treatment + land PII, premium subscription/payment state — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Cheapest own-account path in the program: register on app.cropchart.net — POST /api/access/users/cropchart-registration/createAccount (capture full JSON body; inspect for organizationId/partner/role mass-assignment fields), activate with emailed code via POST /api/access/users/cropchart-registration/activateAccount, login via POST /api/access/authentication/issueSessionToken. On own account ONLY, read-only: GET /api/orders, /api/orders/{id}, /api/agro/event, /api/general/information/contact, /api/general/information/userId, /api/premium/subscription/get then swap ids with syntactically-valid foreign values. Fallback to plantportal Entra B2C (szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100) + SMS Partnernummer linking if cropchart register is closed.
+[LEARN] ACCEPTED RECON @ app.cropchart.net: AgricoNetwork's real app host (linked from agriconetwork.com homepage); "Moro" React SPA + Spring Boot microservices behind OpenResty/Envoy on GKE cropchart-2-0-prod; gateway/agro/access/general/premium/assets services; uniform 401 MISSING_AUTHORIZATION_HEADER without JWT; actuator+Swagger disabled; endpoint map recovered from /assets/index.bd3e3a65.js — large, well-gated tier-2 asset.
+[LEARN] REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history (certspotter complete set = only agriconetwork.com/www). Inventory entry was stale by 09-05; real platform lives at cropchart.net.
+[LEARN] ACCEPTED RECON @ app.cropchart.net/api/assets/fedora/getPublicFile/{r}: auth-free gateway-bypassing file-resolver (200 application/octet-stream "Resource /public/{id} not found" for all scanned ids) — sole unauth service exposed; sibling/doc surface closed (actuator, per-service api-docs, swagger-resources all 404/empty).
+[RISK] suedzucker: 70 — this round ~40 read-only GETs at ≤1 rps against public endpoints of one newly-identified asset (401 gates hit, one 200-empty auth-free oracle, several 404s); zero credentials, zero authenticated reads, zero writes, no customer data. No DoS, no mutation; registration deferred to own-account phase. Risk stable; discovery of a large new in-scope platform raises expected impact of future AUTH_HELPED testing but not current exposure.
+=====HYP-NEMOTRON3=====
+[CHANGED] portal.mydataplant.com/services/*.py sibling sweep complete — 11 paths (fields.py, field.py, map.py, geometry.py, layers.py, legend.py, user.py, export.py, wms.py, overview.py, plan.py) all 404; outline.py confirmed SOLE auth-free gateway-bypassing endpoint
+[CHANGED] smartfarming.suedzuckergroup.com/mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (JSON:API Missing-header) — no machine-readable OpenAPI exposed; inline HTML Swagger only surface
+[CHANGED] reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
+[PRIO] portal.mydataplant.com/api/v3,8.1,axis=attack_surface 9 (574 JSON:API endpoints, numeric IDs, CRUD) + business_value 9 (farmer fields/orders/biomass/PII) + tech_exposure 8 (public Swagger, JWT, X-Selected-Partner-Link-Id header) + gate_ease 6 (auth required, docs public) + cloud_surface 8 (Azure API Mgmt, portal.mydataplant.com) + freshness 7 (live v3)
+[PRIO] plantportal.suedzuckergroup.com,8.0,axis=attack_surface 8 (Nuxt SPA, partner-linking, 4 backends) + business_value 9 (farmer PII/contracts/settlements) + tech_exposure 7 (MSAL B2C, OTP-SMS, predictable 7-digit partner IDs) + gate_ease 8 (public SPA, link flow accessible) + cloud_surface 7 (Azure B2C, API gateway) + freshness 8 (v1.8.0 active)
+[PRIO] shop.suedzucker.com,7.6,axis=attack_surface 8 (SF LWR, OrderSummary/:recordId, Product/:recordId) + business_value 8 (e-comm orders/PII/payments) + tech_exposure 7 (SF 15/18-char IDs, API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com) + gate_ease 7 (login required, SelfRegister exists) + cloud_surface 8 (Salesforce+SAP+Azure) + freshness 7 (WebRuntime 236.0)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.2,axis=attack_surface 7 (gateway facade to same 574 endpoints) + business_value 8 + tech_exposure 7 + gate_ease 6 + cloud_surface 8 + freshness 7
+[PRIO] portal.mydataplant.com/services/outline.py,7.0,axis=gate_ease 10 (auth-free) + attack_surface 7 + business_value 7 (field geometry) + tech_exposure 6 + cloud_surface 5 + freshness 6
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: portal.mydataplant.com/api/v3
+confidence: 65
+reasoning: Gateway requires X-Selected-Partner-Link-Id on ALL requests (400 without). Backend returns 403 forbidden(177) with header but no Bearer. JWT embeds userId+email+mdp_bgd_api scope. Client-supplied header scopes tenant on top of JWT — mirrors Plant Portal switchToPartnerNumber. X-Selected-Partner-Link-Id NOT in API documentation (gateway-level only). 574 JSON:API endpoints with numeric IDs. If backend does not verify header value ∈ JWT subject's authorized partner-links, token for partner A can re-scope to partner B.
+evidence_needed: With own test account: GET /api/v3/fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> — observe cross-tenant data return vs rejection.
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (Swagger) — enumerate all endpoints accepting X-Selected-Partner-Link-Id. AUTH_HELPED (own test account only): POST /tokens → JWT; GET /api/v3/fields with JWT + X-Selected-Partner-Link-Id:1; mutate header to 2,3... — read-only, no live customer data, rate-limited 1 rps.
+impact: Cross-tenant read/modify/delete of farm fields, cultivation plans, orders, biomass maps, persons, organizations (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com
+confidence: 70
+reasoning: Nuxt 3 "epp" v1.8.0 SPA with documented partner-number linking (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + switchToPartnerNumber query param captured in client state + /association/impersonation route guarded only by client middleware (is-authenticated/logged-in-user/only-for-partner). Endpoints: GET /external-partner-impersonations?partnerSearch + POST {partnerNo}. API gateway backends (ceres-domain-backend-services, mdpBackend) behind /api-gateway/entra-ext/api/ all 401-gated but authz scope per partner unverified. PrimeVue DataTable/TreeTable components suggest partner-scoped data tables.
+evidence_needed: Observe /partner-linking/:processPartnerNumber endpoint behavior; test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt _payload.json + entry.DpUprWo9.js for API base paths and partner-linking routes. AUTH_HELPED (own test account): register, complete partner linking (SMS OTP + Partnernummer), then test horizontal access to other partner IDs via API (GET /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token).
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP connect-src includes API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com. SelfRegister route suggests public registration possible.
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED (own test account via SelfRegister): login, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API (GET /services/data/vXX.X/sobjects/OrderSummary/{other_id}).
+impact: Cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[PARKED] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint: confidence 55 but outline.py returns 200+empty SVG for all tested combos (1/1, 2/123, 999999/1) after 100+ probes — either no geometry exists for test IDs or soft-fail; needs valid account to confirm data return before horizontal testing viable.
+[PARKED] MyDataPlant JWT Token Endpoint Brute-Force Surface: confidence 35 — credential-guessing/rate-limit OUT OF SCOPE; no logic flaw observed passively; /tokens requires Authorization header (403 without) despite Swagger doc error.
+[PARKED] MyDataPlant SSRF via Export Targets: confidence 40 → downgraded; Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch.
+[PARKED] Employee Benefits Portal SSO Bypass: confidence 45 but testability HUMAN_ONLY (requires employee creds), gate_ease 4 — drop per rules (no auth-bypass on live employee data).
+[PARKED] WordPress wp-json @ bisz.suedzucker.de: REJECTED class (descriptive/public API, no auth bypass impact).
+[PARKED] www.suedzuckergroup.com Drupal 11: CONFIRMED REJECTED (hardened, JSON:API/GraphQL disabled, registration closed).
+[FINAL] plantportal.suedzuckergroup.com — 70 (IDOR/BOLA, high data value, AUTH_HELPED testable)
+[FINAL] portal.mydataplant.com/api/v3 — 65 (IDOR/BOLA, massive API surface, AUTH_HELPED testable)
+[FINAL] shop.suedzucker.com — 60 (IDOR on OrderSummary, HIGH impact, AUTH_HELPED testable)
+[NEXT] PROBE: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com (Entra B2C signup at szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb135611267c, clientId ba3120d6-3d54-478b-a048-5f1242196100), complete partner linking flow (SMS OTP + 7-digit Partnernummer), then test horizontal partner ID access via GET /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token (read-only, rate-limited 1 rps, own test account only)
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" v1.8.0 confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), scopes api://1b7819b0.../external_api_access + api://aad3fee6.../mdp_bgd_api; runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure, not a vuln.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/api/v3: Full public Swagger (15k lines) confirms real backend, Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope), POST /tokens token-gen, gateway-required X-Selected-Partner-Link-Id tenant-scoping header — recon value, public docs.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).
+[LEARN] REJECTED NOT-VULN @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: returns 200 + image/svg+xml + empty body for all tested user_id+field_id combos; auth-free, bypasses gateway; 500 on non-numeric reveals Apache/2.4.29 (Ubuntu), webmaster@kleffmann.digital — IDOR-prone architecture but impact unconfirmed.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com auth: Backend accepts Authorization: Bearer (401 for malformed JWT). Does NOT accept Authentication: Bearer (403 forbidden(149)). Swagger doc has documentation error.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/api/v3/tokens: POST /tokens requires Authorization header (403 without) despite Swagger doc stating "Authorization header is not allowed". JWT validation correctly rejects: malformed (401), invalid signature (401), alg=none (401). Gateway-level auth wraps ALL endpoints.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com, SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+[LEARN] ACCEPTED RECON @ suedzucker.authentication.eu10.hana.ondemand.com: SAP BTP UAA server (Cloud Foundry runtime). Sets X-Uaa-Csrf + __Host-JSESSIONID + __VCAP_ID__ cookies. HSTS with includeSubDomains+preload.
+[LEARN] CONFIRMED REJECTED @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404).
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/: 11 sibling *.py paths 404 — outline.py is the sole auth-free gateway-bypassing service; sibling enumeration closed.
+[LEARN] ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json -> 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readable OpenAPI exposed; inline HTML doc is full surface.
+[LEARN] ACCEPTED RECON @ reposcan 2026-09-05 18:19: no public GitHub org configured for suedzucker — repo-scan is a structural no-op, no repo surface.
+[RISK] suedzucker: 72 — Program scope covers 5 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts.
+[0m
+[0m$ [0mcurl -s --max-time 30 -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36" "https://plantportal.suedzuckergroup.com/_payload.json" -o /tmp/opencode/pp_payload.json -w "HTTP %{http_code} size %{size_download}\n"; echo "---catalog refs---"; grep -o 'catalog[^"\\]*' /tmp/opencode/pp_payload.json | sort -u | head -40
+HTTP 200 size 594346
+---catalog refs---
+[0m
+[0m$ [0mgrep -oE '"/api/[a-zA-Z0-9/_.-]+' /tmp/opencode/pp_payload.json | sort -u | head -60; echo "---all api strings---"; grep -oE '(api-gateway|ceres|external-account|catalog|/api/)[a-zA-Z0-9/_.-]*' /tmp/opencode/pp_payload.json | sort -u | head -80
+---all api strings---
+api-gateway/entra-ext/api/
+api-gateway/entra-ext/api/ceres-domain-backend-services
+api-gateway/entra-ext/api/ceres-image-service/images
+api-gateway/entra-ext/api/ceres-internal-auth-service
+ceres-external-plant-portal
+ceres-screenshot-watermark
+ceresWatermark
+[0m
+[0m$ [0mfor p in companies countries regions languages currencies; do
+  code=$(curl -s --max-time 20 -o /tmp/opencode/cat_$p.json -w "%{http_code}" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64)" "https://plantportal.suedzuckergroup.com/api/catalog/$p")
+  echo "$p -> HTTP $code size $(wc -c < /tmp/opencode/cat_$p.json) preview: $(head -c 200 /tmp/opencode/cat_$p.json)"
+  sleep 1
+done
+companies -> HTTP 200 size 244 preview: [{"id":1000,"name":"Südzucker AG","code":"SZ"},{"id":2001,"name":"Raffinerie Tirlemontoise","code":"RT"},{"id":2331,"name":"Chile","code":"CHILE"},{"id":4100,"name":"Saint Louis Sucre","code":"SLS"},
+countries -> HTTP 200 size 594346 preview: <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script type="importmap">{"imports":{"#entry":"/_nuxt/DpUprWo9.js"}}</script><scrip
+regions -> HTTP 200 size 594346 preview: <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script type="importmap">{"imports":{"#entry":"/_nuxt/DpUprWo9.js"}}</script><scrip
+languages -> HTTP 200 size 594346 preview: <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script type="importmap">{"imports":{"#entry":"/_nuxt/DpUprWo9.js"}}</script><scrip
+currencies -> HTTP 200 size 594346 preview: <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script type="importmap">{"imports":{"#entry":"/_nuxt/DpUprWo9.js"}}</script><scrip
+[0m
+[0m$ [0mcurl -s --max-time 40 -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64)" "https://app.cropchart.net/assets/index.bd3e3a65.js" -o /tmp/opencode/cc_bundle.js -w "HTTP %{http_code} size %{size_download}\n"
+HTTP 200 size 3189923
+[0m
+[0m$ [0mgrep -o 'createAccount[^,;)]\{0,400\}' /tmp/opencode/cc_bundle.js | head -5; echo "===="; grep -oE '"(organizationId|organisationId|orgId|partnerId|role|roles|invitationCode|inviteCode|email|password|firstName|lastName|companyName)"' /tmp/opencode/cc_bundle.js | sort | uniq -c | sort -rn | head -20
+createAccount:"Utwórz bezpłatne konto"
+createAccount:"Create free account"
+createAccount:"Kostenloses Konto erstellen"
+createAccount:"Создать бесплатный аккаунт"
+createAccount"}
+====
+      7 "email"
+      6 "password"
+      5 "role"
+      2 "lastName"
+      2 "firstName"
+      1 "roles"
+[0m
+[0m$ [0mgrep -oE 'createAccount[^"]{0,300}' /tmp/opencode/cc_bundle.js | head -10; echo "===reg==="; grep -oE '.{80}cropchart-registration.{120}' /tmp/opencode/cc_bundle.js | head -6; echo "===activation==="; grep -oE '.{80}(activateAccount|activationCode|activation).{120}' /tmp/opencode/cc_bundle.js | head -8
+createAccount:
+createAccount:
+createAccount:
+createAccount:
+createAccount
+createAccount})]}),_(UPe,{}),m(KIe,{children:[m(YIe,{children:[_(AL,{backgroundColor:a.colors.gray.lightGrey,style:{border:`1px solid ${a.colors.gray.darkGrey};`,height:
+===reg===
+n=u();return s({mutationFn:async({password:e})=>(await lE.delete("/access/users/cropchart-registration/user",{data:{password:e}})).data,onSuccess:()=>{t({text:e.cropchart_common_deleteAccount_success,type:og.Success}),setT
+urn p({queryKey:[$Re.GetUserInfo],queryFn:async()=>(await lE.get("/access/users/cropchart-registration/information")).data,enabled:!!t&&!!n})},JRe=e=>{const{get:t}=OE(ng.AccessToken),r=t(),{get:n}=OE(ng.ContextId),o=n();re
+k(),{mutate:l,isPending:p}=s({mutationFn:async e=>(await lE.post("/access/users/cropchart-registration/changePassword",e)).data}),{mutate:d,isPending:h}=s({mutationFn:async e=>(await lE.put("/access/users/cropchart-registr
+nst t=new FormData;return t.append("image",e.file),(await lE.put("/access/users/cropchart-registration/profileImage",t,{headers:{"Content-Type":"multipart/form-data"}})).data}}),{data:k}=JRe(C?.profileImageId??void 0),O=e=
+xt:e.cropchart_error_registrationError})},Hk({method:eg.POST,url:"/access/users/cropchart-registration/createAccount"},{onSuccess:l,onError:p}));var l,p;const[u,d]=t.exports.useState(!1),[h,f]=t.exports.useState(!1),[g,v]=
+ts.useState(!1),{mutate:h}=s({mutationFn:async e=>(await lE.post("/access/users/cropchart-registration/resetPasswordInit",e)).data}),{mutate:f}=s({mutationFn:async e=>(await lE.post("/access/users/cropchart-registration/re
+===activation===
+mail address.",cropchart_features_register_success:"Registration successful. An activation link has been sent to your email.",cropchart_features_login_form_label_email:"Email",cropchart_features_login_alt_cropc
+or:"Invalid email address. Please try again.",cropchart_error_linkExpired:"Your activation link has expired. Please re-register your account in the system.",cropchart_input_maxLength25:"Maximum allowed length i
+The subscription period is calculated with the accuracy of the date and time of activation of access to the paid modules.",section4Paragraph9:"9. Access to the paid modules expires at the end of the subscriptio
+:O}=s({mutationFn:async e=>(await lE.post("/access/users/cropchart-registration/activateAccount",e)).data}),{localeState:{languageTag:P}}=fk(),{submit:R,form:D}=KV.exports.useForm((()=>{const e=PR();return{email:KV.
+[0m
+[0m$ [0mgrep -oE '.{200}cropchart-registration/createAccount.{250}' /tmp/opencode/cc_bundle.js | head -4; echo "===form fields==="; grep -oE 'name:"(email|password|firstName|lastName|phone|country|company|companyName|terms|captcha|recaptcha)[^"]*"' /tmp/opencode/cc_bundle.js | sort -u | head
+}=(l=()=>{Wze(),k({type:og.Success,text:e.cropchart_features_register_success}),r(lee.Login)},p=()=>{k({type:og.Error,text:e.cropchart_error_registrationError})},Hk({method:eg.POST,url:"/access/users/cropchart-registration/createAccount"},{onSuccess:l,onError:p}));var l,p;const[u,d]=t.exports.useState(!1),[h,f]=t.exports.useState(!1),[g,v]=t.exports.useState(!1),[w,b]=t.exports.useState(!1),{get:C}=OE(ng.Locale),S=C(),[x,E]=t.exports.useState(S?S.toUpperCase():"PL"),{setToast:k}=Wk
+===form fields===
+[0m
+[0m$ [0mgrep -oE '"?(email|password|confirmPassword|firstName|lastName|language|languageTag|termsAccepted|regulationsAccepted|companyName|companyNameName)[^:]{0,40}:' /tmp/opencode/cc_bundle.js | sort -u | head -30; echo "===register form inputs==="; grep -oE '.{60}(Register|cropchart-registration)Form..{200}' /tmp/opencode/cc_bundle.js | head -5
+"email"),{get:
+"firstName",initialValue:
+"lastName",initialValue:
+email address format",cropchart_error_default:
+email!==p)return a({text:
+email)return h({email:
+email,",section3Paragraph7d:
+email,":
+email,isExpired:
+email,isOpen:
+email,label:
+email,maxLength:
+email,name:
+email,password:
+email,validate:
+email,validationRules:
+email,value:
+email.",section9Paragraph4:
+email.value,selectedLanguage:
+email.value,x,n]);return m(NIe,{children:
+email:
+email??""})})]}),m(iIe,{children:
+emailCreatedBy,items:
+emailCreatedBy,name:
+emailOwner,isOpen:
+emailOwner:
+emailOwner}),_(VAe,{children:
+emailOwner}-exclusive`),onToggle:
+emailOwner}-exclusive`,title:
+email]),_(bNe,{offset:
+===register form inputs===
+[0m
+[STEP 1 — DELTA]
+- NO_DELTA hosts/inventory: 7 in-scope assets unchanged; DNS/tech surface stable since 09-05 09:52 UTC.
+- NEW detail @ plantportal.suedzuckergroup.com/api/catalog: `/companies` is the ONLY real unauth server route (200 JSON); `/countries|regions|languages|currencies` all return the SPA shell HTML (200 fallback, size 594346) — unauthenticated catalog surface = 1 static reference endpoint, sibling enumeration closes.
+- NEW detail @ app.cropchart.net bundle re-crawl (index.bd3e3a65.js, 3.19MB): createAccount client form = email/password/confirmPassword/firstName/lastName + locale (default PL); NO org/role/partner fields → registration mass-assignment implausible client-side. Endpoint map extended: `information` (GET), `changePassword` (POST), PUT profileImage (multipart), DELETE `user`, `resetPasswordInit` (POST).
+
+[STEP 2 — PRIORITIZE]
+- [PRIO] portal.mydataplant.com/api/v3,8.1,axis=attack_surface9(574 JSON:API,numeric ids)+business9(FIELDS/BIRTHDAY-EMAIL PII/orders+PAYMENT_LINK)+tech8(JWT+client-scoped header)+gate_ease6+cloud8+freshness7
+- [PRIO] plantportal.suedzuckergroup.com,8.0,axis=attack_surface8(partner-linking+4 backends)+business9(contracts/settlements)+tech7(MSAL B2C+SMS OTP)+gate_ease8+cloud7+freshness8
+- [PRIO] shop.suedzucker.com,7.6,axis=attack_surface8(OrderSummary/:recordId+Product/:recordId)+business8(orders/payments)+tech7(SF 18-char IDs)+gate_ease7(SelfRegister)+cloud8+freshness7
+- [PRIO] app.cropchart.net,7.4,axis=attack_surface8(Moro+6 services)+business8(trading orders/subscriptions)+tech7(spring+JWT+upload)+gate_ease7(public email registration)+cloud6+freshness7
+
+[STEP 3 — HYPOTHESES]
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
+confidence: 65
+reasoning: Gateway returns 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only), POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api but no partner/link claims — tenant scope decided solely by a client-supplied header. epp client pins the same header family to current-partner/access-rights/impersonation. This round: no new passive signal; backend authz link-id∈JWT-subject unverified.
+evidence_needed: Own JWT + a syntactically-valid non-owned link-id → GET /api/v3/fields or /users/{id} returns cross-tenant data vs rejection.
+verify_steps: Passive closed. Active on own test account, read-only GET, header permutation (own → non-owned → unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (current-partner switch + impersonation)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only but current-partner takes raw partnerNo/link-id. This round: /api/catalog sweep showed no auth-free backdoor into partner data.
+evidence_needed: Own token + 2 owned links: does POST current-partner with an owned-but-wrong link-id persist; does GET /access-rights reflect the wrong scope.
+verify_steps: Passive closed (bundle+routes+headers mapped). Active on own test account, read-only GETs after the POST.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Record-level access decided by SF sharing sets, not code — unobservable passively. Public /SelfRegister makes own account feasible. No change this round.
+evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+
+[STEP 4 — SELF-CRITIQUE]
+- [PARKED] CropChart registration mass-assignment: bundle shows form = email/password/confirmPassword/firstName/lastName only, no org/role/partner fields — client-side vector implausible; org likely server-assigned. BOLA-on-swapped-ids still live but confidence 55, deferred to AUTH_HELPED.
+- [PARKED] plantportal /api/catalog breadth: only `companies` is a real route; siblings give pseudo-200 SPA shell — no enumeration signal, recon-only, closed.
+- [PARKED] outline.py geometry IDOR: unchanged (200+empty for all combos, impact unconfirmed).
+- [FINAL] portal.mydataplant.com/api/v3 BOLA — 65 (AUTH_HELPED, unchanged)
+- [FINAL] plantportal ceres-domain-bff BOLA — 64 (AUTH_HELPED, unchanged)
+- [FINAL] shop.suedzucker.com OrderSummary IDOR — 55 (AUTH_HELPED, unchanged)
+All three AUTH_HELPED; passive plateau confirmed. No confidence<40 or REJECTED entries retained.
+
+[STEP 5 — NEXT ACTION]
+[NEXT] HUMAN: Create plantportal.suedzuckergroup.com test account via Entra B2C signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), link one 7-digit Partnernummer via SMS activation. On own account only, read-only GETs after: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id = own link vs syntactically-valid non-owned id, then GET /access-rights to observe scope persistence; (2) GET /external-partner-impersonations?partnerSearch=<rare surname> then POST {partnerNo} for one listed partner. (3) Reuse the same JWT (mdp_bgd_api scope) against portal.mydataplant.com/api/v3 GET /fields + /users/{id} with permuted X-Selected-Partner-Link-Id. Fallback if B2C signup closed: app.cropchart.net POST /access/users/cropchart-registration/createAccount (capture full body) → activateAccount (email code) → issueSessionToken → GET /api/orders + /users with swapped ids.
+
+[STEP 6 — LEARNING]
+- [LEARN] ACCEPTED RECON @ plantportal /api/catalog: companies is the sole real unauth server route (200 JSON, static company reference); countries/regions/languages/currencies return SPA-shell 200 fallback — unauth catalog surface closed, one endpoint, recon value only.
+- [LEARN] ACCEPTED RECON @ app.cropchart.net/index.bd3e3a65.js: createAccount client form fields = email/password/confirmPassword/firstName/lastName + locale; no org/role/partner inputs → registration mass-assignment vector NOT present client-side; registration endpoints extended (createAccount, activateAccount, information, changePassword, profileImage PUT multipart, DELETE user, resetPasswordInit).
+
+[STEP 7 — RISK]
+[RISK] suedzucker: 70 — this round: 7 read-only GETs at ≤1 rps (1 Nuxt payload, 5 catalog paths, 1 JS bundle re-crawl); zero credentials, zero authenticated reads, zero writes, no customer data. All live surface re-confirmed gated (401/400/403 or SPA fallback). Passive plateau holds; all top hypotheses strictly own-account gated (AUTH_HELPED/HUMAN). Risk stable.

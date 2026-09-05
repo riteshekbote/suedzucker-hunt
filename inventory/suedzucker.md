@@ -93,3 +93,8 @@ www.suedzucker.de
 - CHANGED portal.mydataplant.com/services/*.py sibling sweep complete — 11 paths (fields.py, field.py, map.py, geometry.py, layers.py, legend.py, user.py, export.py, wms.py, overview.py, plan.py) all 404; outli
 - CHANGED smartfarming.suedzuckergroup.com/mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (JSON:API Missing-header) — no machine-readable OpenAPI exposed; inline HTML Swagger only surface
 - CHANGED reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
+
+## 2026-09-05 22:39:50 UTC
+- CHANGED portal.mydataplant.com/services/*.py sibling sweep complete — 11 paths (fields.py, field.py, map.py, geometry.py, layers.py, legend.py, user.py, export.py, wms.py, overview.py, plan.py) all 404; outli
+- CHANGED smartfarming.suedzuckergroup.com/mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (JSON:API Missing-header) — no machine-readable OpenAPI exposed; inline HTML Swagger only surface
+- CHANGED reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
