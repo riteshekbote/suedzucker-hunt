@@ -1,4 +1,10 @@
-## 2026-09-05 16:21:04 UTC [target] (model nemotron3)
+## 2026-09-05 18:29:26 UTC [target] (model nemotron3)
+[PRIO] portal.mydataplant.com/api/v3,8.1,axis=attack_surface 9 (574 JSON:API endpoints, numeric IDs, CRUD) + business_value 9 (farmer fields/orders/biomass/PII) + tech_exposure 8 (public Swagger, JWT, X-Selected-Partner-Link-Id header) + gate_ease 6 (auth required, docs public) + cloud_surface 8 (Azure API Mgmt, portal.mydataplant.com) + freshness 7 (live v3)
+[PRIO] plantportal.suedzuckergroup.com,8.0,axis=attack_surface 8 (Nuxt SPA, partner-linking, 4 backends) + business_value 9 (farmer PII/contracts/settlements) + tech_exposure 7 (MSAL B2C, OTP-SMS, predictable 7-digit partner IDs) + gate_ease 8 (public SPA, link flow accessible) + cloud_surface 7 (Azure B2C, API gateway) + freshness 8 (v1.8.0 active)
+[PRIO] shop.suedzucker.com,7.6,axis=attack_surface 8 (SF LWR, OrderSummary/:recordId, Product/:recordId) + business_value 8 (e-comm orders/PII/payments) + tech_exposure 7 (SF 15/18-char IDs, API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com) + gate_ease 7 (login required, SelfRegister exists) + cloud_surface 8 (Salesforce+SAP+Azure) + freshness 7 (WebRuntime 236.0)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,7.2,axis=attack_surface 7 (gateway facade to same 574 endpoints) + business_value 8 + tech_exposure 7 + gate_ease 6 + cloud_surface 8 + freshness 7
+[PRIO] portal.mydataplant.com/services/outline.py,7.0,axis=gate_ease 10 (auth-free) + attack_surface 7 + business_value 7 (field geometry) + tech_exposure 6 + cloud_surface 5 + freshness 6
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
 class: IDOR
 asset: portal.mydataplant.com/api/v3
 confidence: 65
@@ -7,6 +13,7 @@ evidence_needed: With own test account: GET /api/v3/fields, /users/{id}, /orders
 verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (Swagger) — enumerate all endpoints accepting X-Selected-Partner-Link-Id. AUTH_HELPED (own test account only): POST /tokens → JWT; GET /api/v3/fields with JWT + X-Selected-Partner-Link-Id:1; mutate header to 2,3... — read-only, no live customer data, rate-limited 1 rps.
 impact: Cross-tenant read/modify/delete of farm fields, cultivation plans, orders, biomass maps, persons, organizations (agri PII + operations) — HIGH
 testability: AUTH_HELPED
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com
 confidence: 70
@@ -15,6 +22,7 @@ evidence_needed: Observe /partner-linking/:processPartnerNumber endpoint behavio
 verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt _payload.json + entry.DpUprWo9.js for API base paths and partner-linking routes. AUTH_HELPED (own test account): register, complete partner linking (SMS OTP + Partnernummer), then test horizontal access to other partner IDs via API (GET /api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token).
 impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
 testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
 class: IDOR
 asset: shop.suedzucker.com
 confidence: 60

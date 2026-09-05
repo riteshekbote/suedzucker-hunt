@@ -84,3 +84,7 @@ www.suedzucker.de
 ## 2026-09-05 13:15:34 UTC
 
 ## 2026-09-05 16:21:14 UTC
+
+## 2026-09-05 18:29:35 UTC
+- CHANGED probed: portal.mydataplant.com /services/*.py sibling sweep (fields.py field.py map.py geometry.py layers.py legend.py user.py export.py wms.py overview.py plan.py) all 404 — outline.py is the SOLE au
+- CHANGED probed: smartfarming gateway /mdp-api/v3/api/{openapi,swagger}.json -> 400 application/vnd.api+json (JSON:API Missing-header error, gateway intercepts) — no machine-readable OpenAPI spec exposed; inli
