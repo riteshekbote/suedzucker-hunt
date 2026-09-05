@@ -6021,3 +6021,330 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 70 — this round: ~16 read-only GETs (Nuxt entry + 10 lazy chunk fetches, /api/catalog/companies, /rmp/ probe, no auth, no mutations, ~1 rps). All new material is static client bundle analysis + one public catalog read; zero credential submission, zero authenticated cross-tenant reads, zero writes. epp BOLA top at 64 but strictly own-account-gated (HUMAN). mdp-api BOLA stable at 62 (family provenance now stronger via epp client). Subsurface /api/catalog surfaced but is public config (non-finding). Risk stable.
+===== ANALYST bigpickle 2026-09-05 01:08:45 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sS --max-time 20 -D- -o /tmp/agri_home.html "https://app.agriconetwork.com/" | head -20
+curl: (6) Could not resolve host: app.agriconetwork.com
+[0m
+[0m$ [0mfor u in "https://app.agriconetwork.com/" ; do curl -sS -o /dev/null -w "HEAD %{http_code} %{size_download}B %{content_type} %{redirect_url}\n" --max-time 20 -I "$u" ; sleep 1; done
+curl: (6) Could not resolve host: app.agriconetwork.com
+HEAD 000 0B
+[0m
+[0m$ [0mfor h in agriconetwork.com www.agriconetwork.com exchange.agriconetwork.com gielda.agriconetwork.com app.agriconetwork.pl; do r=$(getent hosts "$h" 2>/dev/null | head -1); echo "$h -> ${r:-NXDOMAIN}"; sleep 0.3; done
+agriconetwork.com -> 217.153.239.198 agriconetwork.com
+www.agriconetwork.com -> 217.153.239.198 agriconetwork.com www.agriconetwork.com
+exchange.agriconetwork.com -> NXDOMAIN
+gielda.agriconetwork.com -> NXDOMAIN
+app.agriconetwork.pl -> NXDOMAIN
+[0m
+[0m$ [0mcurl -sS --max-time 20 "https://plantportal.suedzuckergroup.com/" -o /tmp/pp_home.html -w "PP %{http_code} %{size_download}B\n"; sleep 1; grep -oE '/_nuxt/[A-Za-z0-9_.-]+\.js' /tmp/pp_home.html | sort -u | head -20
+PP 200 594346B
+/_nuxt/1SBXy2-x2.js
+/_nuxt/1V7gmz8s2.js
+/_nuxt/2BbmjVNa.js
+/_nuxt/3mPffRKj2.js
+/_nuxt/3ue2CZK02.js
+/_nuxt/43pEI4B2.js
+/_nuxt/4nNSh7_m2.js
+/_nuxt/590avLKp2.js
+/_nuxt/9A3joOTL2.js
+/_nuxt/9OdgA48e.js
+/_nuxt/B0JbnIiS2.js
+/_nuxt/B1JBYxwy.js
+/_nuxt/B3c8m7EH.js
+/_nuxt/B5OtAk7x2.js
+/_nuxt/B5pvDQpX.js
+/_nuxt/B6kwrvyB2.js
+/_nuxt/B7w5jD322.js
+/_nuxt/B9tnan6R2.js
+/_nuxt/BB0WylX4.js
+/_nuxt/BC0VBV9C2.js
+[0m
+[0m$ [0mcurl -sS --max-time 20 "https://app.agriconetwork.com/" -o /dev/null -w "app2 %{http_code}\n"; getent ahosts app.agriconetwork.com; echo "---checking DNS server explicitly---"; nslookup app.agriconetwork.com 2>&1 | head -8
+curl: (6) Could not resolve host: app.agriconetwork.com
+app2 000
+---checking DNS server explicitly---
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+*** Can't find app.agriconetwork.com: No answer
+[0m
+[0m$ [0mcurl -sS --max-time 20 -D- -o /tmp/agri_root.html "https://agriconetwork.com/" | head -12; echo "---"; grep -oiE '(app\.agriconetwork|/[a-z0-9_-]+nuxt|[a-z0-9-]+\.agri[a-z]*network)' /tmp/agri_root.html | sort -u | head; echo "---len---"; wc -c /tmp/agri_root.html
+HTTP/2 200 
+server: nginx
+date: Sat, 05 Sep 2026 01:03:22 GMT
+content-type: text/html; charset=UTF-8
+vary: Accept-Encoding
+expires: Thu, 19 Nov 1981 08:52:00 GMT
+cache-control: no-store, no-cache, must-revalidate
+pragma: no-cache
+link: <https://agriconetwork.com/wp-json/>; rel="https://api.w.org/", <https://agriconetwork.com/wp-json/wp/v2/pages/5704>; rel="alternate"; title="JSON"; type="application/json", <https://agriconetwork.com/>; rel=shortlink
+set-cookie: PHPSESSID=hgc93fu54ici0105sasrt7tn1g; path=/
+vary: Accept-Encoding
+
+---
+---len---
+102283 /tmp/agri_root.html
+[0m
+[0m$ [0mgrep -oE 'importmap[^<]*|#entry[^"]*"[^"]*"' /tmp/pp_home.html | head -5; echo "---"; grep -oE '"dir":"[^"]+"' /tmp/pp_home.html | head -3; grep -oE '_nuxt/[A-Za-z0-9_.-]+\.js' /tmp/pp_home.html | wc -l; echo "---check ssr payload---"; curl -sS --max-time 20 "https://plantportal.suedzuckergroup.com/_payload.json" -o /tmp/pp_payload.json -w "payload %{http_code} %{size_download}B\n"
+importmap">{"imports":{"#entry":"/_nuxt/DpUprWo9.js"}}
+---
+194
+---check ssr payload---
+payload 200 594346B
+[0m
+[0m$ [0mgrep -oE 'api-gateway[^"]*' /tmp/pp_payload.json | sort -u | head -40; echo "=== selected-partner-link-id refs ==="; grep -oE '"[a-z-]*[Pp]artner[a-z-]*"' /tmp/pp_payload.json | sort | uniq -c | sort -rn | head -20
+api-gateway/entra-ext/api/
+api-gateway/entra-ext/api/ceres-domain-backend-services
+api-gateway/entra-ext/api/ceres-image-service/images
+api-gateway/entra-ext/api/ceres-internal-auth-service
+=== selected-partner-link-id refs ===
+[0m
+[0m$ [0mcurl -sS --max-time 30 "https://plantportal.suedzuckergroup.com/_nuxt/DpUprWo9.js" -o /tmp/pp_entry.js -w "entry %{http_code} %{size_download}B\n"; sleep 1; grep -oE '"(/|api-)[A-Za-z0-9/_?&=.-]+"' /tmp/pp_entry.js | grep -iE 'partner|impers|current|access-right|account|external' | sort -u | head -40
+entry 200 646377B
+[0m
+[0m$ [0mfor pat in "external-account" "current-partner" "impersonation" "access-rights" "partner-link-id" "ceres-domain" "rmpServiceApiEndpoint" "rmpBaseUrl" "friendlyCaptcha" "entra-ext"; do echo "== $pat =="; grep -oE ".{0,60}$pat.{0,90}" /tmp/pp_entry.js | head -4; done
+== external-account ==
+== current-partner ==
+== impersonation ==
+4M.css","./CVet4zPq2.js","./DkCSdWmr.js","./DWiPB4xX.js","./impersonation.DHYybg6x.css","./DYfq93ND.js","./DuWTts3l.js","./TableEmptyState.CFJGgfu8.css","./DjE9J6i
+,119,120,121,122,123]),import.meta.url)},{name:`association-impersonation`,path:`/association/impersonation`,meta:{middleware:[`is-authenticated`,`logged-in-user`,
+== access-rights ==
+== partner-link-id ==
+== ceres-domain ==
+== rmpServiceApiEndpoint ==
+== rmpBaseUrl ==
+== friendlyCaptcha ==
+== entra-ext ==
+[0m
+[0m$ [0mgrep -oE '\./[A-Za-z0-9_.-]+\.js' /tmp/pp_entry.js | sed 's|^\./||' | sort -u | grep -iE 'partner|account|service|api|auth|login|gateway|external|root|global|init|current|access|user' | head -40
+(no output)
+[0m
+[0m$ [0mgrep -oE '"[a-zA-Z]{0,20}(Rmp|rmp|Captcha|captcha)[a-zA-Z]*"[^,}]*' /tmp/pp_payload.json | sort -u | head; echo "== nuxt config keys =="; grep -oE '"[a-zA-Z]+":[^,]{0,80}' /tmp/pp_payload.json | grep -iE 'rmp|captcha|api|endpoint|b2c|tenant|client' | head -20
+== nuxt config keys ==
+[0m
+[0m$ [0mgrep -oE '.{0,50}(rmpServiceApiEndpoint|rmpBaseUrl|friendlyCaptchaSitekey|clientId|authority|b2cprod|tenantId).{0,120}' /tmp/pp_home.html | head -10
+__.config={public:{environment:"PRODUCTION",msal:{clientId:"ba3120d6-3d54-478b-a048-5f1242196100",authority:"https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb13561126
+aseUrl:"https://smartfarming.suedzuckergroup.com",rmpServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/rmp",rmpBaseUrl:"https://plantportal.suedzuckergroup.com",friendlyCaptchaSitek
+[0m
+[0m$ [0mcurl -sS --max-time 20 "https://smartfarming.suedzuckergroup.com/" -o /tmp/sf_home.html -w "SF %{http_code} %{size_download}B %{content_type}\n"; sleep 1; grep -oE '(src|href)="[^"]+"' /tmp/sf_home.html | sort -u | head -25
+SF 200 6335B text/html
+href="/"
+href="chunk-G55QXMBX.js"
+href="favicon.png"
+href="styles-FMMVWPBR.css"
+src="main-4HJT6CJ4.js"
+src="polyfills-RV3JTMEC.js"
+[0m
+[0m$ [0mcurl -sS --max-time 30 "https://smartfarming.suedzuckergroup.com/main-4HJT6CJ4.js" -o /tmp/sf_main.js -w "main %{http_code} %{size_download}B\n"; sleep 1; curl -sS --max-time 30 "https://smartfarming.suedzuckergroup.com/chunk-G55QXMBX.js" -o /tmp/sf_chunk.js -w "chunk %{http_code} %{size_download}B\n"
+main 200 3113481B
+chunk 200 4257B
+[0m
+[0m$ [0mgrep -oE 'https?://[a-zA-Z0-9._/-]+' /tmp/sf_main.js | sort -u | head -30; echo "== auth/api paths =="; grep -oE '"/[a-zA-Z0-9_/-]+api[a-zA-Z0-9_/-]*"' /tmp/sf_main.js | sort -u | head -20
+http://169.254.169.254/metadata/instance/compute/location
+http://geoman.io
+http://localhost
+http://patrickarlt.com
+http://www.w3.org/1998/Math/MathML
+http://www.w3.org/1999/xhtml
+http://www.w3.org/1999/xlink
+http://www.w3.org/2000/svg
+http://www.w3.org/2000/xmlns/
+http://www.w3.org/XML/1998/namespace
+http://yourdomain/api/
+https://aka.ms/msal.js.errors
+https://angular.dev/best-practices/security
+https://developers.arcgis.com/esri-leaflet/
+https://developers.arcgis.com/esri-leaflet/api-reference/request/
+https://developers.arcgis.com/esri-leaflet/samples/non-mercator-projection/
+https://esriurl.com/esri-leaflet-basemap
+https://gavinr.com
+https://geoman.io
+https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/docs/msal-interceptor.md
+https://github.com/Leaflet/Leaflet/
+https://github.com/esri/esri-leaflet/issues
+https://github.com/geoman-io/leaflet-geoman/issues
+https://johngravois.com
+https://jwasilgeo.github.io
+https://leafletjs.com
+https://login.chinacloudapi.cn
+https://login.microsoftonline.com
+https://login.microsoftonline.com/common/
+https://login.microsoftonline.de
+== auth/api paths ==
+[0m
+[0m$ [0mfor pat in "mdp-api" "mydataplant" "selected-partner-link-id" "selectedPartnerLinkId" "X-Selected" "X-Requested-With" "partnerLinkId" "/api/v3" "/tokens"; do echo "== $pat =="; grep -oE ".{0,40}$pat.{0,100}" /tmp/sf_main.js | head -3; done
+== mdp-api ==
+== mydataplant ==
+e=n,this.nativeElement=e;let i="https:\\mydataplant.com/portal/tileserver/outdoor/{z}/{x}/{y}.png";this.defaultTileLayer=(0,rp.tileLayer)(i,{maxZoom:18
+== selected-partner-link-id ==
+{r.token}`,Accept:"application/json","x-selected-partner-link-id":this.appContext.partnerDetails?.id}};Qp.request(o).then(s=>{s.data.content?e(s.data.content):e(s.d
+ance.config.additionalRequestHeaders["x-selected-partner-link-id"]=o,this.msalBroadcastService.msalSubject$.pipe(pa(s=>s.eventType===_i.INITIALIZE_END||s.eventType=
+== selectedPartnerLinkId ==
+== X-Selected ==
+== X-Requested-With ==
+== partnerLinkId ==
+== /api/v3 ==
+== /tokens ==
+[0m
+[0m$ [0mgrep -oE ".{0,300}additionalRequestHeaders\[.x-selected-partner-link-id.\]=o.{0,80}" /tmp/sf_main.js | head -2; echo "=== setPartner context ==="; grep -oE ".{0,80}partnerDetails.{0,180}" /tmp/sf_main.js | head -8
+ivate(e,i){return new Promise(r=>{if(this.appContext.initialized){r(!0);return}let o=e.queryParams?.partner_link_id;if(!o&&e.queryParams?.partner_id&&(o=e.queryParams?.partner_id),o)localStorage.setItem("partner_id",o);else if(o=localStorage.getItem("partner_id"),!o){r(!1);return}Yt.instance.config.additionalRequestHeaders["x-selected-partner-link-id"]=o,this.msalBroadcastService.msalSubject$.pipe(pa(s=>s.eventType===_i.INITIALIZE_E
+=== setPartner context ===
+[jn(),oe("design:type",Uu)],W_.prototype,"organization",void 0);W_=Z([an({type:"partnerDetails"})],W_);var iP=class jk extends Qt{constructor(){super(...arguments),this.resource=W_}static{this.\u0275fac=(()=>{let n;return function(i){return(n||(n=Ve(jk)))(i||jk)}})()}static
+{this.\u0275prov=ke({token:jk,factory:jk.\u0275fac})}};iP=Z([nn({type:"partnerDetails",pathPrefix:""})],iP);var dy=class extends sn{};Z([be({serializedName:"MESSAGE"}),oe("design:type",String)],dy.prototype,"message",void 0);dy=Z([an({type:"errors"})],dy);var rP=cl
+ Yt.instance.authenticationManager.getToken(),o={type:"GET",url:this.appContext.partnerDetails?.apiEndpoints[n]+"?size=1000",headers:{Authorization:`Bearer ${r.token}`,Accept:"application/json","x-selected-partner-link-id":this.appContext.partnerDetails?.id}};Qp.request(o).
+his.currentLanguage$=new Vi,this.currentUser=null,this.currentUser$=new Vi,this.partnerDetails=null,this.orgUnits=[],this.currentOrgUnit=null,this.currentOrgUnit$=new Vi,this.availableOrgUnits$=new Vi,this.appParams=null,tp.getInstance().appContext=this}setAvailableOrgUnits
+Subscription?.unsubscribe()}backToPortal(){window.location.href=this.appContext.partnerDetails.urls.backUrl}static{this.\u0275fac=function(i){return new(i||t)(st(Fi),st(fr),st(fr),st(wo))}}static{this.\u0275cmp=Et({type:t,selectors:[["app-root"]],standalone:!1,decls:16,vars
+ v.save(),this.appContext.setCurrentUser(v);let k=yield Yt.instance.getService("partnerDetails").get(o);this.appContext.partnerDetails=k,console.log("Fetched partner details:",k);let $=yield tp.getInstance().all("parameters");$.sampleYear?this.appContext.setCurrentYear($.sa
+lancedSamplingOrder=i,this.orderLoading=!1,window.location.href=this.appContext.partnerDetails.urls.orderUrl.replace("%id%",i.id)})}onExport(){this.router.navigate(["../../../../export"],{relativeTo:this.route,state:{type:"sampling",mapId:this.map.id}})}get isLoading(){retu
+[0m
+[0m$ [0mgrep -oE 'url:"[^"]+"' /tmp/sf_main.js | sort -u | head -30; echo "== apiEndpoints struct =="; grep -oE '.{0,30}apiEndpoints.{0,120}' /tmp/sf_main.js | head -6
+url:"git://github.com/geoman-io/leaflet-geoman.git"
+url:"git@github.com:Esri/esri-leaflet.git"
+url:"http://geoman.io"
+url:"https://github.com/esri/esri-leaflet/issues"
+url:"https://github.com/geoman-io/leaflet-geoman/issues"
+url:"url"
+== apiEndpoints struct ==
+:type",Object)],W_.prototype,"apiEndpoints",void 0);Z([be({serializedName:"URLS"}),oe("design:type",Object)],W_.prototype,"urls",void 0);Z([jn(),oe("design:type",
+is.appContext.partnerDetails?.apiEndpoints[n]+"?size=1000",headers:{Authorization:`Bearer ${r.token}`,Accept:"application/json","x-selected-partner-link-id":this.
+[0m
+[0m$ [0mgrep -oE 'apiEndpoints\[([^]]+)\]' /tmp/sf_main.js | sort -u | head; echo "== route chunk map =="; grep -oE '"[a-zA-Z]+":"[A-Za-z0-9-]{8,}"' /tmp/sf_main.js | sort -u | head -40
+apiEndpoints[n]
+== route chunk map ==
+"Beprobungskarten":"Beprobungskarte"
+"Duengerkarten":"Duengerkarte"
+"End":"transitionend"
+"MSPointerCancel":"pointercancel"
+"MSPointerDown":"pointerdown"
+"MSPointerMove":"pointermove"
+"MSPointerUp":"pointerup"
+"absolute":"relative"
+"animationend":"transitionend"
+"assimilate":"differentiate"
+"both":"forwards"
+"mousemove":"touchmove"
+"overlayadd":"overlayremove"
+"selectAll":"unselectAll"
+"translateY":"translateX"
+"vertical":"horizontal"
+[0m
+[0m$ [0mgrep -oE '.{0,260}\?size=1000.{0,40}' /tmp/sf_main.js | head -3
+xt=null}static getInstance(){return t.instance||(t.instance=new t),t.instance}all(n){return new Promise((e,i)=>he(this,null,function*(){let r=yield Yt.instance.authenticationManager.getToken(),o={type:"GET",url:this.appContext.partnerDetails?.apiEndpoints[n]+"?size=1000",headers:{Authorization:`Bearer ${r.tok
+[0m
+[0m$ [0mgrep -oE '(\.all\(|getService\("[A-Za-z]+"\)\.get\()[^)]{0,80}\)?' /tmp/sf_main.js | sort -u | head -30; echo "== sampleYear default? =="; grep -oE '\.all\("[^"]+"\)' /tmp/sf_main.js | sort -u | head -20; grep -oE '\.get\("[^"]+"\)' /tmp/sf_main.js | sort -u | head -30
+.all("field-usages")
+.all("parameters")
+.all("target-crops")
+.all()
+.all([e.all({})
+.all(d)
+.all(e)
+.all(h)
+.all(n)
+.all(r)
+.all(x.map(N=>i(N)
+.all({filters:[{name:"CHECK_ACTIVE_DATE",value:e.transform(n,"yyyy-MM-dd")
+.all({filters:[{name:"catalogProductType.id",operator:"in",value:"3,4"}],page:{number
+.all({filters:[{name:"cultivation.id",operator:"in",value:i.join(",")
+.all({filters:[{name:"cultivation.id",value:this.cultivation.id}],sort:["-CREATED"],i
+.all({filters:[{name:"cultivation.id",value:this.cultivation.id}],sort:["-CREATED"],t
+.all({filters:[{name:"id",operator:"in",value:"286,293,295,2,289,291,313"}],page:{num
+.all({filters:[{name:"id",value:i}],include:["cultivation","balancedSamplingOrder"]})
+.all({include:["field"],filters:[{name:"HARVEST_YEAR",value:this.appContext.currentYe
+.all({ttl:0})
+.all({})
+getService("balancedSamplingMaps").get(o.balancedSamplingMap.id)
+getService("balancedSamplingOrders").get(r)
+getService("organizations").get(k.organization.id.toString()
+getService("partnerDetails").get(o)
+== sampleYear default? ==
+.all("field-usages")
+.all("parameters")
+.all("target-crops")
+.get("*")
+.get("100")
+.get("TaskTrackingZone")
+.get("apiScope")
+.get("authority")
+.get("bgdApiURI")
+.get("clientId")
+.get("content-length")
+.get("content-type")
+.get("easing")
+.get("fertilizationMapId")
+.get("fieldId")
+.get("field_usage_no")
+.get("kdApiURI")
+.get("login")
+.get("mapserverURI")
+.get("nutrient")
+.get("offset")
+.get("password")
+.get("postLogoutRedirectURI")
+.get("redirectURI")
+.get("samplingMapId")
+.get("set-cookie")
+.get("state")
+[0m
+[0m$ [0mb="https://smartfarming.suedzuckergroup.com/mdp-api/v3/api"; for v in "" "1" "9999999999" "abc" "0000000001"; do if [ -z "$v" ]; then hdr=""; else hdr="-H x-selected-partner-link-id:$v"; fi; code=$(curl -sS --max-time 15 -o /tmp/b_.txt -w "%{http_code}" $hdr "$b/fields?size=1"); body=$(head -c 120 /tmp/b_.txt); echo "hdr='$v' -> $code :: $body"; sleep 1; done
+hdr='' -> 400 :: {"errors":{"status":400,"title":"Missing X-Selected-Partner-Link-Id header"}}
+hdr='1' -> 403 :: {"errors":{"status":403,"title":"forbidden (177)"}}
+hdr='9999999999' -> 403 :: {"errors":{"status":403,"title":"forbidden (177)"}}
+hdr='abc' -> 403 :: {"errors":{"status":403,"title":"forbidden (177)"}}
+hdr='0000000001' -> 403 :: {"errors":{"status":403,"title":"forbidden (177)"}}
+[0m
+[0m$ [0mfor pat in 'config.json' 'assets/' 'bgdApiURI' 'kdApiURI' 'mapserverURI' 'tileserver' 'orderUrl' 'backUrl'; do echo "== $pat =="; grep -oE ".{0,60}$pat.{0,100}" /tmp/sf_main.js | head -3; done
+== config.json ==
+y,Ele,hI,wce,t3,D0e,cye,Wet]})}}return t})();fetch("/assets/config.json").then(t=>t.json()).then(t=>{window.__APP_CONFIG__=t,w8().bootstrapModule(uye).catch(n=>console.err
+== assets/ ==
+{class t{http;config;constructor(){this.config=me({prefix:"/assets/i18n/",suffix:".json",enforceLoading:!1,useHttpBackend:!1},ge(PH)),this.http=this.config.useHttpBack
+Rme,tQe,t3.forRoot({fallbackLang:"de",loader:Ude({prefix:"./assets/i18n/",suffix:".json"}),compiler:{provide:e0,useClass:$de},isolate:!1})]})}}return t})();var L0e=ho(
+s:[Kn,Cy,Ele,hI,wce,t3,D0e,cye,Wet]})}}return t})();fetch("/assets/config.json").then(t=>t.json()).then(t=>{window.__APP_CONFIG__=t,w8().bootstrapModule(uye).catch(n=>
+== bgdApiURI ==
+}})}function XYe(t){let n=new Map;return console.log(t.get("bgdApiURI")),n.set(t.get("bgdApiURI"),[t.get("apiScope")]),{interactionType:si.Redirect,protectedResourceMap:
+== kdApiURI ==
+l,null,function*(){BM.bootstrap({userConfig:{baseUrl:e.get("kdApiURI"),apiVersion:"v3",urlPostfix:"api",pathPrefix:"{organizationId}",storage:new Kb,authenticationManag
+== mapserverURI ==
+.width=50,this.height=50,this.mapserverUrl=this.config.get("mapserverURI")}static{this.\u0275fac=function(i){return new(i||t)(st(wo),st(f0))}}static{this.\u0275cmp=Et({type
+log(this.map),this.layer=P0e.tileLayer.wms(this.config.get("mapserverURI")+`fertilization_zone?application_map_id=${this.map.id}&organization_id=${this.appContext.currentOr
+== tileserver ==
+,this.nativeElement=e;let i="https:\\mydataplant.com/portal/tileserver/outdoor/{z}/{x}/{y}.png";this.defaultTileLayer=(0,rp.tileLayer)(i,{maxZoom:18,opacity:1,tileSize:51
+== orderUrl ==
+!1,window.location.href=this.appContext.partnerDetails.urls.orderUrl.replace("%id%",i.id)})}onExport(){this.router.navigate(["../../../../export"],{relativeTo:this.rout
+== backUrl ==
+(){window.location.href=this.appContext.partnerDetails.urls.backUrl}static{this.\u0275fac=function(i){return new(i||t)(st(Fi),st(fr),st(fr),st(wo))}}static{this.\u0275
+[0m
+[0m$ [0mcurl -sS --max-time 20 "https://smartfarming.suedzuckergroup.com/assets/config.json" -o /tmp/sf_config.json -w "conf %{http_code} %{size_download}B\n"; sleep 1; head -c 1500 /tmp/sf_config.json; echo
+conf 200 591B
+{
+  "kdApiURI": "https://smartfarming.suedzuckergroup.com/mdp-api",
+  "mapserverURI": "https://smartfarming.suedzuckergroup.com/mapserv/v3/",
+  "bgdApiURI": "https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/my-data-plant",
+  "clientId": "b7face9e-2fc4-4ebf-9599-1159765ad946",
+  "authority": "https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb135611267c",
+  "redirectURI": "https://smartfarming.suedzuckergroup.com/",
+  "postLogoutRedirectURI": "https://smartfarming.suedzuckergroup.com/",
+  "apiScope": "api://aad3fee6-9215-4ded-a3a1-b56cb63e7a00/mdp_bgd_api"
+}
+[0m
+[0m$ [0mcurl -sS --max-time 20 -D- "https://smartfarming.suedzuckergroup.com/mapserv/v3/" -o /tmp/mapserv_root.txt | head -8; echo "---body---"; head -c 300 /tmp/mapserv_root.txt; echo
+HTTP/2 200 
+date: Sat, 05 Sep 2026 01:07:07 GMT
+server: Apache/2.4.41 (Ubuntu)
+access-control-expose-headers: Content-Security-Policy, Location
+access-control-max-age: 600
+vary: Accept-Encoding
+content-type: text/html
+access-control-allow-origin: *
+---body---
+<HTML>
+<HEAD><TITLE>MapServer Message</TITLE></HEAD>
+<!-- MapServer version 7.6.7 OUTPUT=PNG OUTPUT=JPEG OUTPUT=KML SUPPORTS=PROJ SUPPORTS=AGG SUPPORTS=FREETYPE SUPPORTS=CAIRO SUPPORTS=SVG_SYMBOLS SUPPORTS=RSVG SUPPORTS=ICONV SUPPORTS=XMP SUPPORTS=FRIBIDI SUPPORTS=WMS_SERVER SUPPORTS=WMS_CLIENT SUPP
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mwc -c /tmp/mapserv_root.txt; cat /tmp/mapserv_root.txt | head -c 1200; echo failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
