@@ -107,3 +107,10 @@ www.suedzucker.de
 - NEW campus{,,-test}.suedzuckergroup.com — "SZ Group Campus - Login" at /ilp/ (root 302→/ilp/), shared ELB.
 - NEW matomo.suedzuckergroup.com — Matomo analytics (matomo.cloud SaaS), public Sign-in page.
 - NEW e.suedzuckergroup.com — CNAME to flowmailer.net (email-delivery service, low value).
+
+## 2026-09-06 09:18:46 UTC
+- NEW apps{,-beta,-dev,-test}.suedzuckergroup.com — Simplifier Launchpad (low-code iPaaS), akka-http/10.5.3, SAP UI5 shell, pac4j SSO (pac4jCsrfToken), 4 envs on shared AWS ALB, certs 2026-09-02
+- NEW rawmaterial{,-dev,-test}.suedzuckergroup.com — live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error, app path not mapped
+- NEW campus{,-test}.suedzuckergroup.com — "SZ Group Campus - Login" at /ilp/, root 302 → /ilp/
+- NEW matomo.suedzuckergroup.com — Matomo (matomo.cloud SaaS), public Sign-in
+- NEW e.suedzuckergroup.com — CNAME→web.flowmailer.net (email-delivery, low value)

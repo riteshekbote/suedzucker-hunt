@@ -122,3 +122,4 @@
 - 2026-09-06 ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
 - 2026-09-06 REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
 - 2026-09-06 REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
+- 2026-09-06 ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readable OpenAPI exposed; inline HTML doc is full surface.

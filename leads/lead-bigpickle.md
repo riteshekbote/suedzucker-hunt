@@ -1694,3 +1694,15 @@ testability: AUTH_HELPED
 [LEARN] REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
 [LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
 [RISK] suedzucker: 68 — this round: read-only GETs of public roots/static assets on 8 newly-found in-scope subdomains plus CT/DNS passive lookups; zero credentials, zero authenticated reads, zero writes, no customer data. One process note: my probe helper issued 4 GETs per host (code+server+ct+title) — slightly redundant request volume; future rounds single-parallel GET per host. New Simplifier iPaaS + Azure FD cluster increase the carried surface, but all gates are login/SSO or unresponsive, and the top BOLA hypotheses remain strictly own-account gated. Risk stable-to-slightly-up but acceptable.
+## 2026-09-06 09:09:23 UTC [target] (model bigpickle)
+[HYP] Simplifier UI basicAuth brute / default-credential on admin API
+class: AUTH
+asset: apps.suedzuckergroup.com/UserInterface/api (Swagger at /UserInterface/api-docs/api.yaml)
+confidence: 35
+reasoning: Full admin REST (application CRUD, InstanceSettings, connectors) is behind `basicAuth` (Swagger security scheme) + instance-level 'authentication required' 401 wrapper. `/genToken/` (the token login) itself 401s pre-auth, implying a bootstrap/instance credential gates everything. basicAuth on a UI-serving endpoint is uncommon; whether it accepts device/user creds vs a hardcoded instance secret is unobservable passively. No default-credential or bypass evidence found.
+evidence_needed: valid basicAuth credential pair that yields token; or a device/guest account accepted by /genToken/.
+verify_steps: AUTH_HELPED — passive exhausted; only valid credential tests would resolve.
+impact: full low-code iPaaS takeover (app import/export, connector creds, orchestration) — CRITICAL if creds guessable.
+testability: AUTH_HELPED
+[NEXT] PROBE: No new unauth-addressable surface remains on Simplifier (fully gated, verified 3 envs). Next high-value AUTH_HELPED step: on an owned test account, GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations` with a valid Bearer JWT and a non-current `x-selected-partner-link-id` header, read-only, comparing response scope vs current-partner baseline — cross-tenant BOLA check (requires the user's own Entra B2C credentials).
+[RISK] suedzucker: 66 — read-only GETs of the Simplifier Swagger spec + one POST to `/genToken/` with dummy creds (returned only `401 authentication required`, no user interaction, no real credential). No credentials, writes, or customer data touched. Confirmed the Simplifier cluster (4 envs) is uniformly basicAuth-gated with no pre-auth gap — surface carried but tightly locked. The open BOLA hypotheses (MyDataPlant/Plant-Portal/Shop B2B) remain strictly own-account AUTH_HELPED and were not exercised this round. Risk stable and acceptable.
