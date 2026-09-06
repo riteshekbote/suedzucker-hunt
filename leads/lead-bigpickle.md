@@ -1576,3 +1576,68 @@ impact: cross-tenant order disclosure (amounts, line items, shipping, payment li
 testability: AUTH_HELPED
 [NEXT] HUMAN: Create plantportal.suedzuckergroup.com test account via Entra B2C signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), link one 7-digit Partnernummer via SMS activation. On own account only, read-only GETs after: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id = own link vs syntactically-valid non-owned id, then GET /access-rights to observe scope persistence; (2) GET /external-partner-impersonations?partnerSearch=<rare surname> then POST {partnerNo} for one listed partner. (3) Reuse the same JWT (mdp_bgd_api scope) against portal.mydataplant.com/api/v3 GET /fields + /users/{id} with permuted X-Selected-Partner-Link-Id. Fallback if B2C signup closed: app.cropchart.net POST /access/users/cropchart-registration/createAccount (capture full body) → activateAccount (email code) → issueSessionToken → GET /api/orders + /users with swapped ids.
 [RISK] suedzucker: 70 — this round: 7 read-only GETs at ≤1 rps (1 Nuxt payload, 5 catalog paths, 1 JS bundle re-crawl); zero credentials, zero authenticated reads, zero writes, no customer data. All live surface re-confirmed gated (401/400/403 or SPA fallback). Passive plateau holds; all top hypotheses strictly own-account gated (AUTH_HELPED/HUMAN). Risk stable.
+## 2026-09-06 00:13:37 UTC [target] (model bigpickle)
+reasoning: Gateway returns 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only), POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api but no partner/link claims — tenant scope decided solely by a client-supplied header. epp client pins the same header family to current-partner/access-rights/impersonation. This round: no new passive signal; backend authz link-id∈JWT-subject unverified.
+evidence_needed: Own JWT + a syntactically-valid non-owned link-id → GET /api/v3/fields or /users/{id} returns cross-tenant data vs rejection.
+verify_steps: Passive closed. Active on own test account, read-only GET, header permutation (own → non-owned → unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (current-partner switch + impersonation)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only but current-partner takes raw partnerNo/link-id. This round: /api/catalog sweep showed no auth-free backdoor into partner data.
+evidence_needed: Own token + 2 owned links: does POST current-partner with an owned-but-wrong link-id persist; does GET /access-rights reflect the wrong scope.
+verify_steps: Passive closed (bundle+routes+headers mapped). Active on own test account, read-only GETs after the POST.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Record-level access decided by SF sharing sets, not code — unobservable passively. Public /SelfRegister makes own account feasible. No change this round.
+evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Create plantportal.suedzuckergroup.com test account via Entra B2C signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), link one 7-digit Partnernummer via SMS activation. On own account only, read-only GETs after: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id = own link vs syntactically-valid non-owned id, then GET /access-rights to observe scope persistence; (2) GET /external-partner-impersonations?partnerSearch=<rare surname> then POST {partnerNo} for one listed partner. (3) Reuse the same JWT (mdp_bgd_api scope) against portal.mydataplant.com/api/v3 GET /fields + /users/{id} with permuted X-Selected-Partner-Link-Id. Fallback if B2C signup closed: app.cropchart.net POST /access/users/cropchart-registration/createAccount (capture full body) → activateAccount (email code) → issueSessionToken → GET /api/orders + /users with swapped ids.
+[RISK] suedzucker: 70 — this round: 7 read-only GETs at ≤1 rps (1 Nuxt payload, 5 catalog paths, 1 JS bundle re-crawl); zero credentials, zero authenticated reads, zero writes, no customer data. All live surface re-confirmed gated (401/400/403 or SPA fallback). Passive plateau holds; all top hypotheses strictly own-account gated (AUTH_HELPED/HUMAN). Risk stable.
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Record-level access decided by SF sharing sets, not code — unobservable passively. Public /SelfRegister makes own account feasible. No change this round.
+evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Create plantportal.suedzuckergroup.com test account via Entra B2C signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), link one 7-digit Partnernummer via SMS activation. On own account only, read-only GETs after: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id = own link vs syntactically-valid non-owned id, then GET /access-rights to observe scope persistence; (2) GET /external-partner-impersonations?partnerSearch=<rare surname> then POST {partnerNo} for one listed partner. (3) Reuse the same JWT (mdp_bgd_api scope) against portal.mydataplant.com/api/v3 GET /fields + /users/{id} with permuted X-Selected-Partner-Link-Id. Fallback if B2C signup closed: app.cropchart.net POST /access/users/cropchart-registration/createAccount (capture full body) → activateAccount (email code) → issueSessionToken → GET /api/orders + /users with swapped ids.
+[RISK] suedzucker: 70 — this round: 7 read-only GETs at ≤1 rps (1 Nuxt payload, 5 catalog paths, 1 JS bundle re-crawl); zero credentials, zero authenticated reads, zero writes, no customer data. All live surface re-confirmed gated (401/400/403 or SPA fallback). Passive plateau holds; all top hypotheses strictly own-account gated (AUTH_HELPED/HUMAN). Risk stable.
+[HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
+class: IDOR
+asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
+confidence: 65
+reasoning: Gateway returns 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer -> 403 forbidden(177); header absent from Swagger (gateway-only); POST /tokens auth-gated; JWT carries userId+email+mdp_bgd_api with no partner/link claims — tenant scope decided solely by client-supplied header. Fresh probes: doc v0.1.20 unchanged, all 574 endpoints still present, no new endpoints/params.
+evidence_needed: Own JWT + syntactically-valid non-owned link-id -> GET /api/v3/fields or /users/{id} returns cross-tenant data vs rejection.
+verify_steps: Passive closed. Active on own test account, read-only GET, header permutation (own -> non-owned -> unknown). No live customer data.
+impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp partner-scope BOLA (current-partner switch + impersonation)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 64
+reasoning: epp pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; /association/impersonation guarded only by client middleware; switchToPartnerNumber client-state-only, header not primable via query. This round: catalog sibling sweep + bundle hash confirm no new client routes; backend authz of partnerLinkId vs JWT subject still unverified.
+evidence_needed: Own token + 2 owned links: does POST current-partner with an owned-but-wrong link-id persist; does GET /access-rights reflect the wrong scope.
+verify_steps: Passive closed. Active on own test account, read-only GETs after the POST.
+impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
+class: IDOR
+asset: shop.suedzucker.com/OrderSummary/:recordId
+confidence: 55
+reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen; record access decided by SF sharing sets, unobservable passively; /SelfRegister public. Fresh probe: webruntime LWR shell + OrderSummary route unchanged; no new routes in SSR bundle.
+evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
+verify_steps: Passive done. Active on own SelfRegister account only.
+impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
+testability: AUTH_HELPED
