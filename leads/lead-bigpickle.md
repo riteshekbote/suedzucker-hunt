@@ -1706,3 +1706,22 @@ impact: full low-code iPaaS takeover (app import/export, connector creds, orches
 testability: AUTH_HELPED
 [NEXT] PROBE: No new unauth-addressable surface remains on Simplifier (fully gated, verified 3 envs). Next high-value AUTH_HELPED step: on an owned test account, GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations` with a valid Bearer JWT and a non-current `x-selected-partner-link-id` header, read-only, comparing response scope vs current-partner baseline — cross-tenant BOLA check (requires the user's own Entra B2C credentials).
 [RISK] suedzucker: 66 — read-only GETs of the Simplifier Swagger spec + one POST to `/genToken/` with dummy creds (returned only `401 authentication required`, no user interaction, no real credential). No credentials, writes, or customer data touched. Confirmed the Simplifier cluster (4 envs) is uniformly basicAuth-gated with no pre-auth gap — surface carried but tightly locked. The open BOLA hypotheses (MyDataPlant/Plant-Portal/Shop B2B) remain strictly own-account AUTH_HELPED and were not exercised this round. Risk stable and acceptable.
+## 2026-09-06 12:56:13 UTC [target] (model bigpickle)
+[PRIO] apps.suedzuckergroup.com,score=7.8,axis=a8/b9/t8/g5/c6/f10 — iPaaS hub (integration flows, connector creds, orchestration), 4 envs incl dev/test, pac4j SSO, uncharacterized
+[PRIO] rawmaterial.suedzuckergroup.com,score=5.9,axis=a5/b6/t5/g4/c8/f10 — Azure FD app, raw-material logistics domain, root-errored (needs host-router map)
+[PRIO] campus.suedzuckergroup.com,score=5.4,axis=a5/b5/t5/g4/c6/f9 — corporate learning portal /ilp/, login-gated
+[HYP] Simplifier UI basicAuth brute / default-credential on admin API
+class: AUTH
+asset: apps.suedzuckergroup.com/UserInterface/api (Swagger at /UserInterface/api-docs/api.yaml)
+confidence: 35
+reasoning: Full admin REST (application CRUD, InstanceSettings, connectors) is behind `basicAuth` (Swagger security scheme) + instance-level 'authentication required' 401 wrapper. `/genToken/` (the token login) itself 401s pre-auth, implying a bootstrap/instance credential gates everything. basicAuth on a UI-serving endpoint is uncommon; whether it accepts device/user creds vs a hardcoded instance secret is unobservable passively. No default-credential or bypass evidence found.
+evidence_needed: valid basicAuth credential pair that yields token; or a device/guest account accepted by /genToken/.
+verify_steps: AUTH_HELPED — passive exhausted; only valid credential tests would resolve.
+impact: full low-code iPaaS takeover (app import/export, connector creds, orchestration) — CRITICAL if creds guessable.
+testability: AUTH_HELPED
+[LEARN] ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error — app path not yet mapped.
+[LEARN] ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: "SZ Group Campus - Login" at /ilp/, root 302 — corporate learning portal.
+[LEARN] ACCEPTED RECON @ matomo.suedzuckergroup.com: Matomo (matomo.cloud SaaS), public Sign-in — standard login panel, out-of-scope class standalone.
+[LEARN] ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
+[LEARN] REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
+[LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.

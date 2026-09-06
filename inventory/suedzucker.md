@@ -114,3 +114,5 @@ www.suedzucker.de
 - NEW campus{,-test}.suedzuckergroup.com — "SZ Group Campus - Login" at /ilp/, root 302 → /ilp/
 - NEW matomo.suedzuckergroup.com — Matomo (matomo.cloud SaaS), public Sign-in
 - NEW e.suedzuckergroup.com — CNAME→web.flowmailer.net (email-delivery, low value)
+
+## 2026-09-06 13:08:42 UTC
