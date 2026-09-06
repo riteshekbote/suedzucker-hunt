@@ -1769,3 +1769,33 @@ testability: AUTH_HELPED
 [LEARN] REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
 [LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
 [RISK] suedzucker: 65 — this round: 8 new subdomains discovered via CT/DNS passive enumeration; read-only GETs of public roots/assets; zero credentials, zero authenticated reads, zero writes, no customer data. New Simplifier iPaaS + Azure FD cluster increase surface but all gates are login/SSO or unresponsive. Top BOLA hypotheses remain strictly own-account AUTH_HELPED. Risk stable and acceptable.
+## 2026-09-06 20:30:25 UTC [target] (model bigpickle)
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: 574 Swagger endpoints; header enforced gateway-level only; backend JWT carries userId/email; owned account available; cross-tenant /fields geometry + BIRTHDAY/EMAIL persons = PII
+evidence_needed: owned token + two partner-link-ids; GET /fields with non-current link-id returns foreign-scope rows
+verify_steps: AUTH_HELPED — GET `https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields` with valid Bearer + link-id A vs link-id B (own accounts), read-only
+impact: cross-tenant PII (BIRTHDAY/EMAIL), field geometry, financials — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp Partner-Scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 60
+reasoning: impersonation+current-partner routes guarded only by client-side middleware; server-side check of x-selected-partner-link-id vs JWT subject unverified; owned account available
+evidence_needed: owned token + two links; POST external-account/current-partner with non-current link-id; response scope vs baseline differs cross-tenant
+verify_steps: AUTH_HELPED — GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/access-rights` with valid Bearer + non-current link-id, read-only
+impact: cross-tenant contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Simplifier Instance-Auth Credential Oracle on admin API
+class: AUTH
+asset: apps.suedzuckergroup.com/UserInterface/api
+confidence: 30
+reasoning: uniform `401 "authentication required"` (pac4j session) gates everything incl. Swagger-marked-no-security endpoints; invalid HTTP Basic creds → SAME body (not a basic-credential oracle); Release routes 404 (disabled); genToken 404 on all probed paths; Swagger's basicAuth annotations not a real boundary
+evidence_needed: any valid pac4j/SSO session token or instance credential that changes the 401→2xx on /application
+verify_steps: AUTH_HELPED — only valid credential tests would resolve; passive exhausted
+impact: full iPaaS takeover if creds guessable — CRITICAL, but no path found
+testability: AUTH_HELPED
+[NEXT] PROBE: On owned Entra B2C test account (2 partner links), read-only GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner` with Bearer JWT + `x-selected-partner-link-id: <non-current own link>` and diff response scope vs baseline — cross-tenant BOLA check.
+[RISK] suedzucker: 65 — round was passive GETs only: read of public Swagger (60KB), 401/404 boundary checks, error-placeholder fingerprinting; zero credentials, zero auth'd reads, zero writes. Simplifier surface clarified (uniform gate, treats correctly); no new exploitable lead; top BOLA hypotheses still own-account AUTH_HELPED. Risk stable and acceptable.

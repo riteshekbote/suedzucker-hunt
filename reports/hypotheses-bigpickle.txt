@@ -1,43 +1,30 @@
-## 2026-09-06 18:06:00 UTC [target] (model bigpickle)
-[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,score=7.1,axis=a6/b7/t8/g3/c7/f8 — MyDataPlant REST, 574 endpoints, X-Selected-Partner-Link-Id tenant scoping, owned account available
-[PRIO] plantportal.suedzuckergroup.com/api-gateway,score=6.8,axis=a5/b7/t7/g4/c7/f8 — epp Nuxt SPA, Entra B2C auth, partner impersonation endpoints, x-selected-partner-link-id header
-[PRIO] apps.suedzuckergroup.com/UserInterface/api,score=5.2,axis=a6/b6/t5/g4/c8/f8 — Simplifier iPaaS, basicAuth, pac4j SSO, full admin REST
+## 2026-09-06 20:30:25 UTC [target] (model bigpickle)
 [HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
 class: IDOR
 asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
 confidence: 62
-reasoning: Swagger confirms 574 endpoints all require X-Selected-Partner-Link-Id header; gateway-level enforcement only; backend JWT contains userId/email claims; owned test account available; cross-tenant read of fields/geometry/persons would be HIGH impact
-evidence_needed: owned token + two different partner-link-ids; GET /fields with non-current link-id returns cross-tenant data
-verify_steps: AUTH_HELPED — requires owned Entra B2C credentials + two partner accounts
-impact: cross-tenant PII (BIRTHDAY/EMAIL), field geometry, financial data — HIGH
+reasoning: 574 Swagger endpoints; header enforced gateway-level only; backend JWT carries userId/email; owned account available; cross-tenant /fields geometry + BIRTHDAY/EMAIL persons = PII
+evidence_needed: owned token + two partner-link-ids; GET /fields with non-current link-id returns foreign-scope rows
+verify_steps: AUTH_HELPED — GET `https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields` with valid Bearer + link-id A vs link-id B (own accounts), read-only
+impact: cross-tenant PII (BIRTHDAY/EMAIL), field geometry, financials — HIGH
 testability: AUTH_HELPED
 [HYP] Plant Portal epp Partner-Scope BOLA (impersonation + current-partner switch)
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
 confidence: 60
-reasoning: /external-partner-impersonations guarded only by client middleware; backend authz of x-selected-partner-link-id vs JWT subject unverified; owned test account available
-evidence_needed: owned token + two owned links; POST current-partner with non-current link-id; GET access-rights reflects wrong scope
-verify_steps: AUTH_HELPED — requires owned Entra B2C credentials + two partner accounts
-impact: cross-tenant partner contracts/deliveries/settlements — HIGH
+reasoning: impersonation+current-partner routes guarded only by client-side middleware; server-side check of x-selected-partner-link-id vs JWT subject unverified; owned account available
+evidence_needed: owned token + two links; POST external-account/current-partner with non-current link-id; response scope vs baseline differs cross-tenant
+verify_steps: AUTH_HELPED — GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/access-rights` with valid Bearer + non-current link-id, read-only
+impact: cross-tenant contracts/deliveries/settlements — HIGH
 testability: AUTH_HELPED
-[HYP] Simplifier UI basicAuth brute / default-credential on admin API
+[HYP] Simplifier Instance-Auth Credential Oracle on admin API
 class: AUTH
 asset: apps.suedzuckergroup.com/UserInterface/api
-confidence: 32
-reasoning: Full admin REST behind basicAuth; /genToken 401s pre-auth; no default-credential evidence; confidence dropped below threshold
-evidence_needed: valid basicAuth credential pair; device/guest account accepted by /genToken
-verify_steps: AUTH_HELPED — passive exhausted
-impact: full iPaaS takeover — CRITICAL if true
+confidence: 30
+reasoning: uniform `401 "authentication required"` (pac4j session) gates everything incl. Swagger-marked-no-security endpoints; invalid HTTP Basic creds → SAME body (not a basic-credential oracle); Release routes 404 (disabled); genToken 404 on all probed paths; Swagger's basicAuth annotations not a real boundary
+evidence_needed: any valid pac4j/SSO session token or instance credential that changes the 401→2xx on /application
+verify_steps: AUTH_HELPED — only valid credential tests would resolve; passive exhausted
+impact: full iPaaS takeover if creds guessable — CRITICAL, but no path found
 testability: AUTH_HELPED
-[PARKED] Simplifier basicAuth brute: confidence 32 < 40; no credential path identified; passive exhausted — PARKED.
-[FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
-[FINAL] Plant Portal epp BOLA 60 (IDOR, AUTH_HELPED)
-[NEXT] PROBE: On owned Entra B2C test account on plantportal, GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations?partnerSearch=` with valid Bearer JWT + x-selected-partner-link-id header set to a non-current link-id, read-only, comparing response scope vs current-partner baseline — cross-tenant BOLA check.
-[LEARN] ACCEPTED RECON @ apps{,-beta,-dev,-test}.suedzuckergroup.com: Simplifier Launchpad (low-code iPaaS) — akka-http/10.5.3, SAP UI5 shell, pac4j SSO (pac4jCsrfToken), 4 envs on shared AWS ALB, certs 2026-09-02 — new in-scope platform, REST base unverbose.
-[LEARN] ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error — app path not yet mapped.
-[LEARN] ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: "SZ Group Campus - Login" at /ilp/, root 302 — corporate learning portal.
-[LEARN] ACCEPTED RECON @ matomo.suedzuckergroup.com: Matomo (matomo.cloud SaaS), public Sign-in — standard login panel, out-of-scope class standalone.
-[LEARN] ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
-[LEARN] REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
-[LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
-[RISK] suedzucker: 65 — this round: 8 new subdomains discovered via CT/DNS passive enumeration; read-only GETs of public roots/assets; zero credentials, zero authenticated reads, zero writes, no customer data. New Simplifier iPaaS + Azure FD cluster increase surface but all gates are login/SSO or unresponsive. Top BOLA hypotheses remain strictly own-account AUTH_HELPED. Risk stable and acceptable.
+[NEXT] PROBE: On owned Entra B2C test account (2 partner links), read-only GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner` with Bearer JWT + `x-selected-partner-link-id: <non-current own link>` and diff response scope vs baseline — cross-tenant BOLA check.
+[RISK] suedzucker: 65 — round was passive GETs only: read of public Swagger (60KB), 401/404 boundary checks, error-placeholder fingerprinting; zero credentials, zero auth'd reads, zero writes. Simplifier surface clarified (uniform gate, treats correctly); no new exploitable lead; top BOLA hypotheses still own-account AUTH_HELPED. Risk stable and acceptable.

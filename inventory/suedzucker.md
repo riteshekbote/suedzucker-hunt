@@ -130,3 +130,17 @@ www.suedzucker.de
 - CHANGED reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
 - CHANGED app.cropchart.net — AgricoNetwork's real app host (Moro React SPA + Spring Boot on GKE), uniform 401 MISSING_AUTHORIZATION_HEADER, actuator+Swagger disabled
 - CHANGED app.agriconetwork.com — NXDOMAIN, no A/CNAME, no cert in CT history; dead asset confirmed
+
+## 2026-09-06 20:31:31 UTC
+- NEW apps{,-beta,-dev,-test}.suedzuckergroup.com — Simplifier Launchpad (low-code iPaaS), akka-http/10.5.3, SAP UI5 shell, pac4j SSO (pac4jCsrfToken), 4 envs on shared AWS ALB, certs 2026-09-02
+- NEW rawmaterial{,-dev,-test}.suedzuckergroup.com — live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error, app path not mapped
+- NEW campus{,-test}.suedzuckergroup.com — "SZ Group Campus - Login" at /ilp/, root 302 → /ilp/
+- NEW matomo.suedzuckergroup.com — Matomo (matomo.cloud SaaS), public Sign-in
+- NEW e.suedzuckergroup.com — CNAME→web.flowmailer.net (email-delivery, low value)
+- CHANGED portal.mydataplant.com/services/*.py sibling sweep complete — 11 paths all 404; outline.py sole auth-free gateway-bypassing service
+- CHANGED smartfarming gateway /mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json — no machine-readable OpenAPI exposed
+- CHANGED reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
+- CHANGED app.cropchart.net — AgricoNetwork's real app host (Moro React SPA + Spring Boot on GKE), uniform 401 MISSING_AUTHORIZATION_HEADER, actuator+Swagger disabled
+- CHANGED app.agriconetwork.com — NXDOMAIN, no A/CNAME, no cert in CT history; dead asset confirmed
+- CHANGED dev-chatwithyourdata.suedzuckergroup.com — GCP IP 34.117.138.249 but TLS/connect fails (code 000); unreachable
+- CHANGED seedrecommender.suedzuckergroup.com — no live A record, certs from 2022; stale CT entry

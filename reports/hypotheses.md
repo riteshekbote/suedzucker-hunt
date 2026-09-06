@@ -564,3 +564,22 @@
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/: 11 sibling *.py paths 404 — outline.py is the sole auth-free gateway-bypassing service; sibling enumeration c
 - LEARN: ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readab
 - LEARN: ACCEPTED RECON @ reposcan 2026-09-05 18:19: no public GitHub org configured for suedzucker — repo-scan is a structural no-op, no repo surface.
+
+## RANKED HYPOTHESES 2026-09-06 20:31:31 UTC
+- [62] smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header (from art/lead_bigpickle.txt)
+- [55] apps{,-beta,-dev,-test}.suedzuckergroup.com/HybridUserInterface/launchpad: Simplifier Launchpad Pre-Auth Management Endpoint Exposure (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: On owned Entra B2C test account (2 partner links), read-only GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-
+- NEXT(hypotheses-nemotron3.txt): PROBE: GET https://apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js (read-only static fetch) → extract internal endpoint re
+- LEARN: ACCEPTED RECON @ apps{,-beta,-dev,-test}.suedzuckergroup.com: Simplifier Launchpad (low-code iPaaS) — akka-http/10.5.3, SAP UI5 shell, pac4j SSO (pac4jCsrfToken
+- LEARN: ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error — app path not
+- LEARN: ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: "SZ Group Campus - Login" at /ilp/, root 302 — corporate learning portal.
+- LEARN: ACCEPTED RECON @ matomo.suedzuckergroup.com: Matomo (matomo.cloud SaaS), public Sign-in — standard login panel, out-of-scope class standalone.
+- LEARN: ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
+- LEARN: REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
+- LEARN: REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
+- LEARN: REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history (certspotter complete set = only agriconetwork.com/www). Invento
+- LEARN: ACCEPTED RECON @ app.cropchart.net: AgricoNetwork's real app host (linked from agriconetwork.com homepage); "Moro" React SPA + Spring Boot microservices behind 
+- LEARN: ACCEPTED RECON @ app.cropchart.net/api/assets/fedora/getPublicFile/{r}: auth-free gateway-bypassing file-resolver (200 application/octet-stream "Resource /publi
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/: 11 sibling *.py paths 404 — outline.py is the sole auth-free gateway-bypassing service; sibling enumeration c
+- LEARN: ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readab
+- LEARN: ACCEPTED RECON @ reposcan 2026-09-05 18:19: no public GitHub org configured for suedzucker — repo-scan is a structural no-op, no repo surface.

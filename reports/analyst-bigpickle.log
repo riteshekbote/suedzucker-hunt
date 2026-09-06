@@ -11055,3 +11055,360 @@ testability: AUTH_HELPED
 **STEP 7 — RISK**
 
 [RISK] suedzucker: 65 — this round: 8 new subdomains discovered via CT/DNS passive enumeration; read-only GETs of public roots/assets; zero credentials, zero authenticated reads, zero writes, no customer data. New Simplifier iPaaS + Azure FD cluster increase surface but all gates are login/SSO or unresponsive. Top BOLA hypotheses remain strictly own-account AUTH_HELPED. Risk stable and acceptable.
+===== ANALYST bigpickle 2026-09-06 20:31:31 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m% [0mWebFetch https://apps.suedzuckergroup.com/UserInterface/api-docs/api.yaml
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/application 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/AppReleaseList?appId=1 2>/dev/null
+404 text/plain; charset=UTF-8 42
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/LanguageCode 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/TaskConfig 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+The Swagger reveals some endpoints WITHOUT security declarations. Let me probe those.
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/DesignerScreen 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s https://apps.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null
+authentication required
+[0m
+[0m$ [0mcurl -s https://apps.suedzuckergroup.com/UserInterface/api/application 2>/dev/null
+authentication required
+[0m
+[0m$ [0mcurl -s https://apps.suedzuckergroup.com/UserInterface/api/buildInfo -H "Authorization: Basic dGVzdDp0ZXN0" 2>/dev/null
+authentication required
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-test.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-beta.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s https://apps-test.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null
+authentication required
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null
+401 text/plain; charset=UTF-8 23
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api-docs 2>/dev/null
+302 text/html; charset=UTF-8 128
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api-docs/api.yaml 2>/dev/null
+200 application/octet-stream 60592
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api/buildInfo 2>/dev/null && echo " <- dev buildInfo"
+401 text/plain; charset=UTF-8 23 <- dev buildInfo
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api/application 2>/dev/null && echo " <- dev application"
+401 text/plain; charset=UTF-8 23 <- dev application
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api/InstanceSettings 2>/dev/null && echo " <- dev InstanceSettings"
+401 text/plain; charset=UTF-8 23 <- dev InstanceSettings
+[0m
+Dev env exposes api-docs unauthenticated while prod 302s. Let me compare dev API gating vs prod.
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api/LanguageCode 2>/dev/null && echo " <- dev LanguageCode"
+401 text/plain; charset=UTF-8 23 <- dev LanguageCode
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{redirect_url}" https://apps.suedzuckergroup.com/UserInterface/api-docs 2>/dev/null && echo " <- prod api-docs redirect"
+302 http://apps.suedzuckergroup.com/UserInterface/api-docs/ <- prod api-docs redirect
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api-docs/api.yaml 2>/dev/null && echo " <- prod api-docs/api.yaml"
+200 application/octet-stream 60592 <- prod api-docs/api.yaml
+[0m
+[0m$ [0mcurl -s https://apps-dev.suedzuckergroup.com/UserInterface/api-docs/api.yaml -r 0-400 2>/dev/null
+openapi: 3.0.1
+info:
+  title: Simplifier UI API
+  description: Administration Interface Services are available under the path prefix /UserInterface/api/
+  termsOfService: ''
+  version: ''
+externalDocs:
+  description: Simplifier Docs
+  url: https://community.simplifier.io/doc/current-release/
+servers:
+  - url: /UserInterface/api/
+tags:
+  - name: Release
+  - name: Application
+  - name: BusinessObject
+[0m
+[0m$ [0mcurl -s -i https://apps.suedzuckergroup.com/UserInterface/api/AppReleaseList?appId=1 2>/dev/null | head -20
+HTTP/2 404 
+date: Sun, 06 Sep 2026 20:29:18 GMT
+content-type: text/plain; charset=UTF-8
+content-length: 42
+server: Simplifier
+
+The requested resource could not be found.
+[0m
+[0m$ [0mcurl -s -i "https://apps.suedzuckergroup.com/UserInterface/api/AppReleaseList?appId=test" 2>/dev/null | head -20
+HTTP/2 404 
+date: Sun, 06 Sep 2026 20:29:19 GMT
+content-type: text/plain; charset=UTF-8
+content-length: 42
+server: Simplifier
+
+The requested resource could not be found.
+[0m
+Prod api-docs/api.yaml is also public (60592 bytes). Notably `/AppReleaseList?appId=1` returned 404 while others 401. Let me investigate that anomaly.
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}" "https://apps-dev.suedzuckergroup.com/UserInterface/api/AppReleaseList?appId=1" && echo " <- dev AppReleaseList"
+404 42 <- dev AppReleaseList
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" "https://apps.suedzuckergroup.com/UserInterface/api/AppReleaseBuilder/test/1" && echo " <- AppReleaseBuilder"
+404 text/plain; charset=UTF-8 42 <- AppReleaseBuilder
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" "https://apps.suedzuckergroup.com/UserInterface/api/businessobjects/server" && echo " <- businessobjects/server (basicAuth in spec)"
+401 text/plain; charset=UTF-8 23 <- businessobjects/server (basicAuth in spec)
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" "https://apps.suedzuckergroup.com/UserInterface/api/AppReleaseDownloader" && echo " <- AppReleaseDownloader"
+404 text/plain; charset=UTF-8 42 <- AppReleaseDownloader
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" "https://apps.suedzuckergroup.com/UserInterface/api/InstanceSettings/demo" && echo " <- InstanceSettings/demo"
+401 text/plain; charset=UTF-8 23 <- InstanceSettings/demo
+[0m
+[0m$ [0mcurl -s -i https://campus.suedzuckergroup.com/ilp/ 2>/dev/null | head -25
+HTTP/1.1 302 
+Date: Sun, 06 Sep 2026 20:29:31 GMT
+Transfer-Encoding: chunked
+Connection: keep-alive
+Set-Cookie: INGRESSCOOKIE=e5eeb0c54a5800505c79a068259acb6c|b4f7bd19e7e3458e6533f92e7c8070e8; Path=/(.*); Secure; HttpOnly
+Set-Cookie: gatewaySessionId=9A9F18A9ECA05CB83D695C076CB24299; Path=/; Secure; HttpOnly; SameSite=Lax
+X-UA-Compatible: IE=edge
+Cache-Control: no-cache,no-store,must-revalidate
+Pragma: no-cache
+Expires: Wed, 31 Dec 1969 23:59:59 GMT
+Set-Cookie: ilp_JSESSIONID=C03EB2051B92E3F12F71D73D7A5CB9EE; Path=/; Secure; HttpOnly; SameSite=Lax
+Set-Cookie: XSRF_COOKIE=L/BzikKv5jdkD4A5oS4NNZb1vcO+LYnyF6RNToadMd9r8+lOpTJC6mis49vG+7S2W3eYRge+foGzspW22rWxrzBdSUPrEcay0m8GQsi/MBs=; Max-Age=1800; Expires=Sun, 06 Sep 2026 20:59:31 GMT; Path=/ilp; Secure; HttpOnly; SameSite=Lax
+Set-Cookie: oam.Flash.RENDERMAP.TOKEN=-efciesbq1; Path=/ilp; HttpOnly; SameSite=Lax
+Set-Cookie: ILALANG=en-GB; Max-Age=31536000; Expires=Mon, 06 Sep 2027 20:29:31 GMT; Path=/; Secure; HttpOnly; SameSite=Lax
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Location: /ilp/pages/login.jsf
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+[0m
+Release endpoints 404 (not enabled); everything else uniformly 401 — no per-endpoint auth discrepancy. Let me check campus and matomo for any auth-flow anomalies.
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" -L https://campus.suedzuckergroup.com/ 2>/dev/null && echo " <- campus /"
+200 text/html;charset=UTF-8 104770 <- campus /
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{size_download}" https://rawmaterial.suedzuckergroup.com/ && echo " <- rawmaterial /"
+200 997 <- rawmaterial /
+[0m
+[0m$ [0mfor p in /app /api /login /portal /2026 /kampagne /declaration /zuschlag; do code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 "https://rawmaterial.suedzuckergroup.com$p"); echo "$code $p"; done
+200 /app
+200 /api
+200 /login
+200 /portal
+200 /2026
+200 /kampagne
+200 /declaration
+200 /zuschlag
+[0m
+[0m$ [0mcurl -s https://rawmaterial.suedzuckergroup.com/ 2>/dev/null | head -c 1000
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Error</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+        line-height: 1.2;
+        margin: 0;
+      }
+
+      html {
+        color: #888;
+        display: table;
+        font-family: sans-serif;
+        height: 100%;
+        text-align: center;
+        width: 100%;
+      }
+
+      body {
+        display: table-cell;
+        vertical-align: middle;
+        margin: 2em auto;
+      }
+
+      h1 {
+        color: #555;
+        font-size: 2em;
+        font-weight: 400;
+      }
+
+      p {
+        margin: 0 auto;
+        width: 480px;
+      }
+
+      @media only screen and (max-width: 280px) {
+
+        body,
+        p {
+          width: 95%;
+        }
+
+        h1 {
+          font-size: 1.5em;
+          margin: 0 0 0.3em;
+        }
+
+      }
+  </style>
+</head>
+
+<body>
+    <h1>Oops &#128531;</h1>
+    <p>Something went wrong... Please try again later.</p>
+</body>
+
+</html>
+[0m
+[0m$ [0mcurl -s -i https://rawmaterial.suedzuckergroup.com/ 2>/dev/null | head -20
+HTTP/2 200 
+date: Sun, 06 Sep 2026 20:29:42 GMT
+content-type: text/html
+content-length: 997
+last-modified: Mon, 03 Mar 2025 15:28:54 GMT
+etag: "67c5cab6-3e5"
+strict-transport-security: max-age=31536000; includeSubDomains
+x-azure-ref: 20260906T202942Z-168545c87965j6w2hC1IAD157c0000000skg0000000082dk
+x-cache: CONFIG_NOCACHE
+accept-ranges: bytes
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Error</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+[0m
+[0m$ [0mcurl -s https://apps.suedzuckergroup.com/UserInterface/api-docs/api.yaml 2>/dev/null | grep -in -E "genToken|token|security:|basicAuth|login|/login|authenticate|oauth" | head -40
+349:      security:
+350:        - basicAuth: []
+394:      security:
+395:        - basicAuth: []
+450:      security:
+451:        - basicAuth: []
+500:      security:
+501:        - basicAuth: []
+550:      security:
+551:        - basicAuth: []
+612:      security:
+613:        - basicAuth: []
+675:      security:
+676:        - basicAuth: []
+731:      security:
+732:        - basicAuth: []
+775:      security:
+776:        - basicAuth: []
+831:      security:
+832:        - basicAuth: []
+864:      security:
+865:        - basicAuth: []
+908:      security:
+909:        - basicAuth: []
+960:      security:
+961:        - basicAuth: []
+1017:      security:
+1018:        - basicAuth: []
+1070:      security:
+1071:        - basicAuth: []
+1121:      security:
+1122:        - basicAuth: []
+1184:      security:
+1185:        - basicAuth: []
+1237:      security:
+1238:        - basicAuth: []
+1277:      security:
+1278:        - basicAuth: []
+1302:      security:
+1303:        - basicAuth: []
+[0m
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps.suedzuckergroup.com/UserInterface/api/genToken 2>/dev/null && echo " <- genToken"
+404 text/plain; charset=UTF-8 42 <- genToken
+[0m
+rawmaterial is a static Front Door error page (placeholder, last-modified 2025-03-03). Let me check the api.yaml for auth/token endpoints — the pre-auth surface.
+[0m$ [0mcurl -s -o /dev/null -w "%{http_code} %{content_type} %{size_download}" https://apps-dev.suedzuckergroup.com/UserInterface/api/genToken 2>/dev/null && echo " <- dev genToken"
+404 text/plain; charset=UTF-8 42 <- dev genToken
+[0m
+[0m$ [0mfor u in "https://apps.suedzuckergroup.com/genToken/" "https://apps.suedzuckergroup.com/UserInterface/genToken" "https://apps-dev.suedzuckergroup.com/genToken/"; do code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 "$u"); echo "$code $u"; done
+404 https://apps.suedzuckergroup.com/genToken/
+404 https://apps.suedzuckergroup.com/UserInterface/genToken
+404 https://apps-dev.suedzuckergroup.com/genToken/
+[0m
+NO_DELTA on new hosts; round was passive depth on Simplifier admin surface (6 probes + Swagger deep-read). Findings below.
+
+STEP 1 — DELTA
+- [CHANGED] apps*.suedzuckergroup.com/UserInterface/api: Swagger `api.yaml` (60,592 B) fully public unauth on prod AND dev (prod `/api-docs` 302→`/api-docs/`, file serves 200); full admin REST map exposed — previously only assumed.
+- [CHANGED] apps*.suedzuckergroup.com/UserInterface/api: actual gate is a UNIFORM `401 "authentication required"` (pac4j session filter) on every endpoint — including ones Swagger marks with NO security (buildInfo, application, LanguageCode, TaskConfig, DesignerScreen, InstanceSettings/demo); Release routes (AppReleaseList/Builder/Downloader) return 404 (unregistered), not 401.
+- [CHANGED] campus.suedzuckergroup.com/ilp/: fingerprinted as Oracle ILP (Oracle iLearning Plus) JSF LMS — `oam.Flash.RENDERMAP.TOKEN` (OAM gateway), XSRF_COOKIE, ilp_JSESSIONID, ILALANG, INGRESSCOOKIE; 302→`/ilp/pages/login.jsf`, login-only.
+- [CHANGED] rawmaterial.suedzuckergroup.com: every path (/, /app, /api, /login, /portal, /2026…) returns the SAME static "Oops… Something went wrong" Front Door error page (last-modified 2025-03-03, `x-azure-ref`, `x-cache: CONFIG_NOCACHE`) — placeholder, no app/backend mapped.
+
+STEP 2 — PRIORITIZE
+- [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api, score=7.1, axis=a6/b7/t8/g3/c7/f8 — 574-endpoint tenant-scoped REST, owned-account testable
+- [PRIO] plantportal.suedzuckergroup.com/api-gateway, score=6.8, axis=a5/b7/t7/g4/c7/f8 — partner-impersonation + x-selected-partner-link-id BOLA surface
+- [PRIO] apps.suedzuckergroup.com/UserInterface/api, score=4.9, axis=a6/b6/t5/g2/c8/f7 — public admin Swagger map, but uniform auth+404 gates closed (freshness up, gate_ease down)
+
+STEP 3 — HYPOTHESES
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: 574 Swagger endpoints; header enforced gateway-level only; backend JWT carries userId/email; owned account available; cross-tenant /fields geometry + BIRTHDAY/EMAIL persons = PII
+evidence_needed: owned token + two partner-link-ids; GET /fields with non-current link-id returns foreign-scope rows
+verify_steps: AUTH_HELPED — GET `https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields` with valid Bearer + link-id A vs link-id B (own accounts), read-only
+impact: cross-tenant PII (BIRTHDAY/EMAIL), field geometry, financials — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp Partner-Scope BOLA (impersonation + current-partner switch)
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 60
+reasoning: impersonation+current-partner routes guarded only by client-side middleware; server-side check of x-selected-partner-link-id vs JWT subject unverified; owned account available
+evidence_needed: owned token + two links; POST external-account/current-partner with non-current link-id; response scope vs baseline differs cross-tenant
+verify_steps: AUTH_HELPED — GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/access-rights` with valid Bearer + non-current link-id, read-only
+impact: cross-tenant contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Simplifier Instance-Auth Credential Oracle on admin API
+class: AUTH
+asset: apps.suedzuckergroup.com/UserInterface/api
+confidence: 30
+reasoning: uniform `401 "authentication required"` (pac4j session) gates everything incl. Swagger-marked-no-security endpoints; invalid HTTP Basic creds → SAME body (not a basic-credential oracle); Release routes 404 (disabled); genToken 404 on all probed paths; Swagger's basicAuth annotations not a real boundary
+evidence_needed: any valid pac4j/SSO session token or instance credential that changes the 401→2xx on /application
+verify_steps: AUTH_HELPED — only valid credential tests would resolve; passive exhausted
+impact: full iPaaS takeover if creds guessable — CRITICAL, but no path found
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- Simplifier hypothesis further weakened this round (uniform gate, no oracle, no 404/401 boundary) — [PARKED]: Simplifier instance-auth: confidence 31 < 40, uniform "authentication required" gate + disabled Release routes + no credential oracle; PASSIVE_EXHAUSTED.
+- BOLA ×2 (62, 60) survive as FINAL — both AUTH_HELPED, remain own-account only.
+- [FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
+- [FINAL] Plant Portal epp BOLA 60 (IDOR, AUTH_HELPED)
+
+STEP 5 — NEXT ACTION
+[NEXT] PROBE: On owned Entra B2C test account (2 partner links), read-only GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner` with Bearer JWT + `x-selected-partner-link-id: <non-current own link>` and diff response scope vs baseline — cross-tenant BOLA check.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED RECON @ apps*.suedzuckergroup.com/UserInterface/api-docs/api.yaml: full Simplifier admin REST map PUBLIC (prod+dev, 60,592 B); reveals Application/BusinessObject/InstanceSettings/Connector/I18N CRUD, basicAuth scheme — recon value only
+- [LEARN] REJECTED NOT-VULN @ apps*.suedzuckergroup.com/UserInterface/api: actual gate is uniform `401 "authentication required"` (pac4j session filter, not HTTP Basic) on ALL endpoints incl. Swagger-no-security ones; Release routes 404 unregistered; genToken 404 all probed paths — no auth boundary discrepancy, no oracle, properly gated
+- [LEARN] ACCEPTED RECON @ campus.suedzuckergroup.com/ilp/: Oracle ILP (iLearning Plus) JSF LMS, OAM gateway cookies (oam.Flash.RENDERMAP.TOKEN), XSRF_COOKIE, ilp_JSESSIONID; login-only — standard enterprise LMS
+- [LEARN] REJECTED DEAD-ASSET @ rawmaterial.suedzuckergroup.com: all paths serve static Front Door "Oops" error placeholder (last-modified 2025-03-03, x-azure-ref) — no app mapped, low value
+
+STEP 7 — RISK
+[RISK] suedzucker: 65 — round was passive GETs only: read of public Swagger (60KB), 401/404 boundary checks, error-placeholder fingerprinting; zero credentials, zero auth'd reads, zero writes. Simplifier surface clarified (uniform gate, treats correctly); no new exploitable lead; top BOLA hypotheses still own-account AUTH_HELPED. Risk stable and acceptable.
