@@ -1725,3 +1725,4 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
 [LEARN] REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
 [LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
+## 2026-09-06 15:57:45 UTC [target] (model bigpickle)

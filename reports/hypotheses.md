@@ -537,3 +537,5 @@
 - LEARN: REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history (certspotter complete set = only agriconetwork.com/www). Invento
 - LEARN: ACCEPTED RECON @ app.cropchart.net/api/assets/fedora/getPublicFile/{r}: auth-free gateway-bypassing file-resolver (200 application/octet-stream "Resource /publi
 - LEARN: ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readab
+
+## RANKED HYPOTHESES 2026-09-06 16:17:41 UTC

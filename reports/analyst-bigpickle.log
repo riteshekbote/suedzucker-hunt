@@ -10949,3 +10949,38 @@ STEP 6 — LEARN: [LEARN] ACCEPTED RECON @ apps{,-beta,-dev,-test}.suedzuckergro
 [LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
 
 STEP 7 — RISK: [RISK] suedzucker: 66 — read-only GETs of the Simplifier Swagger spec + one POST to `/genToken/` with dummy creds (returned only `401 authentication required`, no user interaction, no real credential). No credentials, writes, or customer data touched. Confirmed the Simplifier cluster (4 envs) is uniformly basicAuth-gated with no pre-auth gap — surface carried but tightly locked. The open BOLA hypotheses (MyDataPlant/Plant-Portal/Shop B2B) remain strictly own-account AUTH_HELPED and were not exercised this round. Risk stable and acceptable.
+===== ANALYST bigpickle 2026-09-06 16:17:41 UTC =====
+[0m
+> build · big-pickle
+[0m
+Looking at this security research context, I need to continue the analysis in **read-only planning mode**. Based on the current state:
+
+## CURRENT ANALYSIS STATE
+
+**Top Hypotheses (Ranked):**
+1. **[65]** MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header - `smartfarming.suedzuckergroup.com` - HIGH if confirmed
+2. **[35]** Simplifier UI basicAuth brute/default-credential - `apps.suedzuckergroup.com` - CRITICAL if creds guessable
+
+**Newly Discovered Assets (2026-09-06):**
+- `apps{,-beta,-dev,-test}.suedzuckergroup.com` - Simplifier Launchpad (iPaaS), pac4j SSO, 4 envs
+- `rawmaterial{,-dev,-test}.suedzuckergroup.com` - Azure Front Door, generic error
+- `campus{,-test}.suedzuckergroup.com` - Corporate learning portal at /ilp/
+- `matomo.suedzuckergroup.com` - Matomo analytics (out-of-scope)
+- `e.suedzuckergroup.com` - Flowmailer (email delivery, low value)
+
+**Current Leads Status:**
+- Plant Portal BOLA needs own-account test (passive exhausted)
+- MyDataPlant cross-tenant BOLA needs own JWT + non-owned link-id
+- Simplifier brute-force needs valid basicAuth credentials
+
+**NEXT Recommended Action:**
+```
+PROBE: GET https://apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js 
+then its AuthObject/helper modules (read-only) to extract Simplifier REST base + login flow
+```
+
+Since I'm in **plan mode**, I can only analyze and plan - no active probing. Do you want me to:
+1. Detail the exact probe sequence for Simplifier exploration?
+2. Analyze the MyDataPlant BOLA hypothesis further?
+3. Review the program scope to confirm these assets are in-scope?
+4. Something else specific?
