@@ -100,3 +100,10 @@ www.suedzucker.de
 - CHANGED reposcan 2026-09-05 18:19 — no public GitHub org for suedzucker; repo-scan structural no-op
 
 ## 2026-09-06 00:14:25 UTC
+
+## 2026-09-06 04:51:16 UTC
+- NEW apps{,,-beta,-dev,-test}.suedzuckergroup.com — **Simplifier Launchpad** (low-code iPaaS), akka-http/10.5.3, SAP UI5 shell, pac4j SSO (`pac4jCsrfToken` cookie), 4 envs on one AWS ALB, certs issued 2026
+- NEW rawmaterial{,,-dev,-test}.suedzuckergroup.com — live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root serves generic error page (app path not mapped).
+- NEW campus{,,-test}.suedzuckergroup.com — "SZ Group Campus - Login" at /ilp/ (root 302→/ilp/), shared ELB.
+- NEW matomo.suedzuckergroup.com — Matomo analytics (matomo.cloud SaaS), public Sign-in page.
+- NEW e.suedzuckergroup.com — CNAME to flowmailer.net (email-delivery service, low value).

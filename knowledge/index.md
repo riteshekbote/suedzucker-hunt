@@ -115,3 +115,10 @@
 - 2026-09-06 ACCEPTED RECON @ app.cropchart.net: AgricoNetwork's real app host (linked from agriconetwork.com homepage); "Moro" React SPA + Spring Boot microservices behind OpenResty/Envoy on GKE cropchart-2-0-prod; gateway/agro/access/general/premium/assets services; uniform 401 MISSING_AUTHORIZATION_HEADER without JWT; actuator+Swagger disabled; endpoint map recovered from /assets/index.bd3e3a65.js — large, well-gated tier-2 asset.
 - 2026-09-06 REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history (certspotter complete set = only agriconetwork.com/www). Inventory entry was stale by 09-05; real platform lives at cropchart.net.
 - 2026-09-06 ACCEPTED RECON @ app.cropchart.net/api/assets/fedora/getPublicFile/{r}: auth-free gateway-bypassing file-resolver (200 application/octet-stream "Resource /public/{id} not found" for all scanned ids) — sole unauth service exposed; sibling/doc surface closed (actuator, per-service api-docs, swagger-resources all 404/empty).
+- 2026-09-06 ACCEPTED RECON @ apps{,-beta,-dev,-test}.suedzuckergroup.com: Simplifier Launchpad (low-code iPaaS) — akka-http/10.5.3, SAP UI5 shell, pac4j SSO (pac4jCsrfToken), 4 envs on shared AWS ALB, certs 2026-09-02 — new in-scope platform, REST base unverbose.
+- 2026-09-06 ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error — app path not yet mapped.
+- 2026-09-06 ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: "SZ Group Campus - Login" at /ilp/, root 302 — corporate learning portal.
+- 2026-09-06 ACCEPTED RECON @ matomo.suedzuckergroup.com: Matomo (matomo.cloud SaaS), public Sign-in — standard login panel, out-of-scope class standalone.
+- 2026-09-06 ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
+- 2026-09-06 REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
+- 2026-09-06 REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.

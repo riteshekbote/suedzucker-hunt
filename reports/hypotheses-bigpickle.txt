@@ -1,65 +1,53 @@
-## 2026-09-06 00:13:37 UTC [target] (model bigpickle)
-reasoning: Gateway returns 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer → 403 forbidden(177). Header absent from Swagger (gateway-level only), POST /tokens auth-gated. JWT carries userId+email+mdp_bgd_api but no partner/link claims — tenant scope decided solely by a client-supplied header. epp client pins the same header family to current-partner/access-rights/impersonation. This round: no new passive signal; backend authz link-id∈JWT-subject unverified.
-evidence_needed: Own JWT + a syntactically-valid non-owned link-id → GET /api/v3/fields or /users/{id} returns cross-tenant data vs rejection.
-verify_steps: Passive closed. Active on own test account, read-only GET, header permutation (own → non-owned → unknown). No live customer data.
-impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+## 2026-09-06 04:50:32 UTC [target] (model bigpickle)
+[NEW] apps{,,-beta,-dev,-test}.suedzuckergroup.com — **Simplifier Launchpad** (low-code iPaaS), akka-http/10.5.3, SAP UI5 shell, pac4j SSO (`pac4jCsrfToken` cookie), 4 envs on one AWS ALB, certs issued 2026-09-02 — first new platform since program start.
+[NEW] rawmaterial{,,-dev,-test}.suedzuckergroup.com — live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root serves generic error page (app path not mapped).
+[NEW] campus{,,-test}.suedzuckergroup.com — "SZ Group Campus - Login" at /ilp/ (root 302→/ilp/), shared ELB.
+[NEW] matomo.suedzuckergroup.com — Matomo analytics (matomo.cloud SaaS), public Sign-in page.
+[NEW] e.suedzuckergroup.com — CNAME to flowmailer.net (email-delivery service, low value).
+[PRIO] apps.suedzuckergroup.com (Simplifier),score=7.8,axis=a8/b9/t8/g5/c6/f10 — iPaaS hub (integration flows, connector creds, orchestration), 4 envs incl dev/test, pac4j SSO, uncharacterized
+[PRIO] rawmaterial.suedzuckergroup.com,score=5.9,axis=a5/b6/t5/g4/c8/f10 — Azure FD app, raw-material logistics domain, root-errored (needs host-router map)
+[PRIO] campus.suedzuckergroup.com,score=5.4,axis=a5/b5/t5/g4/c6/f9 — corporate learning portal /ilp/, login-gated
+[PRIO] matomo.suedzuckergroup.com,score=5.2,axis=a4/b4/t6/g5/c7/f8 — analytics SaaS, standard login panel
+[HYP] Simplifier Launchpad pre-auth / management surface across apps*-cluster
+class: AUTH
+asset: apps{,,-beta,-dev,-test}.suedzuckergroup.com/HybridUserInterface/launchpad
+confidence: 45
+reasoning: 4 freshly-issued (2026-09-02) in-scope envs behind single ALB; akka-http/10.5.3 serves SAP UI5 "io.simplifier.launchpad" shell; `pac4jCsrfToken` cookie indicates pac4j SSO (OIDC/CAS/SAML/OAuth); low-code iPaaS class typically carries platform REST for app import/export + connectors storing integration credentials + optional anonymous-application mode + bootstrap admin. SPA catch-all (404 text/plain on /rest /health) hides REST base. No vuln evidence yet — fresh-surface only.
+evidence_needed: platform REST base + whether any endpoint answers unauth (app list/management/status) or anonymous mode enabled; whether dev/test tenants gate weaker than prod.
+verify_steps: GET Component.js + AuthObject helpers from /HybridUserInterface/launchpad/assets/fp-340e776/ to extract REST base and login/anonymous flow; then single unauth GETs on the resolved base's status/config endpoints on apps vs apps-dev.
+impact: platform-wide access to integration flows/connectors (embedded creds) and orchestration — HIGH if any pre-auth gap.
 testability: AUTH_HELPED
-[HYP] Plant Portal epp partner-scope BOLA (current-partner switch + impersonation)
-class: IDOR
-asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
-confidence: 64
-reasoning: epp client pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations. /association/impersonation guarded only by client middleware. Backend authz of partnerLinkId vs JWT subject unverified. switchToPartnerNumber stays client-state-only but current-partner takes raw partnerNo/link-id. This round: /api/catalog sweep showed no auth-free backdoor into partner data.
-evidence_needed: Own token + 2 owned links: does POST current-partner with an owned-but-wrong link-id persist; does GET /access-rights reflect the wrong scope.
-verify_steps: Passive closed (bundle+routes+headers mapped). Active on own test account, read-only GETs after the POST.
-impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
-testability: AUTH_HELPED
-[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
-class: IDOR
-asset: shop.suedzucker.com/OrderSummary/:recordId
-confidence: 55
-reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Record-level access decided by SF sharing sets, not code — unobservable passively. Public /SelfRegister makes own account feasible. No change this round.
-evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
-verify_steps: Passive done. Active on own SelfRegister account only.
-impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
-testability: AUTH_HELPED
-[NEXT] HUMAN: Create plantportal.suedzuckergroup.com test account via Entra B2C signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), link one 7-digit Partnernummer via SMS activation. On own account only, read-only GETs after: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id = own link vs syntactically-valid non-owned id, then GET /access-rights to observe scope persistence; (2) GET /external-partner-impersonations?partnerSearch=<rare surname> then POST {partnerNo} for one listed partner. (3) Reuse the same JWT (mdp_bgd_api scope) against portal.mydataplant.com/api/v3 GET /fields + /users/{id} with permuted X-Selected-Partner-Link-Id. Fallback if B2C signup closed: app.cropchart.net POST /access/users/cropchart-registration/createAccount (capture full body) → activateAccount (email code) → issueSessionToken → GET /api/orders + /users with swapped ids.
-[RISK] suedzucker: 70 — this round: 7 read-only GETs at ≤1 rps (1 Nuxt payload, 5 catalog paths, 1 JS bundle re-crawl); zero credentials, zero authenticated reads, zero writes, no customer data. All live surface re-confirmed gated (401/400/403 or SPA fallback). Passive plateau holds; all top hypotheses strictly own-account gated (AUTH_HELPED/HUMAN). Risk stable.
-testability: AUTH_HELPED
-[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
-class: IDOR
-asset: shop.suedzucker.com/OrderSummary/:recordId
-confidence: 55
-reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen. Record-level access decided by SF sharing sets, not code — unobservable passively. Public /SelfRegister makes own account feasible. No change this round.
-evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
-verify_steps: Passive done. Active on own SelfRegister account only.
-impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
-testability: AUTH_HELPED
-[NEXT] HUMAN: Create plantportal.suedzuckergroup.com test account via Entra B2C signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), link one 7-digit Partnernummer via SMS activation. On own account only, read-only GETs after: (1) POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner?applicationType=EXTERNAL_PLANT_PORTAL with x-selected-partner-link-id = own link vs syntactically-valid non-owned id, then GET /access-rights to observe scope persistence; (2) GET /external-partner-impersonations?partnerSearch=<rare surname> then POST {partnerNo} for one listed partner. (3) Reuse the same JWT (mdp_bgd_api scope) against portal.mydataplant.com/api/v3 GET /fields + /users/{id} with permuted X-Selected-Partner-Link-Id. Fallback if B2C signup closed: app.cropchart.net POST /access/users/cropchart-registration/createAccount (capture full body) → activateAccount (email code) → issueSessionToken → GET /api/orders + /users with swapped ids.
-[RISK] suedzucker: 70 — this round: 7 read-only GETs at ≤1 rps (1 Nuxt payload, 5 catalog paths, 1 JS bundle re-crawl); zero credentials, zero authenticated reads, zero writes, no customer data. All live surface re-confirmed gated (401/400/403 or SPA fallback). Passive plateau holds; all top hypotheses strictly own-account gated (AUTH_HELPED/HUMAN). Risk stable.
 [HYP] MyDataPlant cross-tenant BOLA via X-Selected-Partner-Link-Id header
 class: IDOR
 asset: portal.mydataplant.com/api/v3 (front smartfarming.suedzuckergroup.com/mdp-api/v3/api)
 confidence: 65
-reasoning: Gateway returns 400 Missing-X-Selected-Partner-Link-Id on every request; header + no Bearer -> 403 forbidden(177); header absent from Swagger (gateway-only); POST /tokens auth-gated; JWT carries userId+email+mdp_bgd_api with no partner/link claims — tenant scope decided solely by client-supplied header. Fresh probes: doc v0.1.20 unchanged, all 574 endpoints still present, no new endpoints/params.
-evidence_needed: Own JWT + syntactically-valid non-owned link-id -> GET /api/v3/fields or /users/{id} returns cross-tenant data vs rejection.
-verify_steps: Passive closed. Active on own test account, read-only GET, header permutation (own -> non-owned -> unknown). No live customer data.
-impact: cross-tenant read/CRUD of fields, geometry, persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
+reasoning: gateway enforces the tenant-scoping header on every request (400 without; 403 forbidden(177) header-only); header absent from Swagger; JWT carries userId/email only — tenant decided by client-supplied header; backend 403-gated unauth. Unchanged this round.
+evidence_needed: own JWT + non-owned syntactically-valid link-id → GET /fields or /users/{id} cross-tenant return vs reject.
+verify_steps: Passive closed. Active on own test account only (read-only GETs, header permutation).
+impact: cross-tenant read of fields/geometry/persons (BIRTHDAY/EMAIL PII), orders+PAYMENT_LINK — HIGH
 testability: AUTH_HELPED
 [HYP] Plant Portal epp partner-scope BOLA (current-partner switch + impersonation)
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
 confidence: 64
-reasoning: epp pins x-selected-partner-link-id only to POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; /association/impersonation guarded only by client middleware; switchToPartnerNumber client-state-only, header not primable via query. This round: catalog sibling sweep + bundle hash confirm no new client routes; backend authz of partnerLinkId vs JWT subject still unverified.
-evidence_needed: Own token + 2 owned links: does POST current-partner with an owned-but-wrong link-id persist; does GET /access-rights reflect the wrong scope.
-verify_steps: Passive closed. Active on own test account, read-only GETs after the POST.
-impact: cross-tenant read of partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
+reasoning: x-selected-partner-link-id only on POST /external-account/current-partner, GET /access-rights, GET|POST /external-partner-impersonations; /association/impersonation is client-middleware-only; backend authz of link-id vs JWT subject unverified. Unchanged this round.
+evidence_needed: own token + 2 owned links: POST current-partner with non-current link-id; does GET /access-rights reflect wrong scope.
+verify_steps: Active on own test account, read-only GETs after POST.
+impact: cross-tenant partner contracts/deliveries/settlements + tenant-scope switch (agri PII + financial) — HIGH
 testability: AUTH_HELPED
-[HYP] shop.suedzucker.com SFDC Commerce OrderSummary IDOR via /OrderSummary/:recordId
-class: IDOR
-asset: shop.suedzucker.com/OrderSummary/:recordId
-confidence: 55
-reasoning: LWR routes /OrderSummary/:recordId + /manage-users; CSP maps SAP Commerce backend + SFDC community deu84.sfdc-yzvdd4 + Stripe/PayPal/Adyen; record access decided by SF sharing sets, unobservable passively; /SelfRegister public. Fresh probe: webruntime LWR shell + OrderSummary route unchanged; no new routes in SSR bundle.
-evidence_needed: Own SFDC account + another account's recordId: GET /OrderSummary/<foreign_recordId> vs SFDC error; /manage-users usable by non-admin.
-verify_steps: Passive done. Active on own SelfRegister account only.
-impact: cross-tenant order disclosure (amounts, line items, shipping, payment links) — HIGH
-testability: AUTH_HELPED
+[PARKED] rawmaterial* host-router map: conf 30 — generic error page w/o data; needs the app's real path; not actionable yet.
+[PARKED] campus /ilp/ login: conf 30 — public login panel is REJECTED-class unless authorization logic is found.
+[PARKED] matomo sign-in: conf 25 — public login panel REJECTED-class; no API token shown pre-auth.
+[PARKED] e.suedzuckergroup.com (flowmailer): mail-service infra — REJECTED-class (mail config).
+[FINAL] Simplifier pre-auth surface 45 (AUTH, fresh tier-2, HIGH-if-true)
+[FINAL] MyDataPlant header BOLA 65 (IDOR, AUTH_HELPED)
+[FINAL] Plant Portal epp BOLA 64 (IDOR, AUTH_HELPED)
+[NEXT] PROBE: GET https://apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js then its AuthObject/helper modules (read-only) to extract the Simplifier REST base + login/anonymous flow; follow with one unauth GET each on the resolved REST base's status and app-list paths on apps vs apps-dev.
+[LEARN] ACCEPTED RECON @ apps{,-beta,-dev,-test}.suedzuckergroup.com: Simplifier Launchpad (low-code iPaaS) — akka-http/10.5.3, SAP UI5 shell, pac4j SSO (pac4jCsrfToken), 4 envs on shared AWS ALB, certs 2026-09-02 — new in-scope platform, REST base unverbose.
+[LEARN] ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: live via Azure Front Door (szazweupdfddmz01.z01.azurefd.net); root = generic error — app path not yet mapped.
+[LEARN] ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: "SZ Group Campus - Login" at /ilp/, root 302 — corporate learning portal.
+[LEARN] ACCEPTED RECON @ matomo.suedzuckergroup.com: Matomo (matomo.cloud SaaS), public Sign-in — standard login panel, out-of-scope class standalone.
+[LEARN] ACCEPTED RECON @ e.suedzuckergroup.com: CNAME→web.flowmailer.net — email-delivery service, low value.
+[LEARN] REJECTED DEAD-ASSET @ dev-chatwithyourdata.suedzuckergroup.com: GCP IP 34.117.138.249 but TLS/connect fails (code 000) — unreachable this round.
+[LEARN] REJECTED DEAD-ASSET @ seedrecommender.suedzuckergroup.com: no live A record (000), certs from 2022 — stale CT entry.
+[RISK] suedzucker: 68 — this round: read-only GETs of public roots/static assets on 8 newly-found in-scope subdomains plus CT/DNS passive lookups; zero credentials, zero authenticated reads, zero writes, no customer data. One process note: my probe helper issued 4 GETs per host (code+server+ct+title) — slightly redundant request volume; future rounds single-parallel GET per host. New Simplifier iPaaS + Azure FD cluster increase the carried surface, but all gates are login/SSO or unresponsive, and the top BOLA hypotheses remain strictly own-account gated. Risk stable-to-slightly-up but acceptable.
