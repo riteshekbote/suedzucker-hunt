@@ -1799,3 +1799,45 @@ impact: full iPaaS takeover if creds guessable — CRITICAL, but no path found
 testability: AUTH_HELPED
 [NEXT] PROBE: On owned Entra B2C test account (2 partner links), read-only GET `https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner` with Bearer JWT + `x-selected-partner-link-id: <non-current own link>` and diff response scope vs baseline — cross-tenant BOLA check.
 [RISK] suedzucker: 65 — round was passive GETs only: read of public Swagger (60KB), 401/404 boundary checks, error-placeholder fingerprinting; zero credentials, zero auth'd reads, zero writes. Simplifier surface clarified (uniform gate, treats correctly); no new exploitable lead; top BOLA hypotheses still own-account AUTH_HELPED. Risk stable and acceptable.
+## 2026-09-06 22:19:19 UTC [target] (model bigpickle)
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,5.70,attack_surface(7)+business_value(8)+tech_exposure(7)+gate_ease(2)+cloud_surface(3)+freshness(3)
+[PRIO] apps{,-beta,-dev,-test}.suedzuckergroup.com Simplifier Launchpad,5.30,attack_surface(5)+business_value(7)+tech_exposure(7)+gate_ease(1)+cloud_surface(5)+freshness(6)
+[PRIO] plantportal.suedzuckergroup.com epp,5.15,attack_surface(6)+business_value(7)+tech_exposure(6)+gate_ease(2)+cloud_surface(4)+freshness(3)
+[PRIO] app.cropchart.net,4.55,attack_surface(5)+business_value(6)+tech_exposure(5)+gate_ease(1)+cloud_surface(5)+freshness(4)
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: 574 Swagger endpoints; header enforced at gateway only; backend JWT carries userId/email but tenant-scope linkage to header unverified; owned account available; cross-tenant /fields geometry + persons BIRTHDAY/EMAIL = PII
+evidence_needed: owned token + two partner-link-ids; GET /fields with non-current link-id returns foreign-scope rows
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields with valid Bearer + link-id A vs link-id B (own accounts), read-only
+impact: cross-tenant PII (BIRTHDAY/EMAIL), field geometry, financials — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp Partner-Scope BOLA via impersonation/current-partner
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 60
+reasoning: /external-partner-impersonations + external-account/current-partner guarded only by client middleware in _nuxt (is-authenticated/logged-in-user/only-for-partner); server-side check of x-selected-partner-link-id vs JWT subject unverified; owned test account available
+evidence_needed: owned token + two links; current-partner/access-rights returns foreign scope for non-current own link-id
+verify_steps: AUTH_HELPED — GET .../access-rights with Bearer + non-current own link-id, read-only, diff vs baseline
+impact: cross-tenant partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Simplifier Launchpad per-env gating divergence leaking admin REST surface
+class: MISCONFIG
+asset: apps.suedzuckergroup.com/HybridUserInterface/launchpad
+confidence: 50
+reasoning: 4 envs share AWS ALB but per-env config can differ; UI5 shell static assets are auth-free; Component.js (fp-340e776) not yet fetched; genToken/Release routes 404 on prod; beta/dev/test may expose interfaces prod disables
+evidence_needed: Component.js reveals launchpad admin/tenant REST base; a dev/test env path returns !=401 vs prod
+verify_steps: PASSIVE — GET /HybridUserInterface/launchpad/assets/fp-340e776/Component.js then diff env roots for non-uniform gating
+impact: admin/integration endpoint exposure on iPaaS — HIGH if found; CRITICAL if creds guessable
+testability: PASSIVE
+[PARKED] Simplifier Instance-Auth Credential Oracle: uniform pac4j 401 on all paths incl. Swagger-no-security; invalid Basic → same body (no oracle); genToken 404 everywhere; passive exhausted, no credential path — confidence 30 < 40.
+[PARKED] simplifier basicAuth brute: no default-credential evidence, no dev/demo creds in public docs — PARKED.
+[FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
+[FINAL] Plant Portal epp BOLA 60 (IDOR, AUTH_HELPED)
+[FINAL] Simplifier per-env gating divergence 50 (MISCONFIG, PASSIVE)
+[NEXT] PROBE: GET `https://apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js` (read-only static fetch) → extract launchpad internal REST base + launcher-admin endpoints; then one GET per env root of `{beta,dev,test}.suedzuckergroup.com` with same path set to diff for gating divergence vs prod (uniform 401 means surface closed, drop to PARKED).
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/UserInterface/api: uniform `401 "authentication required"` pac4j gate on all paths incl. Swagger-marked-no-security endpoints; invalid Basic creds → identical body (NOT a basic-credential oracle); /genToken 404 on all probed paths; Release routes 404 (disabled) — passive surface closed except static UI5 asset map.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: delta scans 09-05→09-06 on repeated timestamps show no new hosts/tech; BOLA pair remains AUTH_HELPED-constrained — re-running identical CT/DNS enumeration adds noise, not leads; refocus on per-asset static-file extraction instead of re-enumeration.
+[LEARN] ACCEPTED RECON @ plantportal+smartfarming: both BOLA hypotheses reissued unchanged at same confidence (62/60) — evidence_needed is owned-token diffing only; all passive angles (runtime config, _nuxt stores, Swagger, 401/400 boundary, header semantics) exhausted as of 09-06.
+[RISK] suedzucker: 65 — this round: zero live requests, pure delta/hypothesis review. No credentials, no authenticated reads, no writes, no customer data touched. Active surface still gates at login/SSO (MSAL B2C, pac4j, Salesforce/SAP SSO) or tolerates only read-only public docs. Top two hypotheses are strictly own-account AUTH_HELPED; no passive escalation path remains. Risk stable and acceptable.

@@ -144,3 +144,8 @@ www.suedzucker.de
 - CHANGED app.agriconetwork.com — NXDOMAIN, no A/CNAME, no cert in CT history; dead asset confirmed
 - CHANGED dev-chatwithyourdata.suedzuckergroup.com — GCP IP 34.117.138.249 but TLS/connect fails (code 000); unreachable
 - CHANGED seedrecommender.suedzuckergroup.com — no live A record, certs from 2022; stale CT entry
+
+## 2026-09-06 22:24:45 UTC
+- CHANGED Simplifier Launchpad pre-auth management endpoints (`/api`, `/management`, `/actuator`, `/services`, `/rest`, `/admin`, `/config`, `/metadata`, `/registry`) return 404 across all 4 envs (apps, apps-be
+- CHANGED rawmaterial{,-dev,-test}.suedzuckergroup.com root returns generic error page (identical HTML across all 3) — app path still unmapped, no new surface
+- CHANGED campus{,-test}.suedzuckergroup.com confirmed as IMC Learning Suite (ILP) at `/ilp/` — standard corporate LMS, no high-value class

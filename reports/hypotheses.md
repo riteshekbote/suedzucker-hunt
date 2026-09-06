@@ -583,3 +583,18 @@
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/: 11 sibling *.py paths 404 — outline.py is the sole auth-free gateway-bypassing service; sibling enumeration c
 - LEARN: ACCEPTED RECON @ smartfarming gateway: /mdp-api/v3/api/{openapi,swagger}.json → 400 application/vnd.api+json (Missing-header JSON:API error) — no machine-readab
 - LEARN: ACCEPTED RECON @ reposcan 2026-09-05 18:19: no public GitHub org configured for suedzucker — repo-scan is a structural no-op, no repo surface.
+
+## RANKED HYPOTHESES 2026-09-06 22:24:45 UTC
+- [65] smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: GET `https://apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js` (read-only static fetch) → extract launchpad internal
+- NEXT(hypotheses-nemotron3.txt): PROBE: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com (Entra B2C signup at szgrmb2cprod.ciamlogin.com, tenant 516d27c9-70e5-49b6-8ca4-fb
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/UserInterface/api: uniform `401 "authentication required"` pac4j gate on all paths incl. Swagger-marked-no-security en
+- LEARN: ACCEPTED RECON @ suedzucker inventory: delta scans 09-05→09-06 on repeated timestamps show no new hosts/tech; BOLA pair remains AUTH_HELPED-constrained — re-run
+- LEARN: ACCEPTED RECON @ plantportal+smartfarming: both BOLA hypotheses reissued unchanged at same confidence (62/60) — evidence_needed is owned-token diffing only; all
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com/HybridUserInterface/launchpad: Simplifier Launchpad pre-auth management endpoints (/api, /manag
+- LEARN: ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: IMC Learning Suite (ILP) at /ilp/ — corporate LMS, standard login, out-of-scope class for high-value findin
+- LEARN: ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: Azure Front Door backend, root serves identical generic error page — app path unmapped, no attack
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
