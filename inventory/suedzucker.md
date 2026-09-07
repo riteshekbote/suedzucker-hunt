@@ -149,3 +149,13 @@ www.suedzucker.de
 - CHANGED Simplifier Launchpad pre-auth management endpoints (`/api`, `/management`, `/actuator`, `/services`, `/rest`, `/admin`, `/config`, `/metadata`, `/registry`) return 404 across all 4 envs (apps, apps-be
 - CHANGED rawmaterial{,-dev,-test}.suedzuckergroup.com root returns generic error page (identical HTML across all 3) — app path still unmapped, no new surface
 - CHANGED campus{,-test}.suedzuckergroup.com confirmed as IMC Learning Suite (ILP) at `/ilp/` — standard corporate LMS, no high-value class
+
+## 2026-09-07 00:05:49 UTC
+- CHANGED No new hosts or technology changes since 2026-09-06 22:24:45 UTC — inventory stable across 11 in-scope assets (www.suedzuckergroup.com, shop.suedzucker.com, plantportal.suedzuckergroup.com, smartfarmi
+- CHANGED Simplifier Launchpad pre-auth management endpoints (`/api`, `/management`, `/actuator`, `/services`, `/rest`, `/admin`, `/config`, `/metadata`, `/registry`) confirmed 404 across all 4 envs — pre-auth 
+- CHANGED rawmaterial{,-dev,-test}.suedzuckergroup.com root returns identical generic error page — app path unmapped, no attack surface
+- CHANGED campus{,-test}.suedzuckergroup.com confirmed IMC Learning Suite (ILP) at `/ilp/` — corporate LMS, out-of-scope class
+- CHANGED portal.mydataplant.com/services/outline.py: sole auth-free gateway-bypassing service confirmed (11 sibling *.py paths 404); 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.2
+- CHANGED smartfarming.suedzuckergroup.com/mdp-api/v3/api: public Swagger (inline HTML, 15k lines) only surface; `/openapi.json` and `/swagger.json` return 400 JSON:API Missing-header — no machine-readable spec
+- CHANGED plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), runtime `__NUXT__` config exposes api-gateway backend 
+- CHANGED shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA),

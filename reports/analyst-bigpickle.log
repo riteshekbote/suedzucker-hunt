@@ -11471,3 +11471,319 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 65 — this round: zero live requests, pure delta/hypothesis review. No credentials, no authenticated reads, no writes, no customer data touched. Active surface still gates at login/SSO (MSAL B2C, pac4j, Salesforce/SAP SSO) or tolerates only read-only public docs. Top two hypotheses are strictly own-account AUTH_HELPED; no passive escalation path remains. Risk stable and acceptable.
+===== ANALYST bigpickle 2026-09-07 00:05:49 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt && cat /home/runner/work/suedzucker-hunt/suedzucker-hunt/scope.yml 2>/dev/null | head -50
+total 212
+drwxr-xr-x 12 runner runner  4096 Sep  7 00:02 .
+drwxr-xr-x  3 runner runner  4096 Sep  7 00:02 ..
+drwxr-xr-x  7 runner runner  4096 Sep  7 00:02 .git
+drwxr-xr-x  3 runner runner  4096 Sep  7 00:02 .github
+-rw-r--r--  1 runner runner  1852 Sep  7 00:02 README.md
+-rw-r--r--  1 runner runner    32 Sep  7 00:02 analyst-out.txt
+-rw-r--r--  1 runner runner 63621 Sep  7 00:02 analyst-prompt.txt
+-rw-r--r--  1 runner runner 59745 Sep  7 00:02 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 leads
+-rw-r--r--  1 runner runner   928 Sep  7 00:02 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 reports
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  7 00:02 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 scripts
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 triage
+programs:
+  suedzucker:
+    name: Südzucker AG / Südzucker Group Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, production systems, supply chain systems, enterprise IT, customer and partner platforms, APIs, websites, and domains operated by Südzucker Group and its subsidiaries"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+[0m
+I have context loaded. Let me review the current state and check the workspace for any active work.
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && cat state_bigpickle.json state_nemotron3.json 2>/dev/null; echo "---analyst-out---"; cat analyst-out.txt; echo "---reports---"; ls reports/ 2>/dev/null; echo "---probe---"; cat probe-results.md 2>/dev/null
+{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}---analyst-out---
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt && cat /home/runner/work/suedzucker-hunt/suedzucker-hunt/scope.yml 2>/dev/null | head -50
+total 212
+drwxr-xr-x 12 runner runner  4096 Sep  7 00:02 .
+drwxr-xr-x  3 runner runner  4096 Sep  7 00:02 ..
+drwxr-xr-x  7 runner runner  4096 Sep  7 00:02 .git
+drwxr-xr-x  3 runner runner  4096 Sep  7 00:02 .github
+-rw-r--r--  1 runner runner  1852 Sep  7 00:02 README.md
+-rw-r--r--  1 runner runner    32 Sep  7 00:02 analyst-out.txt
+-rw-r--r--  1 runner runner 63621 Sep  7 00:02 analyst-prompt.txt
+-rw-r--r--  1 runner runner 59745 Sep  7 00:02 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 leads
+-rw-r--r--  1 runner runner   928 Sep  7 00:02 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 reports
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  7 00:02 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 scripts
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  7 00:02 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 triage
+programs:
+  suedzucker:
+    name: Südzucker AG / Südzucker Group Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, production systems, supply chain systems, enterprise IT, customer and partner platforms, APIs, websites, and domains operated by Südzucker Group and its subsidiaries"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+[0m
+---reports---
+analyst-bigpickle.log
+analyst-laguna.log
+analyst-ling3.log
+analyst-longcat.log
+analyst-nemotron3.log
+hypotheses-bigpickle.txt
+hypotheses-laguna.txt
+hypotheses-ling3.txt
+hypotheses-longcat.txt
+hypotheses-nemotron3.txt
+hypotheses.md
+valid-bugs.md
+---probe---
+
+## 2026-09-02 21:40:00 UTC
+
+
+## 2026-09-02 23:35:55 UTC
+
+
+## 2026-09-03 01:37:08 UTC
+
+
+## 2026-09-03 06:28:47 UTC
+
+
+## 2026-09-03 11:41:50 UTC
+
+
+## 2026-09-03 16:00:35 UTC
+
+
+## 2026-09-03 19:14:36 UTC
+
+
+## 2026-09-03 21:51:49 UTC
+
+
+## 2026-09-03 23:56:35 UTC
+
+
+## 2026-09-04 02:52:37 UTC
+
+
+## 2026-09-04 07:31:16 UTC
+
+
+## 2026-09-04 12:23:16 UTC
+
+
+## 2026-09-04 16:46:07 UTC
+
+
+## 2026-09-04 19:18:44 UTC
+
+
+## 2026-09-04 21:36:21 UTC
+
+
+## 2026-09-04 23:22:47 UTC
+
+
+## 2026-09-05 01:08:45 UTC
+
+
+## 2026-09-05 05:51:00 UTC
+
+
+## 2026-09-05 09:54:41 UTC
+
+
+## 2026-09-05 13:15:34 UTC
+
+
+## 2026-09-05 16:21:14 UTC
+
+
+## 2026-09-05 18:29:35 UTC
+
+
+## 2026-09-05 20:47:37 UTC
+
+
+## 2026-09-05 22:39:50 UTC
+
+
+## 2026-09-06 00:14:25 UTC
+
+
+## 2026-09-06 04:51:16 UTC
+
+
+## 2026-09-06 09:18:46 UTC
+
+
+## 2026-09-06 13:08:42 UTC
+
+
+## 2026-09-06 16:17:42 UTC
+
+
+## 2026-09-06 18:17:45 UTC
+
+
+## 2026-09-06 20:31:31 UTC
+
+
+## 2026-09-06 22:24:45 UTC
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la leads/ knowledge/ scripts/ 2>/dev/null; echo "---git log---"; git log --oneline -15
+knowledge/:
+total 44
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 .
+drwxr-xr-x 12 runner runner  4096 Sep  7 00:02 ..
+-rw-r--r--  1 runner runner 35048 Sep  7 00:02 index.md
+
+leads/:
+total 564
+drwxr-xr-x  2 runner runner   4096 Sep  7 00:02 .
+drwxr-xr-x 12 runner runner   4096 Sep  7 00:02 ..
+-rw-r--r--  1 runner runner 294338 Sep  7 00:02 lead-bigpickle.md
+-rw-r--r--  1 runner runner   1377 Sep  7 00:02 lead-laguna.md
+-rw-r--r--  1 runner runner   1350 Sep  7 00:02 lead-ling3.md
+-rw-r--r--  1 runner runner   1404 Sep  7 00:02 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  7 00:02 lead-mimo.md
+-rw-r--r--  1 runner runner 251676 Sep  7 00:02 lead-nemotron3.md
+-rw-r--r--  1 runner runner   3978 Sep  7 00:02 reposcan-suedzucker.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep  7 00:02 .
+drwxr-xr-x 12 runner runner  4096 Sep  7 00:02 ..
+-rw-r--r--  1 runner runner 16987 Sep  7 00:02 sync-issues.py
+---git log---
+14d0ebf triage 2026-09-06-23-19
+[0m
+The knowledge base and my last leads are provided in the system context. My state phase is "POC" targeting "api". The last round's NEXT action was to fetch Component.js from the Simplifier Launchpad. Let me check the current .github workflow to understand my last run and see if that probe was completed.
+
+Let me check what the previous round actually probed and look at the leads/knowledge dirs.
+My last NEXT action (20:31) / (22:24) was to probe `apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js` — fetch the static UI5 Component.js to extract the launchpad's internal REST base, then diff the 4 envs for gating divergence. The follow-up at 22:24 shows that probe was NOT yet done — the SIMPLIFIER pre-auth management endpoints were already REJECTED (all 404), but Component.js fetch is still on the list.
+
+My phase is "POC" targeting "api". Let me execute that pending probe — a read-only static GET of Component.js on the Simplifier launchpad. This is a passive/read-only static asset fetch, well within rules (<=1 rps, GET only).
+
+Let me do the Component.js probe first.
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && curl -sS -m 30 -o /tmp/component_prod.js -w "HTTP %{http_code} size=%{size_download}\n" "https://apps.suedzuckergroup.com/HybridUserInterface/launchpad/assets/fp-340e776/Component.js" -H "User-Agent: Mozilla/5.0"
+HTTP 200 size=1534
+[0m
+[93m[1m! [0mpermission requested: external_directory (/tmp/*); auto-rejecting
+[0m✗ [0mcat /tmp/component_prod.js failed
+[91m[1mError: [0mThe user rejected permission to use this specific tool call.
+Got the Component.js. Let me read it.
