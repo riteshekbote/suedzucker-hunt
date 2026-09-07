@@ -2017,3 +2017,33 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — confirmed no pre-auth data leak.
 [LEARN] ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated; no unauth data leak confirmed across all passive probes.
 [RISK] suedzucker: 50 — zero live requests this round, pure state review. All three top hypotheses remain AUTH_HELPED-constrained with no passive escalation path. Surface stable: 11 live assets, three IDOR-class leads at 60-62 confidence, no pre-auth data leaks confirmed. Risk low: no credentials, no authenticated reads, no writes, no customer data touched. Entire program blocked on human action (account registration on plantportal + shop).
+## 2026-09-07 22:17:44 UTC [target] (model bigpickle)
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway 400s without X-Selected-Partner-Link-Id; backend JWT carries userId/email but linkage of tenant-scope to the client-supplied header is unverified; 574 JSON:API endpoints exposed in public Swagger contain numeric IDs; header is sent verbatim by the client → if backend trusts header over JWT claim, cross-tenant read is trivially horizontal.
+evidence_needed: owned token + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows (PII/geometry/financials).
+verify_steps: AUTH_HELPED — GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields with Bearer + link-A vs link-B (two owned accounts), read-only diff of row sets.
+impact: cross-tenant PII + field geometry + financial read — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware (is-authenticated/logged-in-user/only-for-partner); x-selected-partner-link-id is tolerated on /external-account/current-partner, /access-rights, /external-partner-impersonations; server-side validation of header vs JWT subject/partnerLinkId unverified; switchToPartnerNumber arrives from query string but never auto-primes setCurrentPartner in pinia — header priming is the only cross-partner switch.
+evidence_needed: owned token with two own partner-links; non-current link-id yields foreign-scope response.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights, Bearer + secondary own link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId keyed by 15/18-char SFDC IDs; OrderSummary holds pricing/PII/payment data; B2B Commerce commonly leans on sharing rules rather than code-level authz; /SelfRegister is open and Stripe+PayPal+Adyen confirm real txn data.
+evidence_needed: authenticated session + own OrderSummary recordId + one foreign record id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — login via /SelfRegister, capture own OrderSummary, GET /services/data/v62.0/sobjects/OrderSummary/{mutated_id}, diff fields.
+impact: cross-account order/PII/payment access — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register owned test accounts on plantportal.suedzuckergroup.com (Entra B2C public sign-up at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb<redacted>/v2.0/) and shop.suedzucker.com (/SelfRegister) to unlock read-only diff-testing on all three FINAL hypotheses. No PROBE exists that escalates any lead without owned credentials; further passive scans are confirmed noise (4x NO_DELTA).
+[RISK] suedzucker: 50 — zero live requests this round (pure state review). Engagement history is read-only GET/HEAD only, ≤1 rps, no credentials used, no authenticated reads, no writes, no customer/employee/financial data touched. Three IDOR-class leads (60-70) cannot be advanced without owned accounts; risk steady with no escalation path and no new exposure.
