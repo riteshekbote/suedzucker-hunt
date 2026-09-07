@@ -163,3 +163,7 @@ www.suedzucker.de
 ## 2026-09-07 04:53:24 UTC
 - NEW apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: auth-free UI5 module "Simplifier Workflow" monitoring UI (`io.simplifier.workflow.rt`) — root/Component.js/manifest/views/controllers all
 - CHANGED Simplifier gating model: static asset surface is auth-free (normal UI5), but every API path is gated — `/UserInterface/api` -> pac4j `401 "authentication required"`, `/workflow-runtime/api/*` -> app-l
+
+## 2026-09-07 09:58:10 UTC
+- NEW NO_DELTA — no new hosts, tech, or knowledge-base entries since 2026-09-07 04:53 UTC; inventory stable at 11 in-scope assets.
+- CHANGED NO_DELTA — all active hypotheses blocked on AUTH_HELPED test accounts; no passive escalation available on existing leads.
