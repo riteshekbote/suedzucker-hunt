@@ -11,3 +11,6 @@
   - | Q3 Real impact? | **YES (if valid IDs exist)** — cross-tenant field boundary/location geometry disclosure (agri location PII) — MEDIUM/HIGH |
   - | Q4 Provable non-invasively? | **NO** — all tested combos returned empty SVG; cannot confirm data disclosure without valid field IDs from own account |
   - | outline.py geometry IDOR | **HOLD** | Confirm scope (Kleffmann vendor?) → own account → test with valid field IDs |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:09:21 UTC
+  - | Q4 Provable | NO | Requires own JWT + valid X-Selected-Partner-Link-Id header + cross-tenant header mutation; cannot prove without test credentials |
