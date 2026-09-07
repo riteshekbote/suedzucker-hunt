@@ -1929,3 +1929,47 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — confirmed no pre-auth data leak.
 [LEARN] ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated; no unauth data leak confirmed across all passive probes.
 [RISK] suedzucker: 55 — zero live requests this round, pure state review. All three top hypotheses remain AUTH_HELPED-constrained with no passive escalation path. Surface stable: 11 live assets, three IDOR-class leads at 60-62 confidence, no pre-auth data leaks confirmed. Risk acceptable: no credentials, no authenticated reads, no writes, no customer data touched. Waiting on human action (account registration) to advance.
+## 2026-09-07 15:28:30 UTC [target] (model bigpickle)
+[NEW] NO_DELTA — no new hosts, tech, or knowledge-base entries since 2026-09-07 09:58 UTC; inventory stable at 11 in-scope assets.
+[CHANGED] NO_DELTA — all active hypotheses remain AUTH_HELPED-blocked; no passive escalation path exists on any lead.
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,5.70,attack_surface(7)+business_value(8)+tech_exposure(7)+gate_ease(2)+cloud_surface(3)+freshness(3)
+[PRIO] plantportal.suedzuckergroup.com,5.15,attack_surface(6)+business_value(7)+tech_exposure(6)+gate_ease(2)+cloud_surface(4)+freshness(3)
+[PRIO] apps.suedzuckergroup.com workflow-runtime,4.00,attack_surface(4)+business_value(4)+tech_exposure(5)+gate_ease(1)+cloud_surface(5)+freshness(6)
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: Gateway enforces X-Selected-Partner-Link-Id (400 without); backend JWT has userId/email but tenant-scope linkage to client-supplied header unverified; all passive angles (Swagger, boundary, header semantics, auth behavior) exhausted as of 09-06; backend behind portal.mydataplant.com validates Authorization: Bearer (not Authentication: Bearer as doc says); 574 JSON:API endpoints with numeric IDs behind a client-supplied tenant-scoping header — classic BOLA shape
+evidence_needed: owned token + two link-ids; GET /fields with non-current link-id returns foreign-scope rows (PII/geometry)
+verify_steps: AUTH_HELPED — GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields Bearer+link-A vs link-B (own accounts), read-only diff
+impact: cross-tenant PII + field geometry + financials — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp Partner-Scope BOLA via impersonation/current-partner
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 60
+reasoning: impersonation routes guarded only by client middleware in _nuxt (is-authenticated/logged-in-user/only-for-partner); x-selected-partner-link-id sent only on /external-account/current-partner, /access-rights, /external-partner-impersonations; server-side check of header vs JWT subject unverified; switchToPartnerNumber captured from query into pinia state but does not auto-prime setCurrentPartner
+evidence_needed: owned token + two links; current-partner/access-rights returns foreign scope for non-current own link-id
+verify_steps: AUTH_HELPED — GET .../access-rights Bearer + non-current own link-id, diff vs baseline
+impact: cross-tenant partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns; OrderSummary object typically contains PII/pricing/payment data; Salesforce B2B Commerce often relies on sharing rules rather than code-level authz; SelfRegister route suggests public registration possible; payments via Stripe+PayPal+Adyen confirm real financial transactions
+evidence_needed: authenticated session + test horizontal access to other users' OrderSummary records by mutating recordId
+verify_steps: AUTH_HELPED — login via SelfRegister, place order, capture OrderSummary ID, attempt GET /services/data/vXX.X/sobjects/OrderSummary/{other_id}
+impact: cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[PARKED] Workflow-Runtime Instance BOLA (was 45): confidence below 40 threshold; instance IDs in URL path but app-level 401 gate without evidence of per-instance authorization bypass; no session obtainable passively; same runtime likely shared across tenants but authorization model unverified.
+[PARKED] Simplifier per-env gating divergence (falsified 09-06): all 4 envs identical 401/404; no env exposes surface prod gates.
+[PARKED] Simplifier Instance-Auth Credential Oracle (30): uniform non-oracle 401 across stale cookie + Bearer garbage; no credential path.
+[FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
+[FINAL] Plant Portal epp BOLA 60 (IDOR, AUTH_HELPED)
+[FINAL] Salesforce OrderSummary IDOR 60 (IDOR, AUTH_HELPED)
+[NEXT] HUMAN: Register test accounts on two of the three AUTH_HELPED surfaces — plantportal.suedzuckergroup.com (Entra B2C signup at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb<redacted>/v2.0/) and shop.suedzucker.com (/SelfRegister) — to enable all three top hypotheses with owned tokens + session cookies. Cannot advance any lead without owned credentials.
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distinct from pac4j-gated /UserInterface surface; worth AUTH_HELPED re-test if Simplifier sessions obtainable but confidence dropped below 40 pending owned access.
+[LEARN] ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — confirmed no pre-auth data leak.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated; no unauth data leak confirmed across all passive probes.
+[RISK] suedzucker: 50 — zero live requests this round, pure state review. All three top hypotheses remain AUTH_HELPED-constrained with no passive escalation path. Surface stable: 11 live assets, three IDOR-class leads at 60-62 confidence, no pre-auth data leaks confirmed. Risk low: no credentials, no authenticated reads, no writes, no customer data touched. Entire program blocked on human action (account registration on plantportal + shop).
