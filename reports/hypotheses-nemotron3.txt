@@ -1,4 +1,6 @@
-## 2026-09-07 15:37:11 UTC [target] (model nemotron3)
+## 2026-09-07 19:30:14 UTC [target] (model nemotron3)
+[NEW] No new hosts, technology changes, or knowledge-base entries since 2026-09-07 15:37 UTC — inventory stable at 11 in-scope assets (www.suedzuckergroup.com, shop.suedzucker.com, plantportal.suedzuckergroup.com, smartfarming.suedzuckergroup.com, portal.mydataplant.com, apps{,-beta,-dev,-test}.suedzuckergroup.com, rawmaterial{,-dev,-test}.suedzuckergroup.com, campus{,-test}.suedzuckergroup.com, matomo.suedzuckergroup.com, e.suedzuckergroup.com, suedzucker.mitarbeiterangebote.de)
+[CHANGED] No passive escalation available on any active hypothesis — all three top IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id, shop OrderSummary) remain blocked on AUTH_HELPED test accounts; repeated delta scans add noise, not leads
 [PRIO] plantportal.suedzuckergroup.com,8.20,axis=attack_surface 9,business_value 9,tech_exposure 8,gate_ease 6,cloud_surface 8,freshness 8
 [PRIO] portal.mydataplant.com/api/v3,7.95,axis=attack_surface 9,business_value 9,tech_exposure 8,gate_ease 5,cloud_surface 8,freshness 7
 [PRIO] shop.suedzucker.com,7.55,axis=attack_surface 8,business_value 8,tech_exposure 7,gate_ease 6,cloud_surface 9,freshness 7

@@ -1,4 +1,4 @@
-## 2026-09-07 15:28:30 UTC [target] (model bigpickle)
+## 2026-09-07 19:23:26 UTC [target] (model bigpickle)
 [NEW] NO_DELTA — no new hosts, tech, or knowledge-base entries since 2026-09-07 09:58 UTC; inventory stable at 11 in-scope assets.
 [CHANGED] NO_DELTA — all active hypotheses remain AUTH_HELPED-blocked; no passive escalation path exists on any lead.
 [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,5.70,attack_surface(7)+business_value(8)+tech_exposure(7)+gate_ease(2)+cloud_surface(3)+freshness(3)
@@ -37,7 +37,7 @@ testability: AUTH_HELPED
 [FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
 [FINAL] Plant Portal epp BOLA 60 (IDOR, AUTH_HELPED)
 [FINAL] Salesforce OrderSummary IDOR 60 (IDOR, AUTH_HELPED)
-[NEXT] HUMAN: Register test accounts on two of the three AUTH_HELPED surfaces — plantportal.suedzuckergroup.com (Entra B2C signup at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb<redacted>/v2.0/) and shop.suedzucker.com (/SelfRegister) — to enable all three top hypotheses with owned tokens + session cookies. Cannot advance any lead without owned credentials.
+[NEXT] HUMAN: Register test accounts on two of the three AUTH_HELPED surfaces — plantportal.suedzuckergroup.com (Entra B2C signup at szgrmb2cprod.ciamlogin.com) and shop.suedzucker.com (/SelfRegister) — to enable all three top hypotheses with owned tokens + session cookies.
 [LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distinct from pac4j-gated /UserInterface surface; worth AUTH_HELPED re-test if Simplifier sessions obtainable but confidence dropped below 40 pending owned access.
 [LEARN] ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — confirmed no pre-auth data leak.
 [LEARN] ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated; no unauth data leak confirmed across all passive probes.
