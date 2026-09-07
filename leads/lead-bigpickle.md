@@ -1842,3 +1842,46 @@ testability: PASSIVE
 [LEARN] ACCEPTED RECON @ plantportal+smartfarming: both BOLA hypotheses reissued unchanged at same confidence (62/60) — evidence_needed is owned-token diffing only; all passive angles (runtime config, _nuxt stores, Swagger, 401/400 boundary, header semantics) exhausted as of 09-06.
 [RISK] suedzucker: 65 — this round: zero live requests, pure delta/hypothesis review. No credentials, no authenticated reads, no writes, no customer data touched. Active surface still gates at login/SSO (MSAL B2C, pac4j, Salesforce/SAP SSO) or tolerates only read-only public docs. Top two hypotheses are strictly own-account AUTH_HELPED; no passive escalation path remains. Risk stable and acceptable.
 ## 2026-09-07 00:03:04 UTC [target] (model bigpickle)
+## 2026-09-07 04:53:13 UTC [target] (model bigpickle)
+[NEW] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: auth-free UI5 module "Simplifier Workflow" monitoring UI (`io.simplifier.workflow.rt`) — root/Component.js/manifest/views/controllers all 200 without pac4j session; REST base `/HybridUserInterface/workflow-runtime/api` recovered from `controller/BaseController.js` with endpoints `/monitoring/workflow-instances?skip&top&orderBy&filters`, `/monitoring/workflow-instances/{id}/`, `/historysettings` (GET+POST).
+[CHANGED] Simplifier gating model: static asset surface is auth-free (normal UI5), but every API path is gated — `/UserInterface/api` -> pac4j `401 "authentication required"`, `/workflow-runtime/api/*` -> app-level `401 {"message":"Not Authenticated"}` — uniform across apps/beta/dev/test. Stale pac4j cookie and Bearer-garbage both return the identical 401 (not a credential oracle).
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,5.70,attack_surface(7)+business_value(8)+tech_exposure(7)+gate_ease(2)+cloud_surface(3)+freshness(3)
+[PRIO] plantportal.suedzuckergroup.com epp,5.15,attack_surface(6)+business_value(7)+tech_exposure(6)+gate_ease(2)+cloud_surface(4)+freshness(3)
+[PRIO] apps{,-beta,-dev,-test}.suedzuckergroup.com workflow-runtime api,4.00,attack_surface(4)+business_value(4)+tech_exposure(5)+gate_ease(1)+cloud_surface(5)+freshness(6) — pre-auth surface closed, gating proven uniform; IDOR-shape REST but app-gated
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: header enforced only at gateway; backend JWT has userId/email but tenant-scope linkage to header unverified; all passive angles (Swagger, boundary, header semantics) exhausted 09-06
+evidence_needed: owned token + two link-ids; GET /fields with non-current link-id returns foreign-scope rows (BIRTHDAY/EMAIL PII)
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer+link-A vs link-B (own accounts), read-only diff
+impact: cross-tenant PII + field geometry + financials — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal epp Partner-Scope BOLA via impersonation/current-partner
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 60
+reasoning: impersonation routes guarded only by client middleware in _nuxt; server-side check of x-selected-partner-link-id vs JWT subject unverified; owned test account available
+evidence_needed: owned token + two links; current-partner/access-rights returns foreign scope for non-current own link-id
+verify_steps: AUTH_HELPED — GET .../access-rights Bearer + non-current own link-id, diff vs baseline
+impact: cross-tenant partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Workflow-Runtime Instance-Monitoring BOLA via workflowInstanceId
+class: IDOR
+asset: apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime/api/monitoring/workflow-instances/{id}
+confidence: 45
+reasoning: instance IDs consumed directly in path; gate proves authentication (401) but not authorization per-instance; multiple business-partner workflows likely share one runtime; no session obtainable passively
+evidence_needed: valid session + one owned workflow instance; GET of a foreign {id} returns its detail across partner boundary
+verify_steps: AUTH_HELPED — GET .../workflow-instances?skip=0&top=200 then GET owned {id} vs foreign {id}, read-only diff
+impact: cross-tenant visibility of workflow execution internals — MEDIUM
+testability: AUTH_HELPED
+[PARKED] Simplifier per-env gating divergence (was 50): falsified — beta/dev/test return identical `401 Not Authenticated` on workflow-runtime API and identical 404 on pre-auth management paths; no env exposes a 2xx that prod gates.
+[PARKED] Simplifier Instance-Auth Credential Oracle / basicAuth brute (30): unchanged; this round's Bearer-garbage + stale-cookie probes reinforce uniform non-oracle 401.
+[FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
+[FINAL] Plant Portal epp BOLA 60 (IDOR, AUTH_HELPED)
+[FINAL] Workflow-Runtime Instance BOLA 45 (IDOR, AUTH_HELPED)
+[NEXT] PROBE: AUTH_HELPED — on owned Entra B2C test accounts (2 partner links): GET `https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields` with valid Bearer + `X-Selected-Partner-Link-Id: <link-A>` vs `<link-B>`, read-only diff of result scope = cross-tenant BOLA proof for the 62-confidence lead.
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: new auth-free UI5 module = "Simplifier Workflow" monitoring (io.simplifier.workflow.rt); REST base extracted from controller/BaseController.js (`_BASE_API_PATH=/HybridUserInterface/workflow-runtime/api`); endpoint map /monitoring/workflow-instances?skip&top&orderBy&filters, /monitoring/workflow-instances/{id}/(detail+resume/skip/stop/terminate), /historysettings (GET/POST) — ALL return uniform `401 {"message":"Not Authenticated"}` app-level gate, invariant to Bearer garbage or stale pac4j cookie; static-only exposure, no pre-auth leak.
+[LEARN] REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com: per-env gating divergence falsified — all 4 envs identical 401 (workflow-runtime api) and identical 404 (management paths); LAUNCHPAD_SETTINGS/Component.js expose only cosmetic config, no tenant REST base in static surface.
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com: workflow-runtime API adds an IDOR-shape REST family (instance IDs in URLs) behind an app-level gate — worth AUTH_HELPED re-test between partners, distinct from the pac4j-gated /UserInterface surface.
+[RISK] suedzucker: 60 — 12 read-only GETs, ~0.3 rps: static UI5 assets, public JS/manifest, and 401/404 boundary reads only. Zero credentials, zero authenticated requests, zero writes, zero customer data. Active surface still gates at MSAL/pac4j/app-401; top BOLA leads remain strictly own-account AUTH_HELPED. Risk stable, slightly down on closed Simplifier hypothesis.

@@ -609,3 +609,19 @@
 - LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
 - LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
 - LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
+
+## RANKED HYPOTHESES 2026-09-07 04:53:24 UTC
+- [70] plantportal.suedzuckergroup.com: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- [62] smartfarming.suedzuckergroup.com/mdp-api/v3/api: MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: AUTH_HELPED — on owned Entra B2C test accounts (2 partner links): GET `https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields` with valid Bearer 
+- NEXT(hypotheses-nemotron3.txt): PROBE: AUTH_HELPED — register test account on plantportal.suedzuckergroup.com (Entra B2C signup at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: new auth-free UI5 module = "Simplifier Workflow" monitoring (io.simplifier.workf
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com: per-env gating divergence falsified — all 4 envs identical 401 (workflow-runtime api) and iden
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: workflow-runtime API adds an IDOR-shape REST family (instance IDs in URLs) behind an app-level gate — worth AUTH_HELP
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com/HybridUserInterface/launchpad: Simplifier Launchpad pre-auth management endpoints (/api, /manag
+- LEARN: ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: IMC Learning Suite (ILP) at /ilp/ — corporate LMS, standard login, out-of-scope class for high-value findin
+- LEARN: ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: Azure Front Door backend, root serves identical generic error page — app path unmapped, no attack
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu

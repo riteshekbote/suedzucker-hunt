@@ -159,3 +159,7 @@ www.suedzucker.de
 - CHANGED smartfarming.suedzuckergroup.com/mdp-api/v3/api: public Swagger (inline HTML, 15k lines) only surface; `/openapi.json` and `/swagger.json` return 400 JSON:API Missing-header — no machine-readable spec
 - CHANGED plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100), runtime `__NUXT__` config exposes api-gateway backend 
 - CHANGED shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA),
+
+## 2026-09-07 04:53:24 UTC
+- NEW apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: auth-free UI5 module "Simplifier Workflow" monitoring UI (`io.simplifier.workflow.rt`) — root/Component.js/manifest/views/controllers all
+- CHANGED Simplifier gating model: static asset surface is auth-free (normal UI5), but every API path is gated — `/UserInterface/api` -> pac4j `401 "authentication required"`, `/workflow-runtime/api/*` -> app-l
