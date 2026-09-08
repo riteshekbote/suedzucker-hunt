@@ -164,3 +164,8 @@
 - 2026-09-08 ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: Azure Front Door backend, root serves identical generic error page — app path unmapped, no attack surface.
 - 2026-09-08 ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated; no unauth data leak confirmed across all passive probes.
 - 2026-09-08 ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated) — confirmed no pre-auth data leak.
+- 2026-09-08 REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
+- 2026-09-08 ACCEPTED RECON @ app.cropchart.net /actuator: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+- 2026-09-08 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+- 2026-09-08 ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
+- 2026-09-08 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — client-side key, not a secret.
