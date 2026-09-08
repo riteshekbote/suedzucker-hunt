@@ -7018,3 +7018,60 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 74 — Program scope covers 11 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data, enterprise iPaaS) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO, Simplifier/akka-http, Matomo SaaS). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Simplifier Launchpad adds enterprise integration credential exposure risk across 4 environments (prod/beta/dev/test) on shared ALB but pre-auth management surface not exposed; new workflow-runtime API adds IDOR-shape surface behind app-level gate. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts.
+===== ANALYST nemotron3 2026-09-08 05:20:34 UTC =====
+[0m
+> build · nemotron-3-ultra-free
+[0m
+[0m$ [0mls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/
+total 244
+drwxr-xr-x 12 runner runner  4096 Sep  8 05:10 .
+drwxr-xr-x  3 runner runner  4096 Sep  8 05:10 ..
+drwxr-xr-x  7 runner runner  4096 Sep  8 05:10 .git
+drwxr-xr-x  3 runner runner  4096 Sep  8 05:10 .github
+-rw-r--r--  1 runner runner  1852 Sep  8 05:10 README.md
+-rw-r--r--  1 runner runner    43 Sep  8 05:10 analyst-out.txt
+-rw-r--r--  1 runner runner 80271 Sep  8 05:10 analyst-prompt.txt
+-rw-r--r--  1 runner runner 76395 Sep  8 05:10 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 leads
+-rw-r--r--  1 runner runner  1131 Sep  8 05:10 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 reports
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  8 05:10 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 scripts
+-rw-r--r--  1 runner runner    33 Sep  8 05:10 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  8 05:10 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  8 05:10 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  8 05:10 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  8 05:10 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  8 05:10 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 triage
+[0m
+[0m→ [0mRead inventory/suedzucker.md
+[0m✱ [0mGlob "leads/*.txt"[90m 0 matches[0m
+[0m
+[0m$ [0mls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/leads/
+total 680
+drwxr-xr-x  2 runner runner   4096 Sep  8 05:10 .
+drwxr-xr-x 12 runner runner   4096 Sep  8 05:10 ..
+-rw-r--r--  1 runner runner 324126 Sep  8 05:10 lead-bigpickle.md
+-rw-r--r--  1 runner runner   1734 Sep  8 05:10 lead-laguna.md
+-rw-r--r--  1 runner runner   1700 Sep  8 05:10 lead-ling3.md
+-rw-r--r--  1 runner runner   1768 Sep  8 05:10 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  8 05:10 lead-mimo.md
+-rw-r--r--  1 runner runner 334305 Sep  8 05:10 lead-nemotron3.md
+-rw-r--r--  1 runner runner   4741 Sep  8 05:10 reposcan-suedzucker.md
+[0m
+[0m$ [0mls -la /home/runner/work/suedzucker-hunt/suedzucker-hunt/knowledge/
+total 52
+drwxr-xr-x  2 runner runner  4096 Sep  8 05:10 .
+drwxr-xr-x 12 runner runner  4096 Sep  8 05:10 ..
+-rw-r--r--  1 runner runner 43518 Sep  8 05:10 index.md
+[0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [limit=200, offset=1][0m
+[0m→ [0mRead leads/lead-nemotron3.md[90m [limit=200, offset=1500][0m
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=1, limit=200][0m
+[0m→ [0mRead leads/lead-bigpickle.md[90m [offset=2000, limit=100][0m
+[91m[1mError: [0m{"message":"Streaming response failed: [502] Upstream error from Nvidia: Service temporarily overloaded","type":"server_error"}
