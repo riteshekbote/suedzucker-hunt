@@ -197,3 +197,5 @@ www.suedzucker.de
 - NEW app.cropchart.net `window.env.GOOGLE_MAPS_KEY="AIzaSyAsMk_REDACTED"` — valid Google Maps API key with Places (Text Search) API enabled; Elevation, Directions, Static Maps NOT enabled. Billing-abuse su
 - NEW app.cropchart.net JS bundle references `dev.siseth.com/api/assets/fedora/pdf?name=...` — Seth Software dev environment; NXDOMAIN, unreachable, dead.
 - NEW apps.suedzuckergroup.com: 5 unregistered Simplifier runtime modules (management, admin, form, report, analytics) return soft-fail 503 vs hard 404 — confirms Simplifier platform has slots for these mod
+
+## 2026-09-08 18:06:10 UTC

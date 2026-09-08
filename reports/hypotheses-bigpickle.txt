@@ -1,18 +1,14 @@
-## 2026-09-08 14:05:05 UTC [target] (model bigpickle)
-[CHANGED] apps.suedzuckergroup.com Simplifier: additional module paths `/HybridUserInterface/{management,admin,form,report,analytics}-runtime` return `503 "No Registration yet."` — new response variant vs prior 404; these module slots exist but are unregistered in current deployment, not accessible.
-[NEW] app.cropchart.net `/actuator/*` and `/swagger-ui.html` all return `200 text/html` — SPA catch-all (Moro index.html, content-length 2549, `x-envoy-decorator-operation: cropchart-web.cropchart-2-0-prod.svc.cluster.local:8080/*`), NOT real Spring Boot actuator. Prior KB entry "actuator+Swagger disabled" confirmed correct; these are catch-all routes.
-[NEW] app.cropchart.net `window.env.GOOGLE_MAPS_KEY="AIzaSyAsMk_REDACTED"` — valid Google Maps API key with Places (Text Search) API enabled; Elevation, Directions, Static Maps NOT enabled. Billing-abuse surface only, not security.
-[NEW] app.cropchart.net JS bundle references `dev.siseth.com/api/assets/fedora/pdf?name=...` — Seth Software dev environment; NXDOMAIN, unreachable, dead.
-[NEW] apps.suedzuckergroup.com: 5 unregistered Simplifier runtime modules (management, admin, form, report, analytics) return soft-fail 503 vs hard 404 — confirms Simplifier platform has slots for these modules but they're not deployed.
+## 2026-09-08 17:58:17 UTC [target] (model bigpickle)
 [PRIO] plantportal.suedzuckergroup.com,80, attack_surface=9 business_value=9 tech_exposure=7 gate_ease=2 cloud_surface=3 freshness=9 — priority=80
 [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,74, attack_surface=8 business_value=9 tech_exposure=8 gate_ease=2 cloud_surface=3 freshness=8 — priority=74
 [PRIO] shop.suedzucker.com,68, attack_surface=7 business_value=8 tech_exposure=6 gate_ease=2 cloud_surface=2 freshness=7 — priority=68
 [PRIO] apps.suedzuckergroup.com,42, attack_surface=4 business_value=5 tech_exposure=4 gate_ease=2 cloud_surface=2 freshness=5 — priority=42
+[PRIO] portal.mydataplant.com,55, attack_surface=6 business_value=6 tech_exposure=6 gate_ease=1 cloud_surface=2 freshness=7 — priority=55
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
 confidence: 70
-reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on current-partner/access-rights/impersonations; server validation vs JWT subject unverified; SelfRegister live confirmed. No new evidence this round.
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on current-partner/access-rights/impersonations; server validation vs JWT subject unverified; SelfRegister shell live (200 confirmed 09-08).
 evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
 verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
 impact: cross-partner contracts/deliveries/settlements — HIGH
@@ -21,50 +17,7 @@ testability: AUTH_HELPED
 class: IDOR
 asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
 confidence: 62
-reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs. Liveness 200 confirmed this round.
-evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
-verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
-impact: cross-tenant PII/geometry/financial read — HIGH
-testability: AUTH_HELPED
-[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
-class: IDOR
-asset: shop.suedzucker.com
-confidence: 60
-reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs; OrderSummary holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister shell live (200 confirmed this round). No new evidence.
-evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
-verify_steps: AUTH_HELPED — SelfRegister → place order → GET sfdc OData sobjects/OrderSummary/{mutated id}, diff fields.
-impact: cross-account order/PII/payment access — HIGH
-testability: AUTH_HELPED
-[LEARN] REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
-[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
-[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
-[LEARN] ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
-[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — client-side key, not a secret.
-[RISK] suedzucker: 48 — 22 read-only GET/HEAD requests this round (liveness checks, SPA catch-all verification, Google Maps key probe, module enumeration, JS bundle fetch), ≤1 rps, no credentials, no writes, no customer/employee/financial data read. All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; new surface findings (Google Maps key, Simplifier 503s) are informational only. Risk flat, unchanged — entire program gated on human-run owned-account registration.
-[LEARN] REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
-[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
-[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
-[LEARN] ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
-[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — client-side key, not a secret.
-[RISK] suedzucker: 48 — 22 read-only GET/HEAD requests this round (liveness checks, SPA catch-all verification, Google Maps key probe, module enumeration, JS bundle fetch), ≤1 rps, no credentials, no writes, no customer/employee/financial data read. All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; new surface findings (Google Maps key, Simplifier 503s) are informational only. Risk flat, unchanged — entire program gated on human-run owned-account registration.
-[PRIO] plantportal.suedzuckergroup.com,80, attack_surface=9 business_value=9 tech_exposure=7 gate_ease=2 cloud_surface=3 freshness=9 — priority=80
-[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,74, attack_surface=8 business_value=9 tech_exposure=8 gate_ease=2 cloud_surface=3 freshness=8 — priority=74
-[PRIO] shop.suedzucker.com,68, attack_surface=7 business_value=8 tech_exposure=6 gate_ease=2 cloud_surface=2 freshness=7 — priority=68
-[PRIO] apps.suedzuckergroup.com,42, attack_surface=4 business_value=5 tech_exposure=4 gate_ease=2 cloud_surface=2 freshness=5 — priority=42
-[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
-class: IDOR
-asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
-confidence: 70
-reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on current-partner/access-rights/impersonations; server validation vs JWT subject unverified; SelfRegister shell live (200 confirmed this round).
-evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
-verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
-impact: cross-partner contracts/deliveries/settlements — HIGH
-testability: AUTH_HELPED
-[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
-class: IDOR
-asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
-confidence: 62
-reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs. Liveness 400 this round matches prior Missing-header gate.
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs. Liveness 400 confirmed this round.
 evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
 verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
 impact: cross-tenant PII/geometry/financial read — HIGH
@@ -78,6 +31,11 @@ evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET 
 verify_steps: AUTH_HELPED — SelfRegister → place order → GET sfdc OData sobjects/OrderSummary/{mutated id}, diff fields.
 impact: cross-account order/PII/payment access — HIGH
 testability: AUTH_HELPED
-[NEXT] HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce self-registration), then Entra B2C public signup at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-f/oauth2/.../signup (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100) for plantportal; with any one account run the read-only Partner-Link-Id / partner-linking diff tests on plantportal+smartfarming. All three FINALs remain AUTH_HELPED-blocked indefinitely without these accounts; further PASSIVE probes are confirmed noise.
+[NEXT] HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce self-registration), then Entra B2C public signup at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-f/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100&response_type=code&scope=openid+offline_access&redirect_uri=... for plantportal; with any one account run the read-only Partner-Link-Id / partner-linking diff tests on plantportal+smartfarming. All three FINALs remain AUTH_HELPED-blocked indefinitely without these accounts; further PASSIVE probes are confirmed noise.
 [LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; re-enumeration adds no lead value, confirm prior NO_DELTA.
-[RISK] suedzucker: 47 — 6 read-only GET requests this round (3-surface liveness confirmation, ≤1 rps, no credentials, no writes, no customer/employee/financial data read). All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; this round formally verified surface gating unchanged (no exposure change). Risk flat, marginally down on reduced request volume — entire program still gated on human-run owned-account registration.
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com Simplifier: 5 unregistered runtime modules (management, admin, form, report, analytics) return 503 "No Registration yet." — soft deployment failure, not auth bypass or data exposure.
+[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+[LEARN] ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+[RISK] suedzucker: 47 — 22 read-only GET/HEAD requests this round (liveness checks, SPA catch-all verification, Google Maps key probe, module enumeration, JS bundle fetch), ≤1 rps, no credentials, no writes, no customer/employee/financial data read. All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; new surface findings (Google Maps key, Simplifier 503s) are informational only. Risk flat, unchanged — entire program gated on human-run owned-account registration.
