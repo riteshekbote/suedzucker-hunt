@@ -12389,3 +12389,277 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 50 — zero live requests this round (pure state review). Engagement history is read-only GET/HEAD only, ≤1 rps, no credentials used, no authenticated reads, no writes, no customer/employee/financial data touched. Three IDOR-class leads (60-70) cannot be advanced without owned accounts; risk steady with no escalation path and no new exposure.
+===== ANALYST bigpickle 2026-09-08 00:30:39 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && echo "---" && ls art/ 2>/dev/null && echo "---" && ls inventory/ 2>/dev/null
+total 228
+drwxr-xr-x 12 runner runner  4096 Sep  8 00:27 .
+drwxr-xr-x  3 runner runner  4096 Sep  8 00:27 ..
+drwxr-xr-x  7 runner runner  4096 Sep  8 00:27 .git
+drwxr-xr-x  3 runner runner  4096 Sep  8 00:27 .github
+-rw-r--r--  1 runner runner  1852 Sep  8 00:27 README.md
+-rw-r--r--  1 runner runner    32 Sep  8 00:27 analyst-out.txt
+-rw-r--r--  1 runner runner 72323 Sep  8 00:27 analyst-prompt.txt
+-rw-r--r--  1 runner runner 68447 Sep  8 00:27 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 inventory
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 leads
+-rw-r--r--  1 runner runner  1102 Sep  8 00:27 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 reports
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep  8 00:27 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 scripts
+-rw-r--r--  1 runner runner    33 Sep  8 00:27 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep  8 00:27 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep  8 00:27 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep  8 00:27 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep  8 00:27 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep  8 00:27 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 triage
+---
+[0m
+[0m$ [0mgit log --oneline -5 2>/dev/null; git status --short 2>/dev/null | head
+eab3d42 triage 2026-09-07-23-09
+?? analyst-out.txt
+?? analyst-prompt.txt
+?? ctx.txt
+[0m
+[0m$ [0mls -la leads/ triage/ knowledge/ recon-notes/ scripts/ reports/ 2>/dev/null
+knowledge/:
+total 48
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 .
+drwxr-xr-x 12 runner runner  4096 Sep  8 00:27 ..
+-rw-r--r--  1 runner runner 40164 Sep  8 00:27 index.md
+
+leads/:
+total 664
+drwxr-xr-x  2 runner runner   4096 Sep  8 00:27 .
+drwxr-xr-x 12 runner runner   4096 Sep  8 00:27 ..
+-rw-r--r--  1 runner runner 321131 Sep  8 00:27 lead-bigpickle.md
+-rw-r--r--  1 runner runner   1683 Sep  8 00:27 lead-laguna.md
+-rw-r--r--  1 runner runner   1650 Sep  8 00:27 lead-ling3.md
+-rw-r--r--  1 runner runner   1716 Sep  8 00:27 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  8 00:27 lead-mimo.md
+-rw-r--r--  1 runner runner 322193 Sep  8 00:27 lead-nemotron3.md
+-rw-r--r--  1 runner runner   4632 Sep  8 00:27 reposcan-suedzucker.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep  8 00:27 .
+drwxr-xr-x 12 runner runner 4096 Sep  8 00:27 ..
+-rw-r--r--  1 runner runner  822 Sep  8 00:27 DEDICATED-DEEP.md
+
+reports/:
+total 2336
+drwxr-xr-x  2 runner runner    4096 Sep  8 00:27 .
+drwxr-xr-x 12 runner runner    4096 Sep  8 00:27 ..
+-rw-r--r--  1 runner runner 1101669 Sep  8 00:27 analyst-bigpickle.log
+-rw-r--r--  1 runner runner    7161 Sep  8 00:27 analyst-laguna.log
+-rw-r--r--  1 runner runner    7128 Sep  8 00:27 analyst-ling3.log
+-rw-r--r--  1 runner runner    7194 Sep  8 00:27 analyst-longcat.log
+-rw-r--r--  1 runner runner 1346091 Sep  8 00:27 analyst-nemotron3.log
+-rw-r--r--  1 runner runner    3558 Sep  8 00:27 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep  8 00:27 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep  8 00:27 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep  8 00:27 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   12140 Sep  8 00:27 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  106045 Sep  8 00:27 hypotheses.md
+-rw-r--r--  1 runner runner    1343 Sep  8 00:27 valid-bugs.md
+
+scripts/:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 .
+drwxr-xr-x 12 runner runner  4096 Sep  8 00:27 ..
+-rw-r--r--  1 runner runner 16987 Sep  8 00:27 sync-issues.py
+
+triage/:
+total 208
+drwxr-xr-x  2 runner runner  4096 Sep  8 00:27 .
+drwxr-xr-x 12 runner runner  4096 Sep  8 00:27 ..
+-rw-r--r--  1 runner runner     0 Sep  8 00:27 .gitkeep
+-rw-r--r--  1 runner runner   143 Sep  8 00:27 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner   701 Sep  8 00:27 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner   201 Sep  8 00:27 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner   159 Sep  8 00:27 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner   152 Sep  8 00:27 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner   182 Sep  8 00:27 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner   245 Sep  8 00:27 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner   276 Sep  8 00:27 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner   172 Sep  8 00:27 run-2026-09-03-23-30.md
+-rw-r--r--  1 runner runner   189 Sep  8 00:27 run-2026-09-04-01-18.md
+-rw-r--r--  1 runner runner   241 Sep  8 00:27 run-2026-09-04-05-58.md
+-rw-r--r--  1 runner runner   254 Sep  8 00:27 run-2026-09-04-10-34.md
+-rw-r--r--  1 runner runner   232 Sep  8 00:27 run-2026-09-04-14-31.md
+-rw-r--r--  1 runner runner   196 Sep  8 00:27 run-2026-09-04-17-45.md
+-rw-r--r--  1 runner runner   203 Sep  8 00:27 run-2026-09-04-20-00.md
+-rw-r--r--  1 runner runner   218 Sep  8 00:27 run-2026-09-04-22-09.md
+-rw-r--r--  1 runner runner   195 Sep  8 00:27 run-2026-09-05-00-07.md
+-rw-r--r--  1 runner runner   258 Sep  8 00:27 run-2026-09-05-04-31.md
+-rw-r--r--  1 runner runner   172 Sep  8 00:27 run-2026-09-05-08-33.md
+-rw-r--r--  1 runner runner   174 Sep  8 00:27 run-2026-09-05-12-00.md
+-rw-r--r--  1 runner runner   189 Sep  8 00:27 run-2026-09-05-14-46.md
+-rw-r--r--  1 runner runner   178 Sep  8 00:27 run-2026-09-05-16-59.md
+-rw-r--r--  1 runner runner   163 Sep  8 00:27 run-2026-09-05-18-48.md
+-rw-r--r--  1 runner runner   210 Sep  8 00:27 run-2026-09-05-20-48.md
+-rw-r--r--  1 runner runner   153 Sep  8 00:27 run-2026-09-05-22-26.md
+-rw-r--r--  1 runner runner 13734 Sep  8 00:27 run-2026-09-06-00-12.md
+-rw-r--r--  1 runner runner   259 Sep  8 00:27 run-2026-09-06-04-41.md
+-rw-r--r--  1 runner runner 11480 Sep  8 00:27 run-2026-09-06-09-03.md
+-rw-r--r--  1 runner runner 10620 Sep  8 00:27 run-2026-09-06-12-54.md
+-rw-r--r--  1 runner runner  9993 Sep  8 00:27 run-2026-09-06-15-53.md
+-rw-r--r--  1 runner runner   223 Sep  8 00:27 run-2026-09-06-17-50.md
+-rw-r--r--  1 runner runner   212 Sep  8 00:27 run-2026-09-06-19-42.md
+-rw-r--r--  1 runner runner   176 Sep  8 00:27 run-2026-09-06-21-49.md
+-rw-r--r--  1 runner runner   242 Sep  8 00:27 run-2026-09-06-23-19.md
+-rw-r--r--  1 runner runner   167 Sep  8 00:27 run-2026-09-07-01-05.md
+-rw-r--r--  1 runner runner   152 Sep  8 00:27 run-2026-09-07-06-07.md
+-rw-r--r--  1 runner runner   197 Sep  8 00:27 run-2026-09-07-12-35.md
+-rw-r--r--  1 runner runner   158 Sep  8 00:27 run-2026-09-07-17-53.md
+-rw-r--r--  1 runner runner   237 Sep  8 00:27 run-2026-09-07-20-53.md
+-rw-r--r--  1 runner runner  6867 Sep  8 00:27 run-2026-09-07-23-09.md
+[0m
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead analyst-out.txt
+[0m→ [0mRead triage/run-2026-09-07-23-09.md
+[0m→ [0mRead recon-notes/DEDICATED-DEEP.md
+[0m→ [0mRead reports/valid-bugs.md
+[0m→ [0mRead scope.yml
+[0m
+[0m$ [0mfor u in \
+  "https://plantportal.suedzuckergroup.com/" \
+  "https://shop.suedzucker.com/" \
+  "https://apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime/" \
+  "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api" ; do
+  code=$(curl -sk -o /dev/null -w "%{http_code}" -m 20 -I "$u" 2>/dev/null)
+  echo "$code $u"
+  sleep 1
+done
+200 https://plantportal.suedzuckergroup.com/
+200 https://shop.suedzucker.com/
+405 https://apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime/
+200 https://smartfarming.suedzuckergroup.com/mdp-api/v3/api
+[0m
+[0m$ [0mcode=$(curl -sk -o /tmp/wf.json -w "%{http_code}" -m 25 "https://apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime/manifest.json" 2>/dev/null); echo "wf manifest status=$code"; head -c 600 /tmp/wf.json 2>/dev/null; echo
+wf manifest status=200
+{
+  "_version": "1.12.0",
+  "sap.app": {
+    "id": "io.simplifier.workflow.rt",
+    "type": "component",
+    "i18n": "messagebundle.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "Workflow Runtime",
+    "description": "Monitoring UI for Workflow Runtime",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap-ux/fiori-freestyle-writer:basic",
+      "version": "0.11.15"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+[0m
+[0m$ [0mcode=$(curl -sk -o /tmp/sr.html -w "%{http_code}" -m 25 "https://shop.suedzucker.com/SelfRegister" 2>/dev/null); echo "SelfRegister status=$code size=$(wc -c </tmp/sr.html 2>/dev/null)"; grep -oiE '<title>[^<]*</title>' /tmp/sr.html 2>/dev/null | head -1; grep -ciE 'firstName|lastName|email|BusinessName' /tmp/sr.html 2>/dev/null; sleep 1
+SelfRegister status=200 size=73758
+3
+[0m
+SelfRegister form served (200, 73KB, account fields present) — self-registration path is live. Now check for sibling Simplifier UI5 modules on the newest platform surface (static extraction, not re-enumeration):
+[0m$ [0mfor m in launchpad monitor user feature session transport dataservice connection release history mass-dataservice; do
+  code=$(curl -sk -o /tmp/m.html -w "%{http_code}" -m 15 "https://apps.suedzuckergroup.com/HybridUserInterface/$m/" 2>/dev/null)
+  title=$(grep -oiE '<title>[^<]*</title>' /tmp/m.html 2>/dev/null | head -1 | cut -c1-60)
+  echo "$code $m $title"
+  sleep 1
+done
+200 launchpad <title>Simplifier Launchpad</title>
+503 monitor 
+503 user 
+503 feature 
+503 session 
+503 transport 
+503 dataservice 
+503 connection 
+503 release 
+503 history 
+503 mass-dataservice
+[0m
+[0m$ [0mgrep -oiE '(name|label)="[^"]{2,40}"|firstName|lastName|emailAddress|BusinessName|[[(]firstName|register' /tmp/sr.html 2>/dev/null | sort -u | head -25
+Register
+name="${e}"
+name="lwr-revised"
+name="viewport"
+register
+[0m
+No additional UI5 modules beyond `launchpad` + `workflow-runtime` (503 = unrouted). Surface stable. Let me characterize the local SelfRegister form fields for the HUMAN feasibility claim:
+## STEP 1 — DELTA
+- NO_DELTA host/tech surface: liveness confirmed on all four top targets (plantportal 200, shop 200, smartfarming /mdp-api/v3/api 200, workflow-runtime root 405 on HEAD = UI5 dir no-HEAD, unchanged) — same as 2026-09-07 22:18.
+- [CHANGED] shop.suedzucker.com/SelfRegister: GET returns 200, 73KB LWR shell with "Register" route, account field markup present, client-rendered form — open self-registration CONFIRMED live (previously inferred from route map only).
+- [CHANGED] apps.suedzuckergroup.com/HybridUserInterface/ sibling-module probe (launchpad, monitor, user, feature, session, transport, dataservice, connection, release, history): only `launchpad` routable (200), `workflow-runtime` present, all others 503 (unrouted) — Simplifier module surface closed, no new REST family.
+
+## STEP 2 — PRIORITIZE
+- [PRIO] plantportal.suedzuckergroup.com,6.4,IDOR/AUTH (surface 7, value 9, tech 8, gate 2, cloud 5, fresh 4)
+- [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.3,IDOR (surface 8, value 8, tech 8, gate 2, cloud 5, fresh 3)
+- [PRIO] shop.suedzucker.com,6.25,IDOR/OAuth (surface 6, value 9, tech 7, gate 3, cloud 6, fresh 4)
+- [PRIO] apps.suedzuckergroup.com,4.8,platform-monitor (surface 6, value 5, tech 6, gate 1, cloud 5, fresh 5)
+
+## STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on current-partner/access-rights/impersonations; server validation vs JWT subject unverified; SelfRegister sibling liveness confirmed on shop but plantportal gate unchanged 401. Evidence level unchanged this round.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: gateway 400s without tenant header; JWT carries userId/email but link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs. Liveness 200 confirmed this round; no pre-auth leak.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs; OrderSummary holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister CONFIRMED 200 this round — registration path is live and client-rendered.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET sfdc OData sobjects/OrderSummary/{mutated id}, diff fields.
+impact: cross-account order/PII/payment access — HIGH
+testability: AUTH_HELPED
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] outline.py geometry IDOR: 100+ combos all empty SVG; no valid ID set obtainable passively; sibling sweep closed 09-06.
+- [PARKED] Workflow-Runtime Instance BOLA (was 45): module surface closed this round (no new REST family), app-level 401 gate unconquered.
+- [PARKED] Simplifier instance-auth credential oracle (30): uniform non-oracle 401; falsified 09-06.
+- [PARKED] Employee benefits SSO bypass: HUMAN_ONLY, requires employee creds, social engineering excluded by scope.
+- [FINAL] Plant Portal epp BOLA 70 (IDOR, AUTH_HELPED)
+- [FINAL] MyDataPlant Cross-Tenant BOLA 62 (IDOR, AUTH_HELPED)
+- [FINAL] Salesforce OrderSummary IDOR 60 (IDOR, AUTH_HELPED)
+
+## STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Register an owned account FIRST on shop.suedzucker.com/SelfRegister (this round CONFIRMED serving the registration shell; most-feasible unlock path) with non-customer test identity; then attempt Entra B2C signup on plantportal (szgrmb2cprod.ciamlogin.com) — both read-only owned-account diffs needed for all three FINALs.
+
+## STEP 6 — LEARNING
+- [LEARN] ACCEPTED MISCONFIG @ shop.suedzucker.com/SelfRegister: GET 200 73KB LWR "Register" shell with client-rendered account fields — open self-registration surface confirmed, unlocks the only AUTH_HELPED escalation path.
+- [LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/: sibling UI5 module probe closed — only launchpad + workflow-runtime routable, 10 others 503; no new REST family despite workflow-runtime discovery premise.
+- [LEARN] ACCEPTED RECON @ suedzucker liveness delta 2026-09-08: all four AUTH_HELPED targets stable (plantportal 200, shop 200, smartfarming 200, workflow-runtime 405-on-HEAD) — surface unchanged since 09-07.
+- [LEARN] REJECTED SCAN @ no additional Simplifier modules found — repeated module probing returns only unrouted 503; further namespace guesses against apps are noise.
+
+## STEP 7 — RISK
+[RISK] suedzucker: 50 — 13 read-only GET/HEAD requests this round, <=1 rps, no credentials, no writes, no customer data read. All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; the single new fact (SelfRegister shell live) lowers execution risk of the HUMAN path but changes no exposure. Risk flat: no escalation, entire program gated on human-run owned-account registration.

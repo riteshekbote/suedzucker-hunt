@@ -179,3 +179,5 @@ www.suedzucker.de
 - CHANGED No passive escalation available on any active hypothesis — all three top IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id, shop OrderSummary) remain blocked on AUTH_HE
 
 ## 2026-09-07 22:18:09 UTC
+
+## 2026-09-08 00:30:39 UTC

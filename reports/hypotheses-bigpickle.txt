@@ -1,30 +1,30 @@
-## 2026-09-07 22:17:44 UTC [target] (model bigpickle)
-[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
-class: IDOR
-asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
-confidence: 62
-reasoning: Gateway 400s without X-Selected-Partner-Link-Id; backend JWT carries userId/email but linkage of tenant-scope to the client-supplied header is unverified; 574 JSON:API endpoints exposed in public Swagger contain numeric IDs; header is sent verbatim by the client → if backend trusts header over JWT claim, cross-tenant read is trivially horizontal.
-evidence_needed: owned token + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows (PII/geometry/financials).
-verify_steps: AUTH_HELPED — GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields with Bearer + link-A vs link-B (two owned accounts), read-only diff of row sets.
-impact: cross-tenant PII + field geometry + financial read — HIGH
-testability: AUTH_HELPED
+## 2026-09-08 00:30:29 UTC [target] (model bigpickle)
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
 confidence: 70
-reasoning: /association/impersonation guarded only by client-side Nuxt middleware (is-authenticated/logged-in-user/only-for-partner); x-selected-partner-link-id is tolerated on /external-account/current-partner, /access-rights, /external-partner-impersonations; server-side validation of header vs JWT subject/partnerLinkId unverified; switchToPartnerNumber arrives from query string but never auto-primes setCurrentPartner in pinia — header priming is the only cross-partner switch.
-evidence_needed: owned token with two own partner-links; non-current link-id yields foreign-scope response.
-verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights, Bearer + secondary own link-id, diff vs baseline.
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on current-partner/access-rights/impersonations; server validation vs JWT subject unverified; SelfRegister sibling liveness confirmed on shop but plantportal gate unchanged 401. Evidence level unchanged this round.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
 impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: gateway 400s without tenant header; JWT carries userId/email but link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs. Liveness 200 confirmed this round; no pre-auth leak.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
 [HYP] Salesforce B2B Commerce OrderSummary Record IDOR
 class: IDOR
 asset: shop.suedzucker.com
 confidence: 60
-reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId keyed by 15/18-char SFDC IDs; OrderSummary holds pricing/PII/payment data; B2B Commerce commonly leans on sharing rules rather than code-level authz; /SelfRegister is open and Stripe+PayPal+Adyen confirm real txn data.
-evidence_needed: authenticated session + own OrderSummary recordId + one foreign record id; horizontal GET returns foreign record.
-verify_steps: AUTH_HELPED — login via /SelfRegister, capture own OrderSummary, GET /services/data/v62.0/sobjects/OrderSummary/{mutated_id}, diff fields.
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs; OrderSummary holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister CONFIRMED 200 this round — registration path is live and client-rendered.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET sfdc OData sobjects/OrderSummary/{mutated id}, diff fields.
 impact: cross-account order/PII/payment access — HIGH
 testability: AUTH_HELPED
-[NEXT] HUMAN: Register owned test accounts on plantportal.suedzuckergroup.com (Entra B2C public sign-up at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb<redacted>/v2.0/) and shop.suedzucker.com (/SelfRegister) to unlock read-only diff-testing on all three FINAL hypotheses. No PROBE exists that escalates any lead without owned credentials; further passive scans are confirmed noise (4x NO_DELTA).
-[RISK] suedzucker: 50 — zero live requests this round (pure state review). Engagement history is read-only GET/HEAD only, ≤1 rps, no credentials used, no authenticated reads, no writes, no customer/employee/financial data touched. Three IDOR-class leads (60-70) cannot be advanced without owned accounts; risk steady with no escalation path and no new exposure.
+[NEXT] HUMAN: Register an owned account FIRST on shop.suedzucker.com/SelfRegister (this round CONFIRMED serving the registration shell; most-feasible unlock path) with non-customer test identity; then attempt Entra B2C signup on plantportal (szgrmb2cprod.ciamlogin.com) — both read-only owned-account diffs needed for all three FINALs.
+[RISK] suedzucker: 50 — 13 read-only GET/HEAD requests this round, <=1 rps, no credentials, no writes, no customer data read. All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; the single new fact (SelfRegister shell live) lowers execution risk of the HUMAN path but changes no exposure. Risk flat: no escalation, entire program gated on human-run owned-account registration.
