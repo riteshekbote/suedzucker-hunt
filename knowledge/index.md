@@ -169,3 +169,5 @@
 - 2026-09-08 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
 - 2026-09-08 ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
 - 2026-09-08 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — client-side key, not a secret.
+- 2026-09-08 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+- 2026-09-08 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; re-enumeration adds no lead value, confirm prior NO_DELTA.

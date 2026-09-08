@@ -190,3 +190,10 @@ www.suedzucker.de
 - NEW app.cropchart.net `window.env.GOOGLE_MAPS_KEY="AIzaSyAsMk_REDACTED"` — valid Google Maps API key with Places (Text Search) API enabled; Elevation, Directions, Static Maps NOT enabl
 - NEW app.cropchart.net JS bundle references `dev.siseth.com/api/assets/fedora/pdf?name=...` — Seth Software dev environment; NXDOMAIN, unreachable, dead.
 - NEW apps.suedzuckergroup.com: 5 unregistered Simplifier runtime modules (management, admin, form, report, analytics) return soft-fail 503 vs hard 404 — confirms Simplifier platform has slots for these mod
+
+## 2026-09-08 14:23:25 UTC
+- CHANGED apps.suedzuckergroup.com Simplifier: additional module paths `/HybridUserInterface/{management,admin,form,report,analytics}-runtime` return `503 "No Registration yet."` — new response variant vs prior
+- NEW app.cropchart.net `/actuator/*` and `/swagger-ui.html` all return `200 text/html` — SPA catch-all (Moro index.html, content-length 2549, `x-envoy-decorator-operation: cropchart-web.cropchart-2-0-prod.
+- NEW app.cropchart.net `window.env.GOOGLE_MAPS_KEY="AIzaSyAsMk_REDACTED"` — valid Google Maps API key with Places (Text Search) API enabled; Elevation, Directions, Static Maps NOT enabled. Billing-abuse su
+- NEW app.cropchart.net JS bundle references `dev.siseth.com/api/assets/fedora/pdf?name=...` — Seth Software dev environment; NXDOMAIN, unreachable, dead.
+- NEW apps.suedzuckergroup.com: 5 unregistered Simplifier runtime modules (management, admin, form, report, analytics) return soft-fail 503 vs hard 404 — confirms Simplifier platform has slots for these mod
