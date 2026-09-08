@@ -807,3 +807,15 @@
 - LEARN: ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: Azure Front Door backend, root serves identical generic error page — app path unmapped, no attack
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) 
 - LEARN: ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (pro
+
+## RANKED HYPOTHESES 2026-09-08 20:50:47 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop /SelfRegister): liveness re-confirmed 200/400/
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator d
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT ena
+- LEARN: ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — c
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating inv

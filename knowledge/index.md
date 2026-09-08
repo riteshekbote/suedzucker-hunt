@@ -176,3 +176,4 @@
 - 2026-09-08 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
 - 2026-09-08 ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
 - 2026-09-08 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- 2026-09-08 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop /SelfRegister): liveness re-confirmed 200/400/200 at 20:46 UTC — gating invariant unchanged since 09-07; third consecutive NO_DELTA confirms further re-enumeration adds no lead value.
