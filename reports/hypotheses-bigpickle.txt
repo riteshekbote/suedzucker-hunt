@@ -1,4 +1,15 @@
-## 2026-09-09 15:16:57 UTC [target] (model bigpickle)
+## 2026-09-09 18:41:13 UTC [target] (model bigpickle)
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage was empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, config exposure) stand, no class reopens.
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; fourth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+[LEARN] REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
+[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+[LEARN] ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
+[LEARN] REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
 [PRIO] plantportal.suedzuckergroup.com,7.0,business_value:cross-partner+agri+contracts,gate_ease:5(B2C+Entra B2C),freshness:0
 [PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment+PII,gate_ease:5(SelfRegister public),freshness:0
 [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574+endpoints,gate_ease:4,no+public+signup,freshness:0
