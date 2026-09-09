@@ -1,35 +1,15 @@
-## 2026-09-09 18:41:13 UTC [target] (model bigpickle)
-[LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage was empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
-[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, config exposure) stand, no class reopens.
-[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; fourth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
-[LEARN] REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
-[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
-[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
-[LEARN] ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
-[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
-[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
-[LEARN] REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
-[LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
+## 2026-09-09 21:29:54 UTC [target] (model bigpickle)
+[PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment+PII,gate_ease:5(SelfRegister+login live 200),freshness:0
 [PRIO] plantportal.suedzuckergroup.com,7.0,business_value:cross-partner+agri+contracts,gate_ease:5(B2C+Entra B2C),freshness:0
-[PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment+PII,gate_ease:5(SelfRegister public),freshness:0
-[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574+endpoints,gate_ease:4,no+public+signup,freshness:0
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574+endpoints,gate_ease:4(no public signup),freshness:0
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
 confidence: 65
-reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog liveness 200.
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog liveness 200 re-confirmed.
 evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
 verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
 impact: cross-partner contracts/deliveries/settlements — HIGH
-testability: AUTH_HELPED
-[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
-class: IDOR
-asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
-confidence: 58
-reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs.
-evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
-verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
-impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
 [HYP] Salesforce B2B Commerce OrderSummary Record IDOR
 class: IDOR
@@ -40,8 +20,16 @@ evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET 
 verify_steps: AUTH_HELPED — SelfRegister → place order → GET sobjects/OrderSummary/{mutated id}, diff fields.
 impact: cross-account order/PII/payment access — HIGH
 testability: AUTH_HELPED
-[FINAL] 1. plantportal partner-linking [65] 2. shop OrderSummary [62] 3. MyDataPlant X-Selected-Partner-Link-Id [58]. All AUTH_HELPED only — no passive escalation path exists; owned accounts required for any further progress.
-[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then run IDOR test against /OrderSummary/:recordId with mutated ID. This is the fastest path to owned access and highest single-asset business impact.
-[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
-[LEARN] REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
-[RISK] suedzucker: 45 — passive phase complete, 0 HTTP requests this round. All three IDOR leads require owned accounts; risk flat on inactivity. Marginal risk from repeated passive enumeration but no exposure change.
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs; /fields gating invariant 400 re-confirmed.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[FINAL] 1. plantportal partner-linking [65] 2. shop OrderSummary [62] 3. MyDataPlant X-Selected-Partner-Link-Id [58].
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (live 200 shell) — complete self-registration, place at least one order, then IDOR-test GET /OrderSummary/:recordId with mutated 15/18-char SFDC ID vs own record. Fastest path to owned access; highest single-asset business impact. Parallel track: open owned Entra B2C account at szgrmb2cprod.ciamlogin.com to test plantportal partner-linking diffing (evidence_needed for lead 1).
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; fifth consecutive NO_DELTA; further re-enumeration adds noise, not leads.
+[RISK] suedzucker: 45 — passive phase terminal, 3 read-only GET probes this round (no new exposure). All three IDOR leads require owned accounts; risk flat on inactivity.
