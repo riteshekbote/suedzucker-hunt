@@ -1,4 +1,4 @@
-## 2026-09-09 06:04:06 UTC [target] (model bigpickle)
+## 2026-09-09 11:30:04 UTC [target] (model bigpickle)
 [PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment,gate_ease:5(SelfRegister public),freshness:0
 [PRIO] plantportal.suedzuckergroup.com,7.0,business_value:cross-partner agri contracts,gate_ease:5(B2C signup),freshness:0
 [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574 endpoints,gate_ease:4,no public signup
@@ -6,7 +6,7 @@
 class: IDOR
 asset: shop.suedzucker.com
 confidence: 62
-reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister shell 200 re-confirmed; Salesforce SharingModel Typically on除非 explicit criteria.
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister shell 200 re-confirmed; Salesforce SharingModel typically on unless explicit criteria.
 evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
 verify_steps: AUTH_HELPED — SelfRegister → place order → GET sobjects/OrderSummary/{mutated id}, diff fields.
 impact: cross-account order/PII/payment access — HIGH
