@@ -933,3 +933,9 @@
 - LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
 - LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
 - LEARN: REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
+
+## RANKED HYPOTHESES 2026-09-09 23:32:53 UTC
+- [62] shop.suedzucker.com: Salesforce B2B Commerce OrderSummary Record IDOR (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Complete owned-account registration at shop.suedzucker.com/SelfRegister (public 200), receive order-confirmation ID, then IDOR-test GET /OrderSummary/{mu
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
+- LEARN: REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
