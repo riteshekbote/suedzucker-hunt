@@ -2340,3 +2340,39 @@ testability: AUTH_HELPED
 [NEXT] HUMAN: Register owned test identities — shop.suedzucker.com/SelfRegister first (public 200 shell), then Entra B2C self-service signup at szgrmb2cprod.ciamlogin.com (client_id ba3120d6-3d54-478b-a048-5f1242196100) for plantportal/smartfarming; with any one account run the read-only Partner-Link-Id / partner-linking row-set diff tests. No further passive probe changes any lead — fourth consecutive NO_DELTA proves it.
 [LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister+login=200): liveness re-confirmed 21:0x UTC, fourth consecutive NO_DELTA; gating invariant frozen since 09-07. Passive phase on suedzucker is exhausted — all 11 assets either hardened, third-party gated, or AUTH_HELPED-blocked; any in-scope high-value finding now requires owned accounts.
 [RISK] suedzucker: 46 — 5 read-only GET requests this round (3 liveness + 2 SPA route checks, ≤1 rps, no credentials, no writes). All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; surface gating verified unchanged (no exposure deltas). Risk flat, marginally down on reduced request volume; program is fully gated on human-run owned-account registration.
+## 2026-09-09 01:17:03 UTC [target] (model bigpickle)
+[PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment,gate_ease:5(SelfRegister public),freshness:0
+[PRIO] plantportal.suedzuckergroup.com,7.0,business_value:cross-partner agri contracts,gate_ease:5(B2C signup),freshness:0
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574 endpoints,gate_ease:4,freshness:0
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware (KB 09-04); x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog liveness 200 re-confirmed 21:0x UTC 09-08.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: gateway 400s without tenant header (re-confirmed 21:0x UTC); JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister shell 200 re-confirmed 21:0x UTC.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET sobjects/OrderSummary/{mutated id}, diff fields.
+impact: cross-account order/PII/payment access — HIGH
+testability: AUTH_HELPED
+[FINAL] 1. plantportal partner-linking [70] 2. MyDataPlant X-Selected-Partner-Link-Id [62] 3. shop OrderSummary [60]. All AUTH_HELPED only.
+[NEXT] HUMAN: Register owned test identities — shop.suedzucker.com/SelfRegister first (public 200 shell), then Entra B2C self-service signup at szgrmb2cprod.ciamlogin.com (client_id ba3120d6-3d54-478b-a048-5f1242196100) for plantportal/smartfarming; with any one account run the read-only Partner-Link-Id / partner-linking row-set diff tests. No passive probe changes any lead.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage was empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, config exposure) stand, no class reopens.
+[RISK] suedzucker: 45 — 0 HTTP requests this round (deliberate NO_DELTA; re-enumeration adds noise per KB). All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; surface gating verified unchanged across five consecutive rounds. Risk flat-to-down on reduced request volume; program fully gated on human-created test accounts.

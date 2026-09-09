@@ -14425,3 +14425,235 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 46 — 5 read-only GET requests this round (3 liveness + 2 SPA route checks, ≤1 rps, no credentials, no writes). All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; surface gating verified unchanged (no exposure deltas). Risk flat, marginally down on reduced request volume; program is fully gated on human-run owned-account registration.
+===== ANALYST bigpickle 2026-09-09 01:19:06 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead .
+[0m✱ [0mGlob "*.md"[90m 61 matches[0m
+[0m✱ [0mGlob "art/*"[90m 0 matches[0m
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la leads/ && echo "---STATE---" && cat state_bigpickle.json 2>/dev/null | head -100
+total 768
+drwxr-xr-x  2 runner runner   4096 Sep  9 01:16 .
+drwxr-xr-x 12 runner runner   4096 Sep  9 01:16 ..
+-rw-r--r--  1 runner runner 355950 Sep  9 01:16 lead-bigpickle.md
+-rw-r--r--  1 runner runner   2040 Sep  9 01:16 lead-laguna.md
+-rw-r--r--  1 runner runner   2000 Sep  9 01:16 lead-ling3.md
+-rw-r--r--  1 runner runner   2080 Sep  9 01:16 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep  9 01:16 lead-mimo.md
+-rw-r--r--  1 runner runner 394910 Sep  9 01:16 lead-nemotron3.md
+-rw-r--r--  1 runner runner   5664 Sep  9 01:16 reposcan-suedzucker.md
+---STATE---
+{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la scripts/ && echo "---" && cat scope.yml
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep  9 01:16 .
+drwxr-xr-x 12 runner runner  4096 Sep  9 01:16 ..
+-rw-r--r--  1 runner runner 16987 Sep  9 01:16 sync-issues.py
+---
+programs:
+  suedzucker:
+    name: Südzucker AG / Südzucker Group Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, production systems, supply chain systems, enterprise IT, customer and partner platforms, APIs, websites, and domains operated by Südzucker Group and its subsidiaries"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+[0m
+Let me examine my state file, the most recent triage, and relevant leads to run the analysis properly.
+[0m→ [0mRead triage/run-2026-09-08-23-24.md
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && tail -60 reports/hypotheses.md
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com: per-env gating divergence falsified — all 4 envs identical 401 (workflow-runtime api) and iden
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: workflow-runtime API adds an IDOR-shape REST family (instance IDs in URLs) behind an app-level gate — worth AUTH_HELP
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com/HybridUserInterface/launchpad: Simplifier Launchpad pre-auth management endpoints (/api, /manag
+- LEARN: ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: IMC Learning Suite (ILP) at /ilp/ — corporate LMS, standard login, out-of-scope class for high-value findin
+- LEARN: ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: Azure Front Door backend, root serves identical generic error page — app path unmapped, no attack
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) 
+- LEARN: ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (pro
+
+## RANKED HYPOTHESES 2026-09-08 18:06:10 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating inv
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com Simplifier: 5 unregistered runtime modules (management, admin, form, report, analytics) return 503 "No Registration ye
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
+- LEARN: ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator d
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT ena
+- LEARN: ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — c
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/api/v3: Full public Swagger (15k lines) confirms real backend, Bearer JWT (iss=auth-backend aud=rest-client, userId+emai
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: new auth-free UI5 module "Simplifier Workflow" monitoring (io.simplifier.workflo
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com: per-env gating divergence falsified — all 4 envs identical 401 (workflow-runtime api) and iden
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: workflow-runtime API adds an IDOR-shape REST family (instance IDs in URLs) behind an app-level gate — worth AUTH_HELP
+- LEARN: REJECTED MISCONFIG @ apps{,-beta,-dev,-test}.suedzuckergroup.com/HybridUserInterface/launchpad: Simplifier Launchpad pre-auth management endpoints (/api, /manag
+- LEARN: ACCEPTED RECON @ campus{,-test}.suedzuckergroup.com: IMC Learning Suite (ILP) at /ilp/ — corporate LMS, standard login, out-of-scope class for high-value findin
+- LEARN: ACCEPTED RECON @ rawmaterial{,-dev,-test}.suedzuckergroup.com: Azure Front Door backend, root serves identical generic error page — app path unmapped, no attack
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) 
+- LEARN: ACCEPTED RECON @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (pro
+
+## RANKED HYPOTHESES 2026-09-08 20:50:47 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop /SelfRegister): liveness re-confirmed 200/400/
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator d
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key `AIzaSyAsMk_REDACTED` valid with Places Text Search; Elevation/Directions/Static Maps NOT ena
+- LEARN: ACCEPTED RECON @ dev.siseth.com (cropchart JS bundle reference): NXDOMAIN, unreachable — dead dev environment.
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key in window.env: Seth Software Sp. z o.o. (Polish vendor), license key for 2 production envs — c
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating inv
+
+## RANKED HYPOTHESES 2026-09-08 23:09:41 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register owned test identities — shop.suedzucker.com/SelfRegister first (public 200 shell), then Entra B2C self-service signup at szgrmb2cprod.ciamlogin.
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identities via the most-feasible public paths — shop.suedzucker.com/SelfRegister first (live 200 shell, customer-facing Salesforce se
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister+login=200): liveness re-confirmed 21:0x U
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
+- LEARN: ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+[0m
+The state file is minimal. Let me look at the most recent triage run and the latest hypotheses file to understand the current state, since my "state" provided in the context is what I should baseline against. The last triage was run-2026-09-08-23-24.md.
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -lt --time-style=+%Y-%m-%dT%H:%M:%SZ triage/ | head -5 && echo "---kb tail---" && tail -5 knowledge/index.md
+total 228
+-rw-r--r-- 1 runner runner   242 2026-09-09T01:16:25Z run-2026-09-06-23-19.md
+-rw-r--r-- 1 runner runner   167 2026-09-09T01:16:25Z run-2026-09-07-01-05.md
+-rw-r--r-- 1 runner runner   152 2026-09-09T01:16:25Z run-2026-09-07-06-07.md
+-rw-r--r-- 1 runner runner   197 2026-09-09T01:16:25Z run-2026-09-07-12-35.md
+---kb tail---
+- 2026-09-08 ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- 2026-09-08 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- 2026-09-08 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop /SelfRegister): liveness re-confirmed 200/400/200 at 20:46 UTC — gating invariant unchanged since 09-07; third consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+- 2026-09-08 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister+login=200): liveness re-confirmed 21:0x UTC, fourth consecutive NO_DELTA; gating invariant frozen since 09-07. Passive phase on suedzucker is exhausted — all 11 assets either hardened, third-party gated, or AUTH_HELPED-blocked; any in-scope high-value finding now requires owned accounts.
+- 2026-09-08 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; third consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+[0m
+The latest run (23:24) was the last one. My context's "LAST LEADS" ends at ~23:09. There's nothing newer since 23:09 in the ranked hypotheses — the 23:24 triage produced no leads. So I'm operating at the same baseline.
+
+The program state is unambiguous: passive phase is exhausted, all top IDOR leads are AUTH_HELPED-blocked pending owned-account registration. My context already established 4 consecutive NO_DELTA. Let me consider whether there is any genuinely new passive angle worth one low-cost probe, without repeating the noise-generating re-enumeration that the KB has explicitly flagged as producing no lead value.
+
+Let me review the deep-hunt directive for any under-explored surface. The directive emphasizes breadth then depth on anomalies. The assets that have received the least passive depth are: rawmaterial{,-dev,-test} (app path unmapped), campus (LMS, out-of-scope class), matomo (SaaS login, out-of-scope), e (Flowmailer). One thing not deeply explored per KB: whether rawmaterial or other Azure Front Door assets have any discoverable application path via static/title probing. But the KB explicitly logged "app path unmapped, no attack surface" and repeated re-probing adds no value.
+
+Rather than repeat already-disproven enumeration, the correct analytical output is a disciplined NO_DELTA that preserves the three live AUTH_HELPED hypotheses and escalates the HUMAN action — the program's only real forward path. I will not fabricate new probes. Let me verify I have the exact current last-run timestamp by checking the newest triage file timestamps.
+The state baseline is well-established. My last state was already at the 23:09 mark with the same three AUTH_HELPED hypotheses. The program is fully gated on HUMAN account registration. There is no genuinely new passive lead, and the knowledge base explicitly warns that re-running identical enumeration adds noise, not value.
+
+I should run the 8 steps honestly. Since I have no new passive angle and the previous runs confirmed NO_DELTA, I'll do one discipline-preserving thing: verify whether there's any *new* exploitable-looking surface I haven't touched — but only if truly novel. All surfaces have been closed (hardened Drupal, gated Salesforce, gated Simplifier, gated MyDataPlant, dead/unmapped rawmaterial, out-of-scope LMS/Matomo). No new probe adds value.
+
+I will output the structured blocks reflecting NO_DELTA, keeping the three live AUTH_HELPED hypotheses at unchanged confidence, and escalate the HUMAN registration as the sole forward path. Per instructions, I should not invent vulnerabilities or fabricate deltas.
+
+STEP 1 — DELTA
+NO_DELTA: inventory stable at 11 in-scope assets; no new hosts, technology changes, or knowledge-base entries since 2026-09-08 23:09:41 UTC. 2026-09-08 23:24 triage was empty (no leads). Fifth consecutive NO_DELTA.
+
+Note: passive enumeration is closed by KB consensus (hardened/gated third-party/AUTH_HELPED classes all confirmed). Re-probing the same endpoints would be noise, so I run no redundant HTTP requests this round.
+
+STEP 2 — PRIORITIZE (unchanged, existing live hypotheses; no new assets)
+[PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment,gate_ease:5(SelfRegister public),freshness:0
+[PRIO] plantportal.suedzuckergroup.com,7.0,business_value:cross-partner agri contracts,gate_ease:5(B2C signup),freshness:0
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574 endpoints,gate_ease:4,freshness:0
+
+STEP 3 — HYPOTHESES (top 3, each max 1)
+
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware (KB 09-04); x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog liveness 200 re-confirmed 21:0x UTC 09-08.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 62
+reasoning: gateway 400s without tenant header (re-confirmed 21:0x UTC); JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 60
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister shell 200 re-confirmed 21:0x UTC.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET sobjects/OrderSummary/{mutated id}, diff fields.
+impact: cross-account order/PII/payment access — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+All three hypotheses survive at >40. No new low-confidence or REJECTED-class candidates to cull this round. No new passive verification is possible; all three remain AUTH_HELPED. [PARKED] Simplifier workflow-runtime IDOR — <40 pending owned Simplifier session (no feasible public registration path). 
+[FINAL] 1. plantportal partner-linking [70] 2. MyDataPlant X-Selected-Partner-Link-Id [62] 3. shop OrderSummary [60]. All AUTH_HELPED only.
+
+STEP 5 — NEXT ACTION
+No new probe is warranted — five consecutive NO_DELTA and the KB has closed every passive surface. The single forward path is human registration.
+[NEXT] HUMAN: Register owned test identities — shop.suedzucker.com/SelfRegister first (public 200 shell), then Entra B2C self-service signup at szgrmb2cprod.ciamlogin.com (client_id ba3120d6-3d54-478b-a048-5f1242196100) for plantportal/smartfarming; with any one account run the read-only Partner-Link-Id / partner-linking row-set diff tests. No passive probe changes any lead.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage was empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, config exposure) stand, no class reopens.
+
+STEP 7 — RISK
+[RISK] suedzucker: 45 — 0 HTTP requests this round (deliberate NO_DELTA; re-enumeration adds noise per KB). All three top IDOR leads (60-70) remain AUTH_HELPED-blocked; surface gating verified unchanged across five consecutive rounds. Risk flat-to-down on reduced request volume; program fully gated on human-created test accounts.
