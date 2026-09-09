@@ -118,3 +118,12 @@ TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
 TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
 ## REPOSCAN 2026-09-09 15:24:19 UTC
 TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
+## REPOSCAN 2026-09-09 18:50:22 UTC
+[HYP] (none)
+class: N/A
+asset: N/A — no candidate repos
+confidence: 0
+reasoning: No public GitHub repos exist for Südzucker AG or any known subsidiary. cands.txt confirms "no org candidates". scope.yml shows github_orgs: "none-configured". Historical scans (2026-09-03 through 2026-09-09) consistently report TARGET_ORG not configured, with GitHub API searches returning 0 results for org:suedzucker, org:SuedZucker, and related queries.
+impact: N/A
+verify_steps: N/A — nothing to verify
+TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
