@@ -2743,3 +2743,41 @@ evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link
 verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
+## 2026-09-10 18:54:40 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,score=8.2,axis=business_value=9,attack_surface=8,gate_ease=7(client-linking-flow),tech_exposure=8(MSAL_B2C+predictable_partner_ids),cloud_surface=7,freshness=9
+[PRIO] shop.suedzucker.com,score=7.8,axis=business_value=9,attack_surface=8,tech_exposure=8(SFDC_OrderSummary:recordId),gate_ease=7(SelfRegister_200),cloud_surface=9(SAP+SFDC+Azure),freshness=8
+[PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,score=7.5,axis=attack_surface=10(574_endpoints),business_value=8,tech_exposure=9(JWT+X-Selected-Partner-Link-Id),gate_ease=5(auth_required),cloud_surface=7,freshness=9
+[PRIO] portal.mydataplant.com/services/outline.py,score=6.8,axis=gate_ease=10(auth-free),attack_surface=7,business_value=7(agri_geometry_PII),tech_exposure=6,freshness=8
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 65
+reasoning: /association/impersonation guarded only by client-side Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog liveness 200 re-confirmed through 09-10.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister shell 200 re-confirmed 09-10; Salesforce SharingModel typically on unless explicit criteria.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET sobjects/OrderSummary/{mutated id}, diff fields vs own record.
+impact: cross-account order/PII/payment access — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; 574 endpoints with numeric IDs; /fields gating invariant 400 re-confirmed.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] MyDataPlant X-Selected-Partner-Link-Id [58]: lowest gate_ease (no public signup); requires two owned link-ids AND owned JWT; revisit only after plantportal/shop owned access secured.
+[FINAL] 1. plantportal partner-linking [65] 2. shop OrderSummary [62] 3. MyDataPlant X-Selected-Partner-Link-Id [58]. All AUTH_HELPED only — no passive escalation path exists.
+[NEXT] HUMAN: Complete owned-account registration at shop.suedzucker.com/SelfRegister (public 200), receive order-confirmation ID, then IDOR-test GET /OrderSummary/{mutated 15/18-char SFDC id} against own record and diff fields (pricing/PII/payment). Fastest path to owned access; highest single-asset business impact. Parallel track: open owned Entra B2C account at szgrmb2cprod.ciamlogin.com to test plantportal partner-linking diffing (evidence_needed for lead 1).
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
+[LEARN] REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
+[RISK] suedzucker: 45 — passive phase complete, 0 HTTP requests this round; all three IDOR leads require owned accounts; risk flat on inactivity.
