@@ -15353,3 +15353,103 @@ testability: AUTH_HELPED
 
 **STEP 7 — RISK**
 [RISK] suedzucker: 45 — passive phase complete, 0 HTTP requests this round; all three IDOR leads require owned accounts; risk flat on inactivity.
+===== ANALYST bigpickle 2026-09-10 21:23:12 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la && git log --oneline -10 2>/dev/null && git status --short 2>/dev/null
+total 252
+drwxr-xr-x 12 runner runner  4096 Sep 10 21:20 .
+drwxr-xr-x  3 runner runner  4096 Sep 10 21:20 ..
+drwxr-xr-x  7 runner runner  4096 Sep 10 21:20 .git
+drwxr-xr-x  3 runner runner  4096 Sep 10 21:20 .github
+-rw-r--r--  1 runner runner  1852 Sep 10 21:20 README.md
+-rw-r--r--  1 runner runner    32 Sep 10 21:20 analyst-out.txt
+-rw-r--r--  1 runner runner 83803 Sep 10 21:20 analyst-prompt.txt
+-rw-r--r--  1 runner runner 79927 Sep 10 21:20 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 inventory
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 leads
+-rw-r--r--  1 runner runner  1653 Sep 10 21:20 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 reports
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep 10 21:20 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 scripts
+-rw-r--r--  1 runner runner    33 Sep 10 21:20 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep 10 21:20 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep 10 21:20 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep 10 21:20 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep 10 21:20 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep 10 21:20 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep 10 21:20 triage
+c0ee694 triage 2026-09-10-20-15
+?? analyst-out.txt
+?? analyst-prompt.txt
+?? ctx.txt
+[0m
+[0m✱ [0mGlob "**/*.{yml,yaml,md,json}"[90m 81 matches[0m
+[0m→ [0mRead triage/run-2026-09-10-20-15.md
+[0m→ [0mRead leads/lead-bigpickle.md
+[0m→ [0mRead probe-results.md
+Last triage (20:15) came back empty — no leads handed off. Running the 8 steps with a minimal read-only liveness re-check of the three carried surfaces (GET only, spaced ≥1s), consistent with prior rounds.
+[0m
+[0m$ [0mfor url in "https://shop.suedzucker.com/SelfRegister" "https://plantportal.suedzuckergroup.com/api/catalog/companies" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields"; do code=$(curl -s -o /dev/null -w "%{http_code}" -m 20 -A "Mozilla/5.0" "$url"); echo "$code  $url"; sleep 1.2; done
+200  https://shop.suedzucker.com/SelfRegister
+200  https://plantportal.suedzuckergroup.com/api/catalog/companies
+400  https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields
+[0m
+Liveness invariant unchanged (200/200/400). No new surface since 2026-09-10 18:56.
+
+STEP 1 — DELTA
+- NO_DELTA: no new hosts, KB entries, or hypothesis state since 2026-09-10 18:56 UTC; last triage run (20:15) was empty ("No leads provided").
+- NO_DELTA: live gating re-confirmed — shop /SelfRegister 200, plantportal /api/catalog/companies 200, smartfarming /fields 400 (identical to 09-07→09-10 invariant); sixth consecutive round.
+
+STEP 2 — PRIORITIZE
+- [PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,score=8.2,axis=business_value=9,attack_surface=8,gate_ease=7(client-linking-flow),tech_exposure=8(MSAL_B2C+predictable_partner_ids),cloud_surface=7,freshness=9
+- [PRIO] shop.suedzucker.com,score=7.8,axis=business_value=9,attack_surface=8,tech_exposure=8(SFDC_OrderSummary:recordId),gate_ease=7(SelfRegister_200),cloud_surface=9(SAP+SFDC+Azure),freshness=8
+- [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,score=7.5,axis=attack_surface=10(574_endpoints),business_value=8,tech_exposure=9(JWT+X-Selected-Partner-Link-Id),gate_ease=5(auth_required),cloud_surface=7,freshness=9
+- [PRIO] portal.mydataplant.com/services/outline.py,score=6.8,axis=gate_ease=10(auth-free),attack_surface=7,business_value=7(agri_geometry_PII),tech_exposure=6,freshness=8
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 65
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog liveness 200 re-confirmed this round.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; /SelfRegister shell 200 re-confirmed this round; SharingModel typically on.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff fields vs own record.
+impact: cross-account order/PII/payment access — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming.suedzuckergroup.com/mdp-api/v3/api
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim by client; /fields gating 400 re-confirmed this round.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- [PARKED] MyDataPlant outline.py numeric user_id/field_id IDOR [50]: gate_ease 10 and sole auth-free surface, but >100 probe combos all return 200+empty SVG (0-byte) — no valid ID space known, impact unconfirmed; parked pending a valid user/field ID from owned access.
+- [FINAL] 1. plantportal partner-linking [65] 2. shop OrderSummary [62] 3. MyDataPlant X-Selected-Partner-Link-Id [58]. All survivors AUTH_HELPED-only; no passive escalation path exists.
+
+STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: Complete owned-account registration at shop.suedzucker.com/SelfRegister (public 200, re-confirmed this round) → place test order → IDOR-test GET /OrderSummary/{mutated 15/18-char SFDC id} vs own record, diff pricing/PII/payment fields. Parallel: open owned Entra B2C account at szgrmb2cprod.ciamlogin.com to supply the two link-ids required by plantportal evidence_needed.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness 200/200/400 re-confirmed 21:2x UTC; gating invariant unchanged; sixth NO_DELTA — outcomes align with "passive phase terminal".
+- [LEARN] REJECTED MISCONFIG @ (none new): prior rejections stand (Simplifier 503, Drupal hardening, config exposure, gating tests).
+
+STEP 7 — RISK
+- [RISK] suedzucker: 45 — 3 read-only GETs this round; no mutations, no live customer data touched, ~1 rps; all three IDOR leads remain behind owned accounts; risk flat on inactivity.
