@@ -156,3 +156,12 @@ reasoning: No public GitHub repos exist for Südzucker AG or any known subsidiar
 impact: N/A
 verify_steps: N/A — no repos to audit
 TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
+## REPOSCAN 2026-09-10 05:59:55 UTC
+[HYP] (none)
+class: N/A
+asset: N/A — no candidate repos
+confidence: 0
+reasoning: No public GitHub repos exist for Südzucker AG or any known subsidiary. cands.txt reads "no org candidates". scope.yml github_orgs is "none-configured". GitHub API confirmed: org:suedzucker → 404, org:suedzucker-hunt → 0 results, search/users?q=suedzucker+type:org → 0 results. 50+ historical reposcan runs (2026-09-03 through 2026-09-10) consistently report no public org.
+impact: N/A
+verify_steps: N/A — no repos to audit
+TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
