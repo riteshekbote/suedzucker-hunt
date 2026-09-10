@@ -1,4 +1,4 @@
-## 2026-09-09 23:31:49 UTC [target] (model bigpickle)
+## 2026-09-10 01:26:23 UTC [target] (model bigpickle)
 [PRIO] shop.suedzucker.com,7.5,business_value:commerce+payment+PII,gate_ease:5(SelfRegister live 200),freshness:0
 [PRIO] plantportal.suedzuckergroup.com,7.0,business_value:cross-partner+agri+contracts,gate_ease:5(B2C+Entra B2C),freshness:0
 [PRIO] smartfarming.suedzuckergroup.com/mdp-api/v3/api,6.5,attack_surface:574+endpoints,gate_ease:4(no public signup),freshness:0
@@ -31,7 +31,7 @@ impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
 [PARKED] smartfarming X-Selected-Partner-Link-Id [58]: lowest gate_ease (no public signup); requires two owned link-ids AND owned JWT; revisit only after plantportal/shop owned access secured.
 [FINAL] 1. plantportal partner-linking [65] 2. shop OrderSummary [62] 3. MyDataPlant X-Selected-Partner-Link-Id [58]. All AUTH_HELPED only — no passive escalation path exists.
-[NEXT] HUMAN: Complete owned-account registration at shop.suedzucker.com/SelfRegister (public 200), receive order-confirmation ID, then IDOR-test GET /OrderSummary/{mutated 15/18-char SFDC id} against own record and diff fields (pricing/PII/payment).
+[NEXT] HUMAN: Complete owned-account registration at shop.suedzucker.com/SelfRegister (public 200), receive order-confirmation ID, then IDOR-test GET /OrderSummary/{mutated 15/18-char SFDC id} against own record and diff fields (pricing/PII/payment). Fastest path to owned access; highest single-asset business impact. Parallel track: open owned Entra B2C account at szgrmb2cprod.ciamlogin.com to test plantportal partner-linking diffing (evidence_needed for lead 1).
 [LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
 [LEARN] REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
 [RISK] suedzucker: 45 — passive phase complete, 0 HTTP requests this round; all three IDOR leads require owned accounts; risk flat on inactivity.

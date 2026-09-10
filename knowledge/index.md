@@ -191,3 +191,13 @@
 - 2026-09-09 REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
 - 2026-09-09 ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
 - 2026-09-09 ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; fifth consecutive NO_DELTA; further re-enumeration adds noise, not leads.
+- 2026-09-10 ACCEPTED RECON @ all three AUTH_HELPED surfaces: liveness unchanged; passive phase terminal; program gated on owned-account registration.
+- 2026-09-10 REJECTED MISCONFIG @ (none new): prior rejections stand, no class reopens.
+- 2026-09-10 ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage was empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
+- 2026-09-10 REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, config exposure) stand, no class reopens.
+- 2026-09-10 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; fifth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+- 2026-09-10 REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
+- 2026-09-10 ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+- 2026-09-10 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+- 2026-09-10 ACCEPTED RECON @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- 2026-09-10 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
