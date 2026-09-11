@@ -1,4 +1,4 @@
-## 2026-09-11 06:36:57 UTC [target] (model bigpickle)
+## 2026-09-11 11:47:53 UTC [target] (model bigpickle)
 [PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
 [PRIO] shop.suedzucker.com,6.8,attack_surface=6 business_value=8 tech_exposure=7 gate_ease=5 cloud_surface=5 freshness=3
 [PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=6 freshness=3
@@ -19,7 +19,7 @@ asset: shop.suedzucker.com
 confidence: 62
 reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister shell 200 since 09-07; SharingModel typically on.
 evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
-verify_steps: AUTH_HELPED — SelfRegister -> place order -> GET /OrderSummary/{mutated id}, diff fields vs own record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff fields vs own record.
 impact: cross-account order/PII/payment access — HIGH
 testability: AUTH_HELPED
 [HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
@@ -31,6 +31,10 @@ evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link
 verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
+[FINAL] plantportal horizontal partner access — 65
+[FINAL] shop OrderSummary IDOR — 62
+[FINAL] MyDataPlant cross-tenant BOLA — 58
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then test OrderSummary horizontal access. This is the lowest-friction AUTH_HELPED entry point (no existing account needed). If SelfRegister is live, it unlocks two hypotheses (shop OrderSummary +, with a test email for smartfarming credential creation, the X-Selected-Partner-Link-Id BOLA).
 [LEARN] ACCEPTED RECON @ suedzucker inventory: 2026-09-08 23:24 triage was empty (no leads); fifth consecutive NO_DELTA on all 11 assets. Passive phase terminal — no repeat enumeration; program gated entirely on owned-account registration.
 [LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, config exposure) stand, no class reopens.
 [LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; fifth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
