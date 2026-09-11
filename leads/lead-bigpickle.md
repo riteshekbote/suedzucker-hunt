@@ -2837,3 +2837,4 @@ evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link
 verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
+## 2026-09-11 01:26:34 UTC [target] (model bigpickle)
