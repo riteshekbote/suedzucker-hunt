@@ -1,4 +1,4 @@
-## 2026-09-11 15:45:28 UTC [target] (model bigpickle)
+## 2026-09-11 18:57:34 UTC [target] (model bigpickle)
 [PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
 [PRIO] shop.suedzucker.com,6.8,attack_surface=6 business_value=8 tech_exposure=7 gate_ease=5 cloud_surface=5 freshness=3
 [PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=6 freshness=3
@@ -30,10 +30,7 @@ evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link
 verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
-[FINAL] plantportal horizontal partner access — 65
-[FINAL] shop OrderSummary IDOR — 62
-[FINAL] MyDataPlant cross-tenant BOLA — 58
-[NEXT] HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete the flow, place one order, then diff GET /OrderSummary/{recordId} against a mutated foreign id. Unlocks shop IDOR directly and yields a test credential/email for MyDataPlant /tokens toward the link-id BOLA.
+[NEXT] HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then diff GET /OrderSummary/{recordId} against a mutated foreign id. This unlocks shop IDOR directly and yields a test credential/email for MyDataPlant /tokens toward the link-id BOLA.
 [LEARN] ACCEPTED RECON @ suedzucker inventory: sixth consecutive NO_DELTA — passive surface frozen since 09-07; re-running identical liveness probes (plantportal catalog / smartfarming /fields / shop SelfRegister) adds noise, not leads; prior determinations stand.
 [LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
 [RISK] suedzucker: 45 — passive phase exhausted, all three HIGH-class hypotheses gated on owned-account registration; risk flat on inactivity. No finding-class has advanced since 09-07; real progress requires the HUMAN registration action, not further probing.
