@@ -260,3 +260,6 @@ www.suedzucker.de
 - CHANGED No inventory, host, or tech changes since 2026-09-12 11:15 lead; triage run-2026-09-12-12-37 confirmed zero leads; seventh consecutive NO_DELTA otherwise. Passive phase remains terminal.
 
 ## 2026-09-12 17:17:24 UTC
+
+## 2026-09-12 19:27:47 UTC
+- CHANGED shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 [{"message":"The Chatter Connect API is not enabled for this organization or user type","errorCode":"API_DISABLED_FOR_ORG"}] — SFDC 

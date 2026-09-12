@@ -251,3 +251,7 @@
 - 2026-09-12 ACCEPTED RECON @ all three AUTH_HELPED surfaces: seventh consecutive NO_DELTA confirms liveness re-probes add noise, not leads; passive phase terminal.
 - 2026-09-12 REJECTED MISCONFIG @ (no new candidate) — none surfaced this run; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
 - 2026-09-12 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; seventh consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+- 2026-09-12 REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 INVALID_SESSION_ID — SFDC GraphQL plane closed at org level, no pre-auth introspection surface; same session gate as sobjects.
+- 2026-09-12 ACCEPTED RECON @ shop.suedzucker.com: SFDC data-plane family now fully mapped — REST (sobjects), aura, GraphQL all require valid session; GraphQL org-wide disabled; surface reduced to horizontal-authenticated-only, OrderSummary hypothesis scope unchanged.
+- 2026-09-12 ACCEPTED RECON @ triage run-2026-09-12-17-57: empty leads (no new candidates submitted) — consistent with seventh consecutive NO_DELTA; no class reopen.
+- 2026-09-12 REJECTED DEAD-ASSET @ dead-asset set: seedrecommender + dev-chatwithyourdata still HTTP 000 — stable.

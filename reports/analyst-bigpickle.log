@@ -17670,3 +17670,190 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 45 — passive phase terminal and re-confirmed this run; only new probe since last lead (shop /services/data) closed with correct 401 gating. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) remain gated on owned-account registration; no finding-class advanced since 09-07; risk flat on inactivity. The single productive path is the HUMAN registration step; further probing cannot move any confidence score.
+===== ANALYST bigpickle 2026-09-12 19:27:47 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m→ [0mRead .
+[0m
+[0m$ [0mls -lt knowledge/ leads/ triage/ | head -40
+triage/:
+total 356
+-rw-r--r-- 1 runner runner   205 Sep 12 19:24 run-2026-09-09-11-48.md
+-rw-r--r-- 1 runner runner  1604 Sep 12 19:24 run-2026-09-09-15-29.md
+-rw-r--r-- 1 runner runner   174 Sep 12 19:24 run-2026-09-09-18-49.md
+-rw-r--r-- 1 runner runner   177 Sep 12 19:24 run-2026-09-09-21-20.md
+-rw-r--r-- 1 runner runner   206 Sep 12 19:24 run-2026-09-09-23-20.md
+-rw-r--r-- 1 runner runner   208 Sep 12 19:24 run-2026-09-10-01-10.md
+-rw-r--r-- 1 runner runner   146 Sep 12 19:24 run-2026-09-10-05-59.md
+-rw-r--r-- 1 runner runner   771 Sep 12 19:24 run-2026-09-10-10-46.md
+-rw-r--r-- 1 runner runner   284 Sep 12 19:24 run-2026-09-10-14-41.md
+-rw-r--r-- 1 runner runner   225 Sep 12 19:24 run-2026-09-10-17-56.md
+-rw-r--r-- 1 runner runner   180 Sep 12 19:24 run-2026-09-10-20-15.md
+-rw-r--r-- 1 runner runner   277 Sep 12 19:24 run-2026-09-10-22-36.md
+-rw-r--r-- 1 runner runner  1501 Sep 12 19:24 run-2026-09-11-00-30.md
+-rw-r--r-- 1 runner runner   471 Sep 12 19:24 run-2026-09-11-05-09.md
+-rw-r--r-- 1 runner runner   213 Sep 12 19:24 run-2026-09-11-09-42.md
+-rw-r--r-- 1 runner runner   143 Sep 12 19:24 run-2026-09-11-13-55.md
+-rw-r--r-- 1 runner runner   217 Sep 12 19:24 run-2026-09-11-17-24.md
+-rw-r--r-- 1 runner runner 12702 Sep 12 19:24 run-2026-09-11-20-00.md
+-rw-r--r-- 1 runner runner   241 Sep 12 19:24 run-2026-09-11-22-17.md
+-rw-r--r-- 1 runner runner   153 Sep 12 19:24 run-2026-09-12-00-21.md
+-rw-r--r-- 1 runner runner  9079 Sep 12 19:24 run-2026-09-12-04-58.md
+-rw-r--r-- 1 runner runner   143 Sep 12 19:24 run-2026-09-12-08-58.md
+-rw-r--r-- 1 runner runner  1126 Sep 12 19:24 run-2026-09-12-12-37.md
+-rw-r--r-- 1 runner runner  1869 Sep 12 19:24 run-2026-09-12-15-48.md
+-rw-r--r-- 1 runner runner   251 Sep 12 19:24 run-2026-09-12-17-57.md
+-rw-r--r-- 1 runner runner   195 Sep 12 19:24 run-2026-09-05-00-07.md
+-rw-r--r-- 1 runner runner   258 Sep 12 19:24 run-2026-09-05-04-31.md
+-rw-r--r-- 1 runner runner   172 Sep 12 19:24 run-2026-09-05-08-33.md
+-rw-r--r-- 1 runner runner   174 Sep 12 19:24 run-2026-09-05-12-00.md
+-rw-r--r-- 1 runner runner   189 Sep 12 19:24 run-2026-09-05-14-46.md
+-rw-r--r-- 1 runner runner   178 Sep 12 19:24 run-2026-09-05-16-59.md
+-rw-r--r-- 1 runner runner   163 Sep 12 19:24 run-2026-09-05-18-48.md
+-rw-r--r-- 1 runner runner   210 Sep 12 19:24 run-2026-09-05-20-48.md
+-rw-r--r-- 1 runner runner   153 Sep 12 19:24 run-2026-09-05-22-26.md
+-rw-r--r-- 1 runner runner 13734 Sep 12 19:24 run-2026-09-06-00-12.md
+-rw-r--r-- 1 runner runner   259 Sep 12 19:24 run-2026-09-06-04-41.md
+-rw-r--r-- 1 runner runner 11480 Sep 12 19:24 run-2026-09-06-09-03.md
+-rw-r--r-- 1 runner runner 10620 Sep 12 19:24 run-2026-09-06-12-54.md
+[0m
+[0m$ [0mls -la knowledge/ && ls -la leads/ | head -20
+total 72
+drwxr-xr-x  2 runner runner  4096 Sep 12 19:24 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 19:24 ..
+-rw-r--r--  1 runner runner 61955 Sep 12 19:24 index.md
+total 1140
+drwxr-xr-x  2 runner runner   4096 Sep 12 19:24 .
+drwxr-xr-x 12 runner runner   4096 Sep 12 19:24 ..
+-rw-r--r--  1 runner runner 462033 Sep 12 19:24 lead-bigpickle.md
+-rw-r--r--  1 runner runner   3366 Sep 12 19:24 lead-laguna.md
+-rw-r--r--  1 runner runner   3300 Sep 12 19:24 lead-ling3.md
+-rw-r--r--  1 runner runner   3432 Sep 12 19:24 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep 12 19:24 lead-mimo.md
+-rw-r--r--  1 runner runner 664720 Sep 12 19:24 lead-nemotron3.md
+-rw-r--r--  1 runner runner  11216 Sep 12 19:24 reposcan-suedzucker.md
+[0m
+[0m→ [0mRead triage/run-2026-09-12-17-57.md
+[0m
+[0m$ [0mcat state_bigpickle.json 2>/dev/null | head -50
+{"phase": "POC", "target": "api"}
+[0m
+[0m$ [0mls -la *.md recon-notes/ reports/ 2>/dev/null | head -40
+-rw-r--r-- 1 runner runner 1852 Sep 12 19:24 README.md
+-rw-r--r-- 1 runner runner 2059 Sep 12 19:24 probe-results.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 12 19:24 .
+drwxr-xr-x 12 runner runner 4096 Sep 12 19:24 ..
+-rw-r--r--  1 runner runner  822 Sep 12 19:24 DEDICATED-DEEP.md
+
+reports/:
+total 3224
+drwxr-xr-x  2 runner runner    4096 Sep 12 19:24 .
+drwxr-xr-x 12 runner runner    4096 Sep 12 19:24 ..
+-rw-r--r--  1 runner runner 1490994 Sep 12 19:24 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   14322 Sep 12 19:24 analyst-laguna.log
+-rw-r--r--  1 runner runner   14256 Sep 12 19:24 analyst-ling3.log
+-rw-r--r--  1 runner runner   14388 Sep 12 19:24 analyst-longcat.log
+-rw-r--r--  1 runner runner 1735920 Sep 12 19:24 analyst-nemotron3.log
+-rw-r--r--  1 runner runner    5065 Sep 12 19:24 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 12 19:24 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 12 19:24 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 12 19:24 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   12773 Sep 12 19:24 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  200069 Sep 12 19:24 hypotheses.md
+-rw-r--r--  1 runner runner    2192 Sep 12 19:24 valid-bugs.md
+[0m
+[0m$ [0mgrep -rn "graphql" knowledge/index.md | head -10
+(no output)
+[0m
+[0m→ [0mRead probe-results.md
+[0m
+[0m$ [0mgrep -c "graphql\|GraphQL" reports/analyst-bigpickle.log
+41
+[0m
+[0m$ [0mgrep -n "graphql" reports/analyst-bigpickle.log | head -20
+grep: reports/analyst-bigpickle.log: binary file matches
+[0m
+[0m$ [0mgrep -n "services/data" reports/analyst-bigpickle.log | tail -10
+grep: reports/analyst-bigpickle.log: binary file matches
+[0m
+[0m$ [0mgrep -ao "graphql" reports/analyst-bigpickle.log | wc -l; grep -ai "shop.suedzucker.com/services/data/v[0-9]" reports/analyst-bigpickle.log | tail -5
+20
+[0m$ [0mecho "===== /services/data/ ====="; curl -sk -m 20 "https://shop.suedzucker.com/services/data/"; echo; echo "===== /services/data/v62.0/sobjects (with header) ====="; curl -sk -m 20 -H "Authorization: Bearer invalid" "https://shop.suedzucker.com/services/data/v62.0/sobjects" | head -c 400; echo; echo "===== /sfsites/aura ====="; curl -sk -m 20 "https://shop.suedzucker.com/sfsites/aura" | head -c 600
+[0m
+[0m$ [0mgrep -n "graphql" knowledge/index.md; echo "---"; grep -n "GraphQL" reports/analyst-bigpickle.log | head -5
+---
+grep: reports/analyst-bigpickle.log: binary file matches
+[0m
+GraphQL is the one unprobed member of the SFDC data-plane family (09-12 only closed REST sobjects/aura). One read-only probe to close it.
+[0m$ [0mecho "== /services/data/v62.0/graphql (no auth) =="; curl -sk -m 20 -o /tmp/g1.txt -w "%{http_code}\n" "https://shop.suedzucker.com/services/data/v62.0/graphql"; head -c 300 /tmp/g1.txt; echo; echo "== /services/data/v62.0/graphql (invalid bearer) =="; curl -sk -m 20 -o /tmp/g2.txt -w "%{http_code}\n" -H "Authorization: Bearer invalid" "https://shop.suedzucker.com/services/data/v62.0/graphql"; head -c 300 /tmp/g2.txt
+== /services/data/v62.0/graphql (no auth) ==
+403
+[{"message":"The Chatter Connect API is not enabled for this organization or user type.","errorCode":"API_DISABLED_FOR_ORG"}]
+== /services/data/v62.0/graphql (invalid bearer) ==
+401
+[{"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"}]
+[0m
+403 `API_DISABLED_FOR_ORG` (GraphQL/Chatter-Connect disabled) and 401 on invalid Bearer — GraphQL surface closed at org level.
+
+```
+STEP 1 — DELTA
+[CHANGED] shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 [{"message":"The Chatter Connect API is not enabled for this organization or user type","errorCode":"API_DISABLED_FOR_ORG"}] — SFDC GraphQL plane disabled at org level, no introspection surface (contrast: sobjects 401 INVALID_SESSION_ID); invalid Bearer → 401 INVALID_SESSION_ID, same session gate.
+NO_DELTA — no new hosts/tech; all 11 assets unchanged; three AUTH_HELPED surfaces liveness invariant frozen since 09-07 (seventh consecutive); dead-asset set (seedrecommender, dev-chatwithyourdata, app.agriconetwork.com, dev.siseth.com) stable.
+
+STEP 2 — PRIORITIZE
+[PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
+[PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=7 gate_ease=4 cloud_surface=6 freshness=3
+[PRIO] shop.suedzucker.com,6.0,attack_surface=6 business_value=8 tech_exposure=5 gate_ease=5 cloud_surface=5 freshness=3
+  — shop tech_exposure 7→5: GraphQL now confirmed org-disabled, REST+aura+graphql data plane fully mapped and session-gated; score drops below smartfarming on exposure, not on business value.
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07; no new passive angle this run; 09-12-17:57 triage empty (no leads).
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 closed REST (sobjects 401) and now GraphQL (403 API_DISABLED_FOR_ORG) pre-auth planes — horizontal-authenticated case remains sole open question, unchanged.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07; outline.py re-confirmed empty-SVG (impact unconfirmed, sub-top-3).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] (none) — all three ≥58, verify_steps concrete, none REJECTED-class; outline.py IDOR stays sub-top-3 (impact unconfirmed after 100+ empty-SVG combos).
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (09-12 REST+GraphQL closures only rule out pre-auth plane, not horizontal case)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, capture own OrderSummary recordId, then read-only diff GET /OrderSummary/{mutated id} (SFDC REST Bearer, 1 rps). Reuse same credential/email for MyDataPlant POST /tokens to test link-id BOLA with two own link-ids. No further passive PROBE warranted: this run closed the last unmapped SFDC family member (GraphQL) with 403 API_DISABLED_FOR_ORG, the three liveness surfaces are a seventh consecutive no-op, and remaining delta is profile-level behind session — unreachable by GET/HEAD/OPTIONS.
+
+STEP 6 — LEARNING
+[LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 INVALID_SESSION_ID — SFDC GraphQL plane closed at org level, no pre-auth introspection surface; same session gate as sobjects.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: SFDC data-plane family now fully mapped — REST (sobjects), aura, GraphQL all require valid session; GraphQL org-wide disabled; surface reduced to horizontal-authenticated-only, OrderSummary hypothesis scope unchanged.
+[LEARN] ACCEPTED RECON @ triage run-2026-09-12-17-57: empty leads (no new candidates submitted) — consistent with seventh consecutive NO_DELTA; no class reopen.
+[LEARN] REJECTED DEAD-ASSET @ dead-asset set: seedrecommender + dev-chatwithyourdata still HTTP 000 — stable.
+
+STEP 7 — RISK
+[RISK] suedzucker: 45 — passive phase terminal; the only new probe this run (SFDC GraphQL) closed with org-level disable (403 API_DISABLED_FOR_ORG), no new lead. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) remain gated on owned-account registration; no finding-class advanced since 09-07 — now 6 consecutive days — risk flat on inactivity. The single productive path is the HUMAN registration step; further probing cannot move any confidence score.
+```
