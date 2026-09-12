@@ -16925,3 +16925,41 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 45 — passive phase exhausted; all three HIGH-class hypotheses gated on owned-account registration; no finding-class advanced since 09-07, risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.
+===== ANALYST bigpickle 2026-09-12 11:15:13 UTC =====
+[0m
+> build · big-pickle
+[0m
+[PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
+[PRIO] shop.suedzucker.com,6.8,attack_surface=6 business_value=8 tech_exposure=7 gate_ease=5 cloud_surface=5 freshness=3
+[PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=6 freshness=3
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07.
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+[LEARN] ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, then diff GET /OrderSummary/{recordId} vs a mutated foreign id. Same credential/email feeds MyDataPlant POST /tokens toward the link-id BOLA. No new passive PROBE is warranted: liveness probes are the seventh consecutive no-op and explicitly disqualified.
+[RISK] suedzucker: 45 — passive phase exhausted; all three HIGH-class hypotheses gated on owned-account registration; no finding-class advanced since 09-07, risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.
