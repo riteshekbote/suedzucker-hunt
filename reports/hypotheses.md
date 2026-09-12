@@ -1174,3 +1174,27 @@
 - LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
 - LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
 - LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+
+## RANKED HYPOTHESES 2026-09-12 01:33:52 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_bigpickle.txt)
+- [65] portal.mydataplant.com/api/v3: MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, then diff GET /OrderSu
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then te
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: REJECTED MISCONFIG @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404) — no further action.
+- LEARN: REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata ev
+- LEARN: REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distin
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
