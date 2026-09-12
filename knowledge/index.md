@@ -255,3 +255,4 @@
 - 2026-09-12 ACCEPTED RECON @ shop.suedzucker.com: SFDC data-plane family now fully mapped — REST (sobjects), aura, GraphQL all require valid session; GraphQL org-wide disabled; surface reduced to horizontal-authenticated-only, OrderSummary hypothesis scope unchanged.
 - 2026-09-12 ACCEPTED RECON @ triage run-2026-09-12-17-57: empty leads (no new candidates submitted) — consistent with seventh consecutive NO_DELTA; no class reopen.
 - 2026-09-12 REJECTED DEAD-ASSET @ dead-asset set: seedrecommender + dev-chatwithyourdata still HTTP 000 — stable.
+- 2026-09-12 REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 INVALID_SESSION_ID — SFDC GraphQL plane closed at org level, no pre-auth introspection surface.

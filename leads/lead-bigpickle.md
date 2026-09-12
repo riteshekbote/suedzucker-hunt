@@ -3366,3 +3366,45 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ triage run-2026-09-12-17-57: empty leads (no new candidates submitted) — consistent with seventh consecutive NO_DELTA; no class reopen.
 [LEARN] REJECTED DEAD-ASSET @ dead-asset set: seedrecommender + dev-chatwithyourdata still HTTP 000 — stable.
 [RISK] suedzucker: 45 — passive phase terminal; the only new probe this run (SFDC GraphQL) closed with org-level disable (403 API_DISABLED_FOR_ORG), no new lead. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) remain gated on owned-account registration; no finding-class advanced since 09-07 — now 6 consecutive days — risk flat on inactivity. The single productive path is the HUMAN registration step; further probing cannot move any confidence score.
+## 2026-09-12 21:37:23 UTC [target] (model bigpickle)
+[CHANGED] shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 [{"message":"The Chatter Connect API is not enabled for this organization or user type","errorCode":"API_DISABLED_FOR_ORG"}] — SFDC GraphQL plane disabled at org level, no introspection surface (contrast: sobjects 401 INVALID_SESSION_ID); invalid Bearer → 401 INVALID_SESSION_ID, same session gate.
+[PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
+[PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=7 gate_ease=4 cloud_surface=6 freshness=3
+[PRIO] shop.suedzucker.com,6.0,attack_surface=6 business_value=8 tech_exposure=5 gate_ease=5 cloud_surface=5 freshness=3
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07; no new passive angle this run; 09-12-17:57 triage empty (no leads).
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 closed REST (sobjects 401) and now GraphQL (403 API_DISABLED_FOR_ORG) pre-auth planes — horizontal-authenticated case remains sole open question, unchanged.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07; outline.py re-confirmed empty-SVG (impact unconfirmed, sub-top-3).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] (none) — all three ≥58, verify_steps concrete, none REJECTED-class; outline.py IDOR stays sub-top-3 (impact unconfirmed after 100+ empty-SVG combos).
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (09-12 REST+GraphQL closures only rule out pre-auth plane, not horizontal case)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, capture own OrderSummary recordId, then read-only diff GET /OrderSummary/{mutated id} (SFDC REST Bearer, 1 rps). Reuse same credential/email for MyDataPlant POST /tokens to test link-id BOLA with two own link-ids. No further passive PROBE warranted: this run closed the last unmapped SFDC family member (GraphQL) with 403 API_DISABLED_FOR_ORG, the three liveness surfaces are a seventh consecutive no-op, and remaining delta is profile-level behind session — unreachable by GET/HEAD/OPTIONS.
+[LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 INVALID_SESSION_ID — SFDC GraphQL plane closed at org level, no pre-auth introspection surface; same session gate as sobjects.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: SFDC data-plane family now fully mapped — REST (sobjects), aura, GraphQL all require valid session; GraphQL org-wide disabled; surface reduced to horizontal-authenticated-only, OrderSummary hypothesis scope unchanged.
+[LEARN] ACCEPTED RECON @ triage run-2026-09-12-17-57: empty leads (no new candidates submitted) — consistent with seventh consecutive NO_DELTA; no class reopen.
+[LEARN] REJECTED DEAD-ASSET @ dead-asset set: seedrecommender + dev-chatwithyourdata still HTTP 000 — stable.
+[RISK] suedzucker: 45 — passive phase terminal; the only new probe this run (SFDC GraphQL) closed with org-level disable (403 API_DISABLED_FOR_ORG), no new lead. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) remain gated on owned-account registration; no finding-class advanced since 09-07 — now 6 consecutive days — risk flat on inactivity. The single productive path is the HUMAN registration step; further probing cannot move any confidence score.
