@@ -25,3 +25,10 @@
 - 2 lead(s) marked VALID at 2026-09-12 04:58:30 UTC
   - | Q4 Provable | **NO** — requires authenticated session + order placement to capture valid recordId, then test horizontal access |
   - **VALID leads: 0** — All three HOLD leads require AUTH_HELPED testing (own test accounts) to produce a reportable PoC. No lead has sufficient passive proof to pass all 7 gates today.
+
+- 5 lead(s) marked VALID at 2026-09-12 22:04:33 UTC
+  - **Verdict: VALID**
+  - **Verdict: VALID**
+  - | Q4 Provable non-invasively? | No — 100+ probes all returned 200+empty SVG. Cannot confirm non-empty data return without own test account with valid field geometry. | NO (impact unconfirmed) |
+  - | 1 | Plant Portal partner-linking BOLA | **VALID** | 8.6 |
+  - | 2 | MyDataPlant X-Selected-Partner-Link-Id BOLA | **VALID** | 8.6 |
