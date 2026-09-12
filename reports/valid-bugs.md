@@ -21,3 +21,7 @@
   - | Q3 Impact | **PARTIAL** — Field boundary/location geometry is agri location PII. 200 responses with empty SVG body means either test IDs have no geometry or auth failure is soft-fail. Impact depends
   - | MyDataPlant BOLA (X-Selected-Partner-Link-Id) | **VALID** | 8.6 | IDOR/BOLA |
   - | Plant Portal BOLA (switchToPartnerNumber) | **VALID** | 8.1 | IDOR/BOLA |
+
+- 2 lead(s) marked VALID at 2026-09-12 04:58:30 UTC
+  - | Q4 Provable | **NO** — requires authenticated session + order placement to capture valid recordId, then test horizontal access |
+  - **VALID leads: 0** — All three HOLD leads require AUTH_HELPED testing (own test accounts) to produce a reportable PoC. No lead has sufficient passive proof to pass all 7 gates today.
