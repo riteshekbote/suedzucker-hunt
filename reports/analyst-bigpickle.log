@@ -16963,3 +16963,652 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
 [NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, then diff GET /OrderSummary/{recordId} vs a mutated foreign id. Same credential/email feeds MyDataPlant POST /tokens toward the link-id BOLA. No new passive PROBE is warranted: liveness probes are the seventh consecutive no-op and explicitly disqualified.
 [RISK] suedzucker: 45 — passive phase exhausted; all three HIGH-class hypotheses gated on owned-account registration; no finding-class advanced since 09-07, risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.
+===== ANALYST bigpickle 2026-09-12 14:14:08 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la; echo "---"; ls -la *.txt *.md 2>/dev/null | head -50
+total 276
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:11 .
+drwxr-xr-x  3 runner runner  4096 Sep 12 14:11 ..
+drwxr-xr-x  7 runner runner  4096 Sep 12 14:11 .git
+drwxr-xr-x  3 runner runner  4096 Sep 12 14:11 .github
+-rw-r--r--  1 runner runner  1852 Sep 12 14:11 README.md
+-rw-r--r--  1 runner runner    32 Sep 12 14:11 analyst-out.txt
+-rw-r--r--  1 runner runner 94331 Sep 12 14:11 analyst-prompt.txt
+-rw-r--r--  1 runner runner 90455 Sep 12 14:11 ctx.txt
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 inventory
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 knowledge
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 leads
+-rw-r--r--  1 runner runner  2001 Sep 12 14:11 probe-results.md
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 recon-notes
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 reports
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 reposcan-raw
+-rw-r--r--  1 runner runner  3289 Sep 12 14:11 scope.yml
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 scripts
+-rw-r--r--  1 runner runner    33 Sep 12 14:11 state_bigpickle.json
+-rw-r--r--  1 runner runner    33 Sep 12 14:11 state_laguna.json
+-rw-r--r--  1 runner runner    33 Sep 12 14:11 state_ling3.json
+-rw-r--r--  1 runner runner    33 Sep 12 14:11 state_longcat.json
+-rw-r--r--  1 runner runner    33 Sep 12 14:11 state_mimo.json
+-rw-r--r--  1 runner runner    33 Sep 12 14:11 state_nemotron3.json
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 triage
+---
+-rw-r--r-- 1 runner runner  1852 Sep 12 14:11 README.md
+-rw-r--r-- 1 runner runner    32 Sep 12 14:11 analyst-out.txt
+-rw-r--r-- 1 runner runner 94331 Sep 12 14:11 analyst-prompt.txt
+-rw-r--r-- 1 runner runner 90455 Sep 12 14:11 ctx.txt
+-rw-r--r-- 1 runner runner  2001 Sep 12 14:11 probe-results.md
+[0m
+[0m$ [0mgit log --oneline -5 2>/dev/null; echo "---"; git diff --stat HEAD~1 2>/dev/null | tail -20
+840f493 triage 2026-09-12-12-37
+---
+[0m
+[0m$ [0mgit show --stat HEAD --format="%h %s %ci" | head -30; echo "==="; ls -la triage leads knowledge recon-notes reports scripts | head -60
+840f493 triage 2026-09-12-12-37 2026-09-12 12:37:51 +0000
+
+ .github/workflows/hunt.yml        |   250 +
+ .github/workflows/reposcan.yml    |   109 +
+ .github/workflows/sync-issues.yml |    44 +
+ .github/workflows/triage.yml      |   138 +
+ README.md                         |    34 +
+ inventory/suedzucker.md           |   256 +
+ knowledge/index.md                |   246 +
+ leads/lead-bigpickle.md           |  3187 +++++++
+ leads/lead-laguna.md              |    64 +
+ leads/lead-ling3.md               |    64 +
+ leads/lead-longcat.md             |    64 +
+ leads/lead-mimo.md                |     1 +
+ leads/lead-nemotron3.md           |  3166 +++++++
+ leads/reposcan-suedzucker.md      |   206 +
+ probe-results.md                  |   207 +
+ recon-notes/DEDICATED-DEEP.md     |    21 +
+ reports/analyst-bigpickle.log     | 16965 ++++++++++++++++++++++++++++++++++++
+ reports/analyst-laguna.log        |   512 ++
+ reports/analyst-ling3.log         |   512 ++
+ reports/analyst-longcat.log       |   512 ++
+ reports/analyst-nemotron3.log     |  9640 ++++++++++++++++++++
+ reports/hypotheses-bigpickle.txt  |    35 +
+ reports/hypotheses-laguna.txt     |     1 +
+ reports/hypotheses-ling3.txt      |     1 +
+ reports/hypotheses-longcat.txt    |     1 +
+ reports/hypotheses-nemotron3.txt  |    58 +
+ reports/hypotheses.md             |  1251 +++
+ reports/valid-bugs.md             |    27 +
+===
+knowledge:
+total 68
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:11 ..
+-rw-r--r--  1 runner runner 60279 Sep 12 14:11 index.md
+
+leads:
+total 1096
+drwxr-xr-x  2 runner runner   4096 Sep 12 14:11 .
+drwxr-xr-x 12 runner runner   4096 Sep 12 14:11 ..
+-rw-r--r--  1 runner runner 439731 Sep 12 14:11 lead-bigpickle.md
+-rw-r--r--  1 runner runner   3264 Sep 12 14:11 lead-laguna.md
+-rw-r--r--  1 runner runner   3200 Sep 12 14:11 lead-ling3.md
+-rw-r--r--  1 runner runner   3328 Sep 12 14:11 lead-longcat.md
+-rw-r--r--  1 runner runner     18 Sep 12 14:11 lead-mimo.md
+-rw-r--r--  1 runner runner 639923 Sep 12 14:11 lead-nemotron3.md
+-rw-r--r--  1 runner runner  10998 Sep 12 14:11 reposcan-suedzucker.md
+
+recon-notes:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 12 14:11 .
+drwxr-xr-x 12 runner runner 4096 Sep 12 14:11 ..
+-rw-r--r--  1 runner runner  822 Sep 12 14:11 DEDICATED-DEEP.md
+
+reports:
+total 3124
+drwxr-xr-x  2 runner runner    4096 Sep 12 14:11 .
+drwxr-xr-x 12 runner runner    4096 Sep 12 14:11 ..
+-rw-r--r--  1 runner runner 1437658 Sep 12 14:11 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   13888 Sep 12 14:11 analyst-laguna.log
+-rw-r--r--  1 runner runner   13824 Sep 12 14:11 analyst-ling3.log
+-rw-r--r--  1 runner runner   13952 Sep 12 14:11 analyst-longcat.log
+-rw-r--r--  1 runner runner 1710460 Sep 12 14:11 analyst-nemotron3.log
+-rw-r--r--  1 runner runner    3490 Sep 12 14:11 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 12 14:11 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 12 14:11 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 12 14:11 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   12024 Sep 12 14:11 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  188037 Sep 12 14:11 hypotheses.md
+-rw-r--r--  1 runner runner    2192 Sep 12 14:11 valid-bugs.md
+
+scripts:
+total 28
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:11 ..
+-rw-r--r--  1 runner runner 16987 Sep 12 14:11 sync-issues.py
+
+triage:
+total 356
+drwxr-xr-x  2 runner runner  4096 Sep 12 14:11 .
+drwxr-xr-x 12 runner runner  4096 Sep 12 14:11 ..
+-rw-r--r--  1 runner runner     0 Sep 12 14:11 .gitkeep
+-rw-r--r--  1 runner runner   143 Sep 12 14:11 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner   701 Sep 12 14:11 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner   201 Sep 12 14:11 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner   159 Sep 12 14:11 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner   152 Sep 12 14:11 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner   182 Sep 12 14:11 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner   245 Sep 12 14:11 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner   276 Sep 12 14:11 run-2026-09-03-21-28.md
+[0m
+[0m$ [0mgit show --stat HEAD~1 --format="%h %s %ci" 2>/dev/null | head -30; echo "==DIFF 2=="; git log --oneline -12
+==DIFF 2==
+840f493 triage 2026-09-12-12-37
+[0m
+[0m$ [0mls -t triage | head -20; echo "===LATEST TRIAGE==="; cat "$(ls -t triage/*.md | head -1)" 2>/dev/null
+run-2026-09-11-17-24.md
+run-2026-09-11-20-00.md
+run-2026-09-11-22-17.md
+run-2026-09-12-00-21.md
+run-2026-09-12-04-58.md
+run-2026-09-12-08-58.md
+run-2026-09-12-12-37.md
+run-2026-09-07-12-35.md
+run-2026-09-07-17-53.md
+run-2026-09-07-20-53.md
+run-2026-09-07-23-09.md
+run-2026-09-08-01-13.md
+run-2026-09-08-05-59.md
+run-2026-09-08-10-36.md
+run-2026-09-08-14-45.md
+run-2026-09-08-18-10.md
+run-2026-09-08-21-10.md
+run-2026-09-08-23-24.md
+run-2026-09-09-01-28.md
+run-2026-09-09-06-37.md
+===LATEST TRIAGE===
+
+===== TRIAGE 2026-09-11 17:24:40 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads were provided in the LEADS section. Please paste the hunt bot probe results and I'll validate each against the 7-Question Gate.
+[0m
+[0m$ [0mcat reports/valid-bugs.md; echo "===PROBE==="; cat probe-results.md
+# Validated findings (running count 0)
+
+- 2 lead(s) marked VALID at 2026-09-06 00:12:08 UTC
+  - | Q3 Impact | **YES** — If valid user_id+field_id pairs yield SVG geometry, cross-tenant field boundary/location disclosure (agri location PII). |
+  - | Q7 Reasonable triager | **NO** — Cannot demonstrate impact without valid IDs. Architecture is IDOR-prone but proof incomplete. |
+
+- 1 lead(s) marked VALID at 2026-09-06 09:03:45 UTC
+  - | Q4 Provable | ❌ | Gateway returns 400 (Missing header) or 403 (unauthed) — this is *correct* behavior. Whether a valid JWT for partner A can use X-Selected-Partner-Link-Id for partner B is untested.
+
+- 3 lead(s) marked VALID at 2026-09-06 15:53:51 UTC
+  - | Q3 Real impact? | **YES (if valid IDs exist)** — cross-tenant field boundary/location geometry disclosure (agri location PII) — MEDIUM/HIGH |
+  - | Q4 Provable non-invasively? | **NO** — all tested combos returned empty SVG; cannot confirm data disclosure without valid field IDs from own account |
+  - | outline.py geometry IDOR | **HOLD** | Confirm scope (Kleffmann vendor?) → own account → test with valid field IDs |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:09:21 UTC
+  - | Q4 Provable | NO | Requires own JWT + valid X-Selected-Partner-Link-Id header + cross-tenant header mutation; cannot prove without test credentials |
+
+- 5 lead(s) marked VALID at 2026-09-11 20:00:59 UTC
+  - **Verdict: VALID**
+  - **Verdict: VALID**
+  - | Q3 Impact | **PARTIAL** — Field boundary/location geometry is agri location PII. 200 responses with empty SVG body means either test IDs have no geometry or auth failure is soft-fail. Impact depends
+  - | MyDataPlant BOLA (X-Selected-Partner-Link-Id) | **VALID** | 8.6 | IDOR/BOLA |
+  - | Plant Portal BOLA (switchToPartnerNumber) | **VALID** | 8.1 | IDOR/BOLA |
+
+- 2 lead(s) marked VALID at 2026-09-12 04:58:30 UTC
+  - | Q4 Provable | **NO** — requires authenticated session + order placement to capture valid recordId, then test horizontal access |
+  - **VALID leads: 0** — All three HOLD leads require AUTH_HELPED testing (own test accounts) to produce a reportable PoC. No lead has sufficient passive proof to pass all 7 gates today.
+===PROBE===
+
+## 2026-09-02 21:40:00 UTC
+
+
+## 2026-09-02 23:35:55 UTC
+
+
+## 2026-09-03 01:37:08 UTC
+
+
+## 2026-09-03 06:28:47 UTC
+
+
+## 2026-09-03 11:41:50 UTC
+
+
+## 2026-09-03 16:00:35 UTC
+
+
+## 2026-09-03 19:14:36 UTC
+
+
+## 2026-09-03 21:51:49 UTC
+
+
+## 2026-09-03 23:56:35 UTC
+
+
+## 2026-09-04 02:52:37 UTC
+
+
+## 2026-09-04 07:31:16 UTC
+
+
+## 2026-09-04 12:23:16 UTC
+
+
+## 2026-09-04 16:46:07 UTC
+
+
+## 2026-09-04 19:18:44 UTC
+
+
+## 2026-09-04 21:36:21 UTC
+
+
+## 2026-09-04 23:22:47 UTC
+
+
+## 2026-09-05 01:08:45 UTC
+
+
+## 2026-09-05 05:51:00 UTC
+
+
+## 2026-09-05 09:54:41 UTC
+
+
+## 2026-09-05 13:15:34 UTC
+
+
+## 2026-09-05 16:21:14 UTC
+
+
+## 2026-09-05 18:29:35 UTC
+
+
+## 2026-09-05 20:47:37 UTC
+
+
+## 2026-09-05 22:39:50 UTC
+
+
+## 2026-09-06 00:14:25 UTC
+
+
+## 2026-09-06 04:51:16 UTC
+
+
+## 2026-09-06 09:18:46 UTC
+
+
+## 2026-09-06 13:08:42 UTC
+
+
+## 2026-09-06 16:17:42 UTC
+
+
+## 2026-09-06 18:17:45 UTC
+
+
+## 2026-09-06 20:31:31 UTC
+
+
+## 2026-09-06 22:24:45 UTC
+
+
+## 2026-09-07 00:05:49 UTC
+
+
+## 2026-09-07 04:53:24 UTC
+
+
+## 2026-09-07 09:58:10 UTC
+
+
+## 2026-09-07 15:37:20 UTC
+
+
+## 2026-09-07 19:30:25 UTC
+
+
+## 2026-09-07 22:18:09 UTC
+
+
+## 2026-09-08 00:30:39 UTC
+
+
+## 2026-09-08 05:20:34 UTC
+
+
+## 2026-09-08 09:49:56 UTC
+
+
+## 2026-09-08 14:23:25 UTC
+
+
+## 2026-09-08 18:06:10 UTC
+
+
+## 2026-09-08 20:50:47 UTC
+
+
+## 2026-09-08 23:09:41 UTC
+
+
+## 2026-09-09 01:19:06 UTC
+
+
+## 2026-09-09 06:08:09 UTC
+
+
+## 2026-09-09 11:31:53 UTC
+
+
+## 2026-09-09 15:24:32 UTC
+
+
+## 2026-09-09 18:42:18 UTC
+
+
+## 2026-09-09 21:30:13 UTC
+
+
+## 2026-09-09 23:32:53 UTC
+
+
+## 2026-09-10 01:29:35 UTC
+
+
+## 2026-09-10 06:43:28 UTC
+
+
+## 2026-09-10 11:53:52 UTC
+
+
+## 2026-09-10 15:47:53 UTC
+
+
+## 2026-09-10 18:56:14 UTC
+
+
+## 2026-09-10 21:23:12 UTC
+
+
+## 2026-09-10 23:24:34 UTC
+
+
+## 2026-09-11 01:28:09 UTC
+
+
+## 2026-09-11 06:40:00 UTC
+
+
+## 2026-09-11 11:48:23 UTC
+
+
+## 2026-09-11 15:53:35 UTC
+
+
+## 2026-09-11 19:00:55 UTC
+
+
+## 2026-09-11 21:42:39 UTC
+
+
+## 2026-09-11 23:32:58 UTC
+
+
+## 2026-09-12 01:33:52 UTC
+
+
+## 2026-09-12 06:29:20 UTC
+
+
+## 2026-09-12 11:15:13 UTC
+[0m
+[0m$ [0mtail -30 knowledge/index.md; echo "===HYP MD TAIL==="; tail -40 reports/hypotheses.md
+- 2026-09-11 REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- 2026-09-11 REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).
+- 2026-09-11 REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.
+- 2026-09-11 REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evidence.
+- 2026-09-11 REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+- 2026-09-11 REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- 2026-09-11 ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kleffmann vendor — sole auth-free gateway-bypassing service, sibling enumeration closed (11 *.py paths 404).
+- 2026-09-11 ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure.
+- 2026-09-11 ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 400 JSON:API Missing-header — no machine-readable spec.
+- 2026-09-11 ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA), SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+- 2026-09-11 ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distinct from pac4j-gated /UserInterface surface; worth AUTH_HELPED re-test if Simplifier sessions obtainable but confidence dropped below 40 pending owned access.
+- 2026-09-12 REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+- 2026-09-12 REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
+- 2026-09-12 REJECTED MISCONFIG @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404) — no further action.
+- 2026-09-12 REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- 2026-09-12 REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).
+- 2026-09-12 REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.
+- 2026-09-12 REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evidence.
+- 2026-09-12 REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+- 2026-09-12 REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- 2026-09-12 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; sixth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+- 2026-09-12 ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kleffmann vendor — sole auth-free gateway-bypassing service, sibling enumeration closed (11 *.py paths 404).
+- 2026-09-12 ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure.
+- 2026-09-12 ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 400 JSON:API Missing-header — no machine-readable spec.
+- 2026-09-12 ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA), SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+- 2026-09-12 ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distinct from pac4j-gated /UserInterface surface; worth AUTH_HELPED re-test if Simplifier sessions obtainable but confidence dropped below 40 pending owned access.
+- 2026-09-12 ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+- 2026-09-12 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+- 2026-09-12 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- 2026-09-12 ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
+===HYP MD TAIL===
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata ev
+- LEARN: REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distin
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+
+## RANKED HYPOTHESES 2026-09-12 11:15:13 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, then diff GET /OrderSu
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then te
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+- LEARN: ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed st
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: REJECTED MISCONFIG @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404) — no further action.
+- LEARN: REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata ev
+- LEARN: REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distin
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- LEARN: ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed st
+[0m
+[0m$ [0mhead -20 triage/run-2026-09-12-12-37.md; echo "===NEMO TAIL==="; tail -60 reports/hypotheses-nemotron3.txt 2>/dev/null
+===== TRIAGE 2026-09-12 12:37:51 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+[0m✱ [0mGlob "**/scope*"[90m 1 match[0m
+[0m✱ [0mGlob "**/*suedzucker*"[90m 2 matches[0m
+[0m✱ [0mGlob "**/inventory/**"[90m 1 match[0m
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/suedzucker.md
+[0m→ [0mRead leads/reposcan-suedzucker.md
+The **LEADS** section is empty — no leads were provided by the hunt bot for validation.
+
+**Result: Nothing to triage.** The lead buffer contains zero entries. The reposcan log (`leads/reposcan-suedzucker.md`) confirms no public GitHub orgs/repos exist for Südzucker or subsidiaries, so that scan path produced no findings.
+
+The inventory (`inventory/suedzucker.md`) shows the hunt is passive-enumeration-complete with 11 in-scope assets, but all active hypotheses remain **AUTH_HELPED-blocked** (require authenticated test accounts to progress).
+
+To produce triageable leads, the hunt bot would need to emit findings like exposed API keys, IDOR, missing auth on protected endpoints, etc. If you have leads from another output, paste them here and I'll run the 7-Question Gate.
+===NEMO TAIL===
+## 2026-09-12 11:14:52 UTC [target] (model nemotron3)
+[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,8.30,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=7,freshness=10
+[PRIO] portal.mydataplant.com/api/v3,8.10,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=10
+[PRIO] shop.suedzucker.com,7.95,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=7,cloud_surface=8,freshness=10
+[PRIO] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime,6.55,attack_surface=7,business_value=7,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=9
+[PRIO] portal.mydataplant.com/services/outline.py,5.75,attack_surface=6,business_value=6,tech_exposure=6,gate_ease=9,cloud_surface=5,freshness=8
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: Nuxt 3 "epp" v1.8.0 SPA with documented partner-number linking (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + switchToPartnerNumber query param captured in client state + /association/impersonation route guarded only by client middleware (is-authenticated/logged-in-user/only-for-partner). Endpoints: GET /external-partner-impersonations?partnerSearch + POST {partnerNo}. API gateway backends (ceres-domain-backend-services, mdpBackend) behind /api-gateway/entra-ext/api/ all 401-gated but authz scope per partner unverified. PrimeVue DataTable/TreeTable/Steps components suggest partner-scoped data tables. x-selected-partner-link-id header only on /external-account/current-partner (POST), /access-rights (GET), /external-partner-impersonations (POST/GET); header value=server-issued partnerLinkId.
+evidence_needed: Observe /partner-linking/:processPartnerNumber endpoint behavior; test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt _payload.json + entry.DpUprWo9.js for API base paths and partner-linking routes. AUTH_HELPED (own test account): register via Entra B2C (https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100), complete partner linking (SMS OTP + 7-digit Partnernummer), then test horizontal access to other partner IDs via API (GET https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token, read-only, rate-limited 1 rps).
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: portal.mydataplant.com/api/v3
+confidence: 65
+reasoning: Gateway requires X-Selected-Partner-Link-Id on ALL requests (400 without). With header but no Bearer → 403 forbidden(177). JWT embeds userId+email+mdp_bgd_api scope (iss=auth-backend, aud=rest-client). Client-supplied header scopes tenant on top of JWT. X-Selected-Partner-Link-Id NOT in API documentation (gateway-level only). 574 JSON:API endpoints with numeric IDs. If backend does not verify header value ∈ JWT subject's authorized partner-links, token for partner A can re-scope to partner B. CORS has access-control-allow-credentials: true but does NOT reflect arbitrary Origin. Backend uses standard Authorization: Bearer (not Authentication: Bearer as doc says — confirmed: 401 for malformed JWT vs 403 for unrecognized header). No mass assignment vectors found in documented request bodies.
+evidence_needed: With own test account: GET /api/v3/fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> — observe cross-tenant data return vs rejection.
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (Swagger) — enumerate all endpoints accepting X-Selected-Partner-Link-Id. AUTH_HELPED (own test account only): POST /tokens → JWT; GET /api/v3/fields with JWT + X-Selected-Partner-Link-Id:1; mutate header to 2,3... — read-only, no live customer data, rate-limited 1 rps.
+impact: Cross-tenant read/modify/delete of farm fields, cultivation plans, orders, biomass maps, persons, organizations (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP connect-src includes API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com. SelfRegister route suggests public registration possible. SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA), SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED (own test account via SelfRegister): login, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API (GET /services/data/vXX.X/sobjects/OrderSummary/{other_id}).
+impact: Cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[PARKED] None dropped — all three hypotheses confidence ≥60, verify_steps concrete, testability AUTH_HELPED (not REJECTED class).
+[FINAL] 1) plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services — 70
+[FINAL] 2) portal.mydataplant.com/api/v3 — 65
+[FINAL] 3) shop.suedzucker.com — 62
+[NEXT] HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then test horizontal OrderSummary IDOR via API gateway (szg-is.prod.apimanagement.eu30.hana.ondemand.com) with valid Bearer token, read-only, rate-limited 1 rps. If SelfRegister fails, fallback to plantportal.suedzuckergroup.com Entra B2C public sign-up (https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100).
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+[LEARN] REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
+[LEARN] REJECTED MISCONFIG @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404) — no further action.
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.
+[LEARN] REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evidence.
+[LEARN] REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+[LEARN] REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; sixth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kleffmann vendor — sole auth-free gateway-bypassing service, sibling enumeration closed (11 *.py paths 404).
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 400 JSON:API Missing-header — no machine-readable spec.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA), SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distinct from pac4j-gated /UserInterface surface; worth AUTH_HELPED re-test if Simplifier sessions obtainable but confidence dropped below 40 pending owned access.
+[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+[LEARN] ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
+[RISK] suedzucker: 74 — Program scope covers 11 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data, enterprise iPaaS) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO, Simplifier/akka-http, Matomo SaaS). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Simplifier Launchpad adds enterprise integration credential exposure risk across 4 environments (prod/beta/dev/test) on shared ALB but pre-auth management surface not exposed; new workflow-runtime API adds IDOR-shape surface behind app-level gate. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts. Passive phase terminal — program gated entirely on owned-account registration.
+[0m
+[0m$ [0mfor p in /services/data/ /services/data/v62.0/ /services/data/v62.0/sobjects /sfsites/aura /services/apexrest/; do
+  echo "== $p =="
+  curl -sk -o /dev/null -m 20 -w "code=%{http_code} type=%{content_type} size=%{size_download} redir=%{redirect_url}\n" "https://shop.suedzucker.com$p"
+  sleep 1
+done
+== /services/data/ ==
+code=200 type=application/json;charset=UTF-8 size=2556 redir=
+== /services/data/v62.0/ ==
+code=401 type=application/json;charset=UTF-8 size=71 redir=
+== /services/data/v62.0/sobjects ==
+code=401 type=application/json;charset=UTF-8 size=71 redir=
+== /sfsites/aura ==
+code=200 type=text/html; charset=UTF-8 size=1392 redir=
+== /services/apexrest/ ==
+code=404 type=application/json;charset=UTF-8 size=70 redir=
+[0m
+[0m$ [0mecho "===== /services/data/ ====="; curl -sk -m 20 "https://shop.suedzucker.com/services/data/"; echo; echo "===== /services/data/v62.0/sobjects (with header) ====="; curl -sk -m 20 -H "Authorization: Bearer invalid" "https://shop.suedzucker.com/services/data/v62.0/sobjects" | head -c 400; echo; echo "===== /sfsites/aura ====="; curl -sk -m 20 "https://shop.suedzucker.com/sfsites/aura" | head -c 600
+===== /services/data/ =====
+[{"label":"Summer '14","url":"/services/data/v31.0","version":"31.0"},{"label":"Winter '15","url":"/services/data/v32.0","version":"32.0"},{"label":"Spring '15","url":"/services/data/v33.0","version":"33.0"},{"label":"Summer '15","url":"/services/data/v34.0","version":"34.0"},{"label":"Winter '16","url":"/services/data/v35.0","version":"35.0"},{"label":"Spring '16","url":"/services/data/v36.0","version":"36.0"},{"label":"Summer '16","url":"/services/data/v37.0","version":"37.0"},{"label":"Winter '17","url":"/services/data/v38.0","version":"38.0"},{"label":"Spring '17","url":"/services/data/v39.0","version":"39.0"},{"label":"Summer '17","url":"/services/data/v40.0","version":"40.0"},{"label":"Winter '18","url":"/services/data/v41.0","version":"41.0"},{"label":"Spring ’18","url":"/services/data/v42.0","version":"42.0"},{"label":"Summer '18","url":"/services/data/v43.0","version":"43.0"},{"label":"Winter '19","url":"/services/data/v44.0","version":"44.0"},{"label":"Spring '19","url":"/services/data/v45.0","version":"45.0"},{"label":"Summer '19","url":"/services/data/v46.0","version":"46.0"},{"label":"Winter '20","url":"/services/data/v47.0","version":"47.0"},{"label":"Spring '20","url":"/services/data/v48.0","version":"48.0"},{"label":"Summer '20","url":"/services/data/v49.0","version":"49.0"},{"label":"Winter '21","url":"/services/data/v50.0","version":"50.0"},{"label":"Spring '21","url":"/services/data/v51.0","version":"51.0"},{"label":"Summer '21","url":"/services/data/v52.0","version":"52.0"},{"label":"Winter '22","url":"/services/data/v53.0","version":"53.0"},{"label":"Spring '22","url":"/services/data/v54.0","version":"54.0"},{"label":"Summer '22","url":"/services/data/v55.0","version":"55.0"},{"label":"Winter '23","url":"/services/data/v56.0","version":"56.0"},{"label":"Spring '23","url":"/services/data/v57.0","version":"57.0"},{"label":"Summer '23","url":"/services/data/v58.0","version":"58.0"},{"label":"Winter '24","url":"/services/data/v59.0","version":"59.0"},{"label":"Spring '24","url":"/services/data/v60.0","version":"60.0"},{"label":"Summer '24","url":"/services/data/v61.0","version":"61.0"},{"label":"Winter '25","url":"/services/data/v62.0","version":"62.0"},{"label":"Spring '25","url":"/services/data/v63.0","version":"63.0"},{"label":"Summer '25","url":"/services/data/v64.0","version":"64.0"},{"label":"Winter '26","url":"/services/data/v65.0","version":"65.0"},{"label":"Spring '26","url":"/services/data/v66.0","version":"66.0"},{"label":"Summer '26","url":"/services/data/v67.0","version":"67.0"}]
+===== /services/data/v62.0/sobjects (with header) =====
+[{"message":"Session expired or invalid","errorCode":"INVALID_SESSION_ID"}]
+===== /sfsites/aura =====
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+
+
+
+
+
+<script>
+function redirectOnLoad() {
+if (this.SfdcApp && this.SfdcApp.projectOneNavigator) { SfdcApp.projectOneNavigator.handleRedirect('https://shop.suedzucker.com/login?ec=302&startURL=%2Fvforcesite%2Fsfsites%2Faura'); }  else 
+if (window.location.replace){ 
+window.location.replace('https://shop.suedzucker.com/login?ec=302&startURL=%2Fvforcesite%2Fsfsites%2Faura');
+} else {
+window.location.href ='https://shop.suedzucke
+[0m
+STEP 1 — DELTA
+[CHANGED] shop.suedzucker.com /services/data path family probed 09-12: `/services/data/` → 200 version list (SFDC REST API v31.0–v67.0), standard Experience-Cloud behavior, version numbers only; `/services/data/v62.0/sobjects` → 401 `INVALID_SESSION_ID` both with and without invalid Bearer (no pre-auth data, not an oracle); `/sfsites/aura` → 302→/login (matches prior KB); `/services/apexrest/` → 404. No new lead from this sparse SFDC REST family — closes one unprobed path family.
+[CHANGED] No inventory, host, or tech changes since 2026-09-12 11:15 lead; triage run-2026-09-12-12-37 confirmed zero leads; seventh consecutive NO_DELTA otherwise. Passive phase remains terminal.
+
+STEP 2 — PRIORITIZE
+[PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
+[PRIO] shop.suedzucker.com,6.8,attack_surface=6 business_value=8 tech_exposure=7 gate_ease=5 cloud_surface=5 freshness=3
+[PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=6 freshness=3
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07; no new passive angle found 09-12.
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 /services/data probed — data endpoints 401 INVALID_SESSION_ID pre-auth (gating correct), does not affect authenticated horizontal access question.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07; no new passive angle found 09-12.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] none — all three ≥58, verify_steps concrete, none REJECTED-class.
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (09-12 service-data probe only ruled out pre-auth data, not the horizontal case)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, capture own OrderSummary recordId, then diff GET /OrderSummary/{mutated id} (Bearer via SFDC REST session, read-only, 1 rps). Same credential/email feeds MyDataPlant POST /tokens toward the link-id BOLA. No new passive PROBE warranted: (a) three liveness surfaces are the seventh consecutive no-op and disqualified; (b) 09-12 /services/data family just closed with correct 401 gating — remaining delta is profile-level and behind session, which passive work cannot reach.
+
+STEP 6 — LEARNING
+[LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) is standard Experience-Cloud behavior, version numbers only; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-auth and with invalid Bearer — correctly gated, no pre-auth REST exposure.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: SFDC REST path family (services/data, apexrest, sfsites/aura) closure confirms community data plane requires session — narrows OrderSummary IDOR to authenticated-horizontal-only, no parallel pre-auth route.
+
+STEP 7 — RISK
+[RISK] suedzucker: 45 — passive phase exhausted and re-confirmed terminal 09-12; the only new probe this run (shop /services/data) closed with correct 401 gating, no new lead. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) still gated on owned-account registration; no finding-class advanced since 09-07; risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.

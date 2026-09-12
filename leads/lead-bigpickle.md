@@ -3185,3 +3185,101 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
 [NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, then diff GET /OrderSummary/{recordId} vs a mutated foreign id. Same credential/email feeds MyDataPlant POST /tokens toward the link-id BOLA. No new passive PROBE is warranted: liveness probes are the seventh consecutive no-op and explicitly disqualified.
 [RISK] suedzucker: 45 — passive phase exhausted; all three HIGH-class hypotheses gated on owned-account registration; no finding-class advanced since 09-07, risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.
+## 2026-09-12 14:13:08 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,8.30,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=7,freshness=10
+[PRIO] portal.mydataplant.com/api/v3,8.10,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=5,cloud_surface=8,freshness=10
+[PRIO] shop.suedzucker.com,7.95,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=7,cloud_surface=8,freshness=10
+[PRIO] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime,6.55,attack_surface=7,business_value=7,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=9
+[PRIO] portal.mydataplant.com/services/outline.py,5.75,attack_surface=6,business_value=6,tech_exposure=6,gate_ease=9,cloud_surface=5,freshness=8
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: Nuxt 3 "epp" v1.8.0 SPA with documented partner-number linking (bodengesundheitsdienst.de PDF). Predictable 7-digit Partnernummer + switchToPartnerNumber query param captured in client state + /association/impersonation route guarded only by client middleware (is-authenticated/logged-in-user/only-for-partner). Endpoints: GET /external-partner-impersonations?partnerSearch + POST {partnerNo}. API gateway backends (ceres-domain-backend-services, mdpBackend) behind /api-gateway/entra-ext/api/ all 401-gated but authz scope per partner unverified. PrimeVue DataTable/TreeTable/Steps components suggest partner-scoped data tables. x-selected-partner-link-id header only on /external-account/current-partner (POST), /access-rights (GET), /external-partner-impersonations (POST/GET); header value=server-issued partnerLinkId.
+evidence_needed: Observe /partner-linking/:processPartnerNumber endpoint behavior; test whether linked partner's data is scoped by session or by supplied partner_number parameter. Check for missing authorization on partner-scoped API calls (e.g., /api/partners/{id}/contracts).
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/ ; GET /robots.txt ; GET /.well-known/openid-configuration ; inspect Nuxt _payload.json + entry.DpUprWo9.js for API base paths and partner-linking routes. AUTH_HELPED (own test account): register via Entra B2C (https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100), complete partner linking (SMS OTP + 7-digit Partnernummer), then test horizontal access to other partner IDs via API (GET https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services/partners/{other_id}/contracts with valid Bearer token, read-only, rate-limited 1 rps).
+impact: Cross-tenant access to farmer contract/delivery/settlement data (PII + financial) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: portal.mydataplant.com/api/v3
+confidence: 65
+reasoning: Gateway requires X-Selected-Partner-Link-Id on ALL requests (400 without). With header but no Bearer → 403 forbidden(177). JWT embeds userId+email+mdp_bgd_api scope (iss=auth-backend, aud=rest-client). Client-supplied header scopes tenant on top of JWT. X-Selected-Partner-Link-Id NOT in API documentation (gateway-level only). 574 JSON:API endpoints with numeric IDs. If backend does not verify header value ∈ JWT subject's authorized partner-links, token for partner A can re-scope to partner B. CORS has access-control-allow-credentials: true but does NOT reflect arbitrary Origin. Backend uses standard Authorization: Bearer (not Authentication: Bearer as doc says — confirmed: 401 for malformed JWT vs 403 for unrecognized header). No mass assignment vectors found in documented request bodies.
+evidence_needed: With own test account: GET /api/v3/fields, /users/{id}, /orders/{id} with X-Selected-Partner-Link-Id=<another org's link id> — observe cross-tenant data return vs rejection.
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api (Swagger) — enumerate all endpoints accepting X-Selected-Partner-Link-Id. AUTH_HELPED (own test account only): POST /tokens → JWT; GET /api/v3/fields with JWT + X-Selected-Partner-Link-Id:1; mutate header to 2,3... — read-only, no live customer data, rate-limited 1 rps.
+impact: Cross-tenant read/modify/delete of farm fields, cultivation plans, orders, biomass maps, persons, organizations (agri PII + operations) — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR routes expose /OrderSummary/:recordId and /product/:recordId with Salesforce 15/18-char ID patterns (01t..., 0ZG...). OrderSummary object typically contains PII, pricing, payment data. Salesforce B2B Commerce often relies on sharing rules rather than code-level authz for record access. CSP connect-src includes API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com. SelfRegister route suggests public registration possible. SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA), SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+evidence_needed: Authenticated session, then test horizontal access to other users' OrderSummary records by mutating recordId parameter. Check if API gateway enforces ownership or only sharing rules.
+verify_steps: PASSIVE: GET https://shop.suedzucker.com/ ; identify API endpoints via XHR in browser devtools (connect-src: szg-is.prod.apimanagement.eu30.hana.ondemand.com). AUTH_HELPED (own test account via SelfRegister): login, place order, capture OrderSummary ID, attempt access to sequential/other IDs via API (GET /services/data/vXX.X/sobjects/OrderSummary/{other_id}).
+impact: Cross-account order/PII/payment data access — HIGH
+testability: AUTH_HELPED
+[PARKED] None dropped — all three hypotheses confidence ≥60, verify_steps concrete, testability AUTH_HELPED (not REJECTED class).
+[FINAL] 1) plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services — 70
+[FINAL] 2) portal.mydataplant.com/api/v3 — 65
+[FINAL] 3) shop.suedzucker.com — 62
+[NEXT] HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow, create at least one order, then test horizontal OrderSummary IDOR via API gateway (szg-is.prod.apimanagement.eu30.hana.ondemand.com) with valid Bearer token, read-only, rate-limited 1 rps. If SelfRegister fails, fallback to plantportal.suedzuckergroup.com Entra B2C public sign-up (https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100).
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+[LEARN] REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data exposure — unregistered module slots are inaccessible.
+[LEARN] REJECTED MISCONFIG @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404) — no further action.
+[LEARN] REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+[LEARN] REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (properly gated).
+[LEARN] REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/(177) (backend) — properly gated.
+[LEARN] REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata evidence.
+[LEARN] REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+[LEARN] REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; sixth consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kleffmann vendor — sole auth-free gateway-bypassing service, sibling enumeration closed (11 *.py paths 404).
+[LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated) — read-only client config exposure.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 400 JSON:API Missing-header — no machine-readable spec.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzucker.authentication.eu10.hana.ondemand.com (SAP BTP UAA), SFDC community deu84.sfdc-yzvdd4.salesforce.com.
+[LEARN] ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distinct from pac4j-gated /UserInterface surface; worth AUTH_HELPED re-test if Simplifier sessions obtainable but confidence dropped below 40 pending owned access.
+[LEARN] ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
+[LEARN] ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
+[LEARN] ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+[LEARN] ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
+[RISK] suedzucker: 74 — Program scope covers 11 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data, enterprise iPaaS) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO, Simplifier/akka-http, Matomo SaaS). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Simplifier Launchpad adds enterprise integration credential exposure risk across 4 environments (prod/beta/dev/test) on shared ALB but pre-auth management surface not exposed; new workflow-runtime API adds IDOR-shape surface behind app-level gate. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts. Passive phase terminal — program gated entirely on owned-account registration.
+[CHANGED] shop.suedzucker.com /services/data path family probed 09-12: `/services/data/` → 200 version list (SFDC REST API v31.0–v67.0), standard Experience-Cloud behavior, version numbers only; `/services/data/v62.0/sobjects` → 401 `INVALID_SESSION_ID` both with and without invalid Bearer (no pre-auth data, not an oracle); `/sfsites/aura` → 302→/login (matches prior KB); `/services/apexrest/` → 404. No new lead from this sparse SFDC REST family — closes one unprobed path family.
+[CHANGED] No inventory, host, or tech changes since 2026-09-12 11:15 lead; triage run-2026-09-12-12-37 confirmed zero leads; seventh consecutive NO_DELTA otherwise. Passive phase remains terminal.
+[PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
+[PRIO] shop.suedzucker.com,6.8,attack_surface=6 business_value=8 tech_exposure=7 gate_ease=5 cloud_surface=5 freshness=3
+[PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=6 freshness=3
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07; no new passive angle found 09-12.
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 /services/data probed — data endpoints 401 INVALID_SESSION_ID pre-auth (gating correct), does not affect authenticated horizontal access question.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07; no new passive angle found 09-12.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] none — all three ≥58, verify_steps concrete, none REJECTED-class.
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (09-12 service-data probe only ruled out pre-auth data, not the horizontal case)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, capture own OrderSummary recordId, then diff GET /OrderSummary/{mutated id} (Bearer via SFDC REST session, read-only, 1 rps). Same credential/email feeds MyDataPlant POST /tokens toward the link-id BOLA. No new passive PROBE warranted: (a) three liveness surfaces are the seventh consecutive no-op and disqualified; (b) 09-12 /services/data family just closed with correct 401 gating — remaining delta is profile-level and behind session, which passive work cannot reach.
+[LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) is standard Experience-Cloud behavior, version numbers only; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-auth and with invalid Bearer — correctly gated, no pre-auth REST exposure.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: SFDC REST path family (services/data, apexrest, sfsites/aura) closure confirms community data plane requires session — narrows OrderSummary IDOR to authenticated-horizontal-only, no parallel pre-auth route.
+[RISK] suedzucker: 45 — passive phase exhausted and re-confirmed terminal 09-12; the only new probe this run (shop /services/data) closed with correct 401 gating, no new lead. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) still gated on owned-account registration; no finding-class advanced since 09-07; risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.

@@ -244,3 +244,5 @@
 - 2026-09-12 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
 - 2026-09-12 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
 - 2026-09-12 ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.
+- 2026-09-12 REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) is standard Experience-Cloud behavior, version numbers only; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-auth and with invalid Bearer — correctly gated, no pre-auth REST exposure.
+- 2026-09-12 ACCEPTED RECON @ shop.suedzucker.com: SFDC REST path family (services/data, apexrest, sfsites/aura) closure confirms community data plane requires session — narrows OrderSummary IDOR to authenticated-horizontal-only, no parallel pre-auth route.

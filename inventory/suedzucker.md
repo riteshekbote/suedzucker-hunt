@@ -254,3 +254,7 @@ www.suedzucker.de
 ## 2026-09-12 06:29:20 UTC
 
 ## 2026-09-12 11:15:13 UTC
+
+## 2026-09-12 14:14:08 UTC
+- CHANGED shop.suedzucker.com /services/data path family probed 09-12: `/services/data/` → 200 version list (SFDC REST API v31.0–v67.0), standard Experience-Cloud behavior, version numbers only; `/services/data
+- CHANGED No inventory, host, or tech changes since 2026-09-12 11:15 lead; triage run-2026-09-12-12-37 confirmed zero leads; seventh consecutive NO_DELTA otherwise. Passive phase remains terminal.
