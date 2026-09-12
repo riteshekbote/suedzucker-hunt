@@ -243,3 +243,4 @@
 - 2026-09-12 ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator disabled" confirmed correct.
 - 2026-09-12 ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse surface only, not security.
 - 2026-09-12 ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- 2026-09-12 ACCEPTED RECON @ dead-asset resurrection re-check 09-12: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confirmed stable; no new surface from previously-dead hosts.

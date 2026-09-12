@@ -1,4 +1,4 @@
-## 2026-09-12 01:33:41 UTC [target] (model nemotron3)
+## 2026-09-12 06:28:59 UTC [target] (model nemotron3)
 [PRIO] portal.mydataplant.com/api/v3,8.55,attack_surface=9,business_value=9,tech_exposure=9,gate_ease=6,cloud_surface=8,freshness=10
 [PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,8.30,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=6,cloud_surface=7,freshness=10
 [PRIO] shop.suedzucker.com,8.15,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=7,cloud_surface=8,freshness=10
