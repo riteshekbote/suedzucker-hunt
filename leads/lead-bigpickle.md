@@ -3283,3 +3283,44 @@ testability: AUTH_HELPED
 [LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) is standard Experience-Cloud behavior, version numbers only; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-auth and with invalid Bearer — correctly gated, no pre-auth REST exposure.
 [LEARN] ACCEPTED RECON @ shop.suedzucker.com: SFDC REST path family (services/data, apexrest, sfsites/aura) closure confirms community data plane requires session — narrows OrderSummary IDOR to authenticated-horizontal-only, no parallel pre-auth route.
 [RISK] suedzucker: 45 — passive phase exhausted and re-confirmed terminal 09-12; the only new probe this run (shop /services/data) closed with correct 401 gating, no new lead. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) still gated on owned-account registration; no finding-class advanced since 09-07; risk flat on inactivity. Real progress requires the HUMAN registration action, not further probing.
+## 2026-09-12 17:15:24 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com,7.1,attack_surface=7 business_value=9 tech_exposure=6 gate_ease=5 cloud_surface=4 freshness=3
+[PRIO] shop.suedzucker.com,6.8,attack_surface=6 business_value=8 tech_exposure=7 gate_ease=5 cloud_surface=5 freshness=3
+[PRIO] smartfarming/portal.mydataplant.com,6.5,attack_surface=7 business_value=7 tech_exposure=8 gate_ease=4 cloud_surface=6 freshness=3
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07; 09-12 /services/data closure is orthogonal (SFDC, not BFF); no new passive angle found this run.
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner and .../access-rights with Bearer + secondary own link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 probe ruled out ONLY the pre-auth REST plane (services/data → 401 INVALID_SESSION_ID) → horizontal-authenticated case remains the open question, unchanged.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07; outline.py re-confirmed empty-SVG (impact still unconfirmed, deprioritized below top-3); no new passive angle this run.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] none — all three ≥58, verify_steps concrete, none REJECTED-class; outline.py IDOR stays sub-top-3 (impact unconfirmed, 100+ empty-SVG combos).
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (09-12 only closed pre-auth plane)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, capture own OrderSummary recordId, then read-only diff GET /OrderSummary/{mutated id} (SFDC REST Bearer, 1 rps). Reuse the same credential/email for MyDataPlant POST /tokens (Authorization Bearer required despite Swagger wording) to test link-id BOLA with two own link-ids. No new passive PROBE warranted: the three liveness surfaces are a seventh no-op, the /services/data family just closed with correct 401 gating, and the remaining delta is profile-level and behind session — out of reach of GET/HEAD/OPTIONS.
+[LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-auth and with invalid Bearer — correctly gated, no pre-auth REST exposure; stands as of this run.
+[LEARN] REJECTED DEAD-ASSET @ seedrecommender + dev-chatwithyourdata.suedzuckergroup.com: 09-12 recheck HTTP 000 both — no resurrection; dead-asset set stable.
+[LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces: seventh consecutive NO_DELTA confirms liveness re-probes add noise, not leads; passive phase terminal.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this run; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+[RISK] suedzucker: 45 — passive phase terminal and re-confirmed this run; only new probe since last lead (shop /services/data) closed with correct 401 gating. All three HIGH-class hypotheses (plantportal 70, shop 62, MyDataPlant 58) remain gated on owned-account registration; no finding-class advanced since 09-07; risk flat on inactivity. The single productive path is the HUMAN registration step; further probing cannot move any confidence score.
