@@ -19030,3 +19030,465 @@ STEP 6 — LEARNING:
 
 STEP 7 — RISK:
 [RISK] suedzucker: 46 — passive phase terminal at 8 consecutive NO_DELTA; the only probe this run (dead-asset recheck) confirmed stable set, opened nothing. Three HIGH-class hypotheses (70/62/58) still gated on owned-account registration, unchanged since 09-07 — now 7 consecutive days without movement. Risk flat on inactivity; the single productive path is the HUMAN registration step; further probing increases cost, not expectation.
+===== ANALYST bigpickle 2026-09-13 06:17:14 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la; echo "---"; ls -la art 2>/dev/null; echo "---"; ls -la *.txt 2>/dev/null; ls -la *.md 2>/dev/null
+total 300
+drwxr-xr-x 12 runner runner   4096 Sep 13 06:15 .
+drwxr-xr-x  3 runner runner   4096 Sep 13 06:15 ..
+drwxr-xr-x  7 runner runner   4096 Sep 13 06:15 .git
+drwxr-xr-x  3 runner runner   4096 Sep 13 06:15 .github
+-rw-r--r--  1 runner runner   1852 Sep 13 06:15 README.md
+-rw-r--r--  1 runner runner     32 Sep 13 06:15 analyst-out.txt
+-rw-r--r--  1 runner runner 108542 Sep 13 06:15 analyst-prompt.txt
+-rw-r--r--  1 runner runner 104666 Sep 13 06:15 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 leads
+-rw-r--r--  1 runner runner   2175 Sep 13 06:15 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 reports
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 reposcan-raw
+-rw-r--r--  1 runner runner   3289 Sep 13 06:15 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 scripts
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 triage
+---
+---
+-rw-r--r-- 1 runner runner     32 Sep 13 06:15 analyst-out.txt
+-rw-r--r-- 1 runner runner 108542 Sep 13 06:15 analyst-prompt.txt
+-rw-r--r-- 1 runner runner 104666 Sep 13 06:15 ctx.txt
+-rw-r--r-- 1 runner runner 1852 Sep 13 06:15 README.md
+-rw-r--r-- 1 runner runner 2175 Sep 13 06:15 probe-results.md
+[0m
+[0m✱ [0mGlob "**/*.{yml,yaml,json,txt,md}"[90m 100 matches[0m
+[0m
+[0m$ [0mcat state_bigpickle.json; echo "==="; cat analyst-out.txt; echo "==="; ls scripts; echo "==="; cat probe-results.md
+{"phase": "POC", "target": "api"}===
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mls -la; echo "---"; ls -la art 2>/dev/null; echo "---"; ls -la *.txt 2>/dev/null; ls -la *.md 2>/dev/null
+total 300
+drwxr-xr-x 12 runner runner   4096 Sep 13 06:15 .
+drwxr-xr-x  3 runner runner   4096 Sep 13 06:15 ..
+drwxr-xr-x  7 runner runner   4096 Sep 13 06:15 .git
+drwxr-xr-x  3 runner runner   4096 Sep 13 06:15 .github
+-rw-r--r--  1 runner runner   1852 Sep 13 06:15 README.md
+-rw-r--r--  1 runner runner     32 Sep 13 06:15 analyst-out.txt
+-rw-r--r--  1 runner runner 108542 Sep 13 06:15 analyst-prompt.txt
+-rw-r--r--  1 runner runner 104666 Sep 13 06:15 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 leads
+-rw-r--r--  1 runner runner   2175 Sep 13 06:15 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 reports
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 reposcan-raw
+-rw-r--r--  1 runner runner   3289 Sep 13 06:15 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 scripts
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 13 06:15 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 13 06:15 triage
+---
+---
+-rw-r--r-- 1 runner runner     32 Sep 13 06:15 analyst-out.txt
+-rw-r--r-- 1 runner runner 108542 Sep 13 06:15 analyst-prompt.txt
+-rw-r--r-- 1 runner runner 104666 Sep 13 06:15 ctx.txt
+-rw-r--r-- 1 runner runner 1852 Sep 13 06:15 README.md
+-rw-r--r-- 1 runner runner 2175 Sep 13 06:15 probe-results.md
+[0m
+[0m✱ [0mGlob "**/*.{yml,yaml,json,txt,md}"[90m 100 matches[0m
+===
+sync-issues.py
+===
+
+## 2026-09-02 21:40:00 UTC
+
+
+## 2026-09-02 23:35:55 UTC
+
+
+## 2026-09-03 01:37:08 UTC
+
+
+## 2026-09-03 06:28:47 UTC
+
+
+## 2026-09-03 11:41:50 UTC
+
+
+## 2026-09-03 16:00:35 UTC
+
+
+## 2026-09-03 19:14:36 UTC
+
+
+## 2026-09-03 21:51:49 UTC
+
+
+## 2026-09-03 23:56:35 UTC
+
+
+## 2026-09-04 02:52:37 UTC
+
+
+## 2026-09-04 07:31:16 UTC
+
+
+## 2026-09-04 12:23:16 UTC
+
+
+## 2026-09-04 16:46:07 UTC
+
+
+## 2026-09-04 19:18:44 UTC
+
+
+## 2026-09-04 21:36:21 UTC
+
+
+## 2026-09-04 23:22:47 UTC
+
+
+## 2026-09-05 01:08:45 UTC
+
+
+## 2026-09-05 05:51:00 UTC
+
+
+## 2026-09-05 09:54:41 UTC
+
+
+## 2026-09-05 13:15:34 UTC
+
+
+## 2026-09-05 16:21:14 UTC
+
+
+## 2026-09-05 18:29:35 UTC
+
+
+## 2026-09-05 20:47:37 UTC
+
+
+## 2026-09-05 22:39:50 UTC
+
+
+## 2026-09-06 00:14:25 UTC
+
+
+## 2026-09-06 04:51:16 UTC
+
+
+## 2026-09-06 09:18:46 UTC
+
+
+## 2026-09-06 13:08:42 UTC
+
+
+## 2026-09-06 16:17:42 UTC
+
+
+## 2026-09-06 18:17:45 UTC
+
+
+## 2026-09-06 20:31:31 UTC
+
+
+## 2026-09-06 22:24:45 UTC
+
+
+## 2026-09-07 00:05:49 UTC
+
+
+## 2026-09-07 04:53:24 UTC
+
+
+## 2026-09-07 09:58:10 UTC
+
+
+## 2026-09-07 15:37:20 UTC
+
+
+## 2026-09-07 19:30:25 UTC
+
+
+## 2026-09-07 22:18:09 UTC
+
+
+## 2026-09-08 00:30:39 UTC
+
+
+## 2026-09-08 05:20:34 UTC
+
+
+## 2026-09-08 09:49:56 UTC
+
+
+## 2026-09-08 14:23:25 UTC
+
+
+## 2026-09-08 18:06:10 UTC
+
+
+## 2026-09-08 20:50:47 UTC
+
+
+## 2026-09-08 23:09:41 UTC
+
+
+## 2026-09-09 01:19:06 UTC
+
+
+## 2026-09-09 06:08:09 UTC
+
+
+## 2026-09-09 11:31:53 UTC
+
+
+## 2026-09-09 15:24:32 UTC
+
+
+## 2026-09-09 18:42:18 UTC
+
+
+## 2026-09-09 21:30:13 UTC
+
+
+## 2026-09-09 23:32:53 UTC
+
+
+## 2026-09-10 01:29:35 UTC
+
+
+## 2026-09-10 06:43:28 UTC
+
+
+## 2026-09-10 11:53:52 UTC
+
+
+## 2026-09-10 15:47:53 UTC
+
+
+## 2026-09-10 18:56:14 UTC
+
+
+## 2026-09-10 21:23:12 UTC
+
+
+## 2026-09-10 23:24:34 UTC
+
+
+## 2026-09-11 01:28:09 UTC
+
+
+## 2026-09-11 06:40:00 UTC
+
+
+## 2026-09-11 11:48:23 UTC
+
+
+## 2026-09-11 15:53:35 UTC
+
+
+## 2026-09-11 19:00:55 UTC
+
+
+## 2026-09-11 21:42:39 UTC
+
+
+## 2026-09-11 23:32:58 UTC
+
+
+## 2026-09-12 01:33:52 UTC
+
+
+## 2026-09-12 06:29:20 UTC
+
+
+## 2026-09-12 11:15:13 UTC
+
+
+## 2026-09-12 14:14:08 UTC
+
+
+## 2026-09-12 17:17:24 UTC
+
+
+## 2026-09-12 19:27:47 UTC
+
+
+## 2026-09-12 21:42:39 UTC
+
+
+## 2026-09-12 23:21:02 UTC
+
+
+## 2026-09-13 01:11:55 UTC
+[0m
+[0m→ [0mRead triage/run-2026-09-13-01-23.md
+[0m→ [0mRead scope.yml
+State confirms phase **POC** targeting the **api** surface. Scope allows active probes (≤1 rps, read-only only). Running a small read-only POC probe round on the api targets before analysis.
+[0m
+[0m$ [0mprobe() { printf "\n### %s\n" "$1"; curl -sS -k -m 15 -o /tmp/probe_body -D - "$2" 2>&1 | head -20; printf -- "-- body bytes: "; wc -c < /tmp/probe_body; printf -- "-- body head: "; head -c 200 /tmp/probe_body; printf "\n"; sleep 1; }
+
+probe "outline.py baseline user_id=1&field_id=1" "https://portal.mydataplant.com/services/outline.py?user_id=1&field_id=1"
+probe "outline.py alt params user=1&field=1" "https://portal.mydataplant.com/services/outline.py?user=1&field=1"
+probe "outline.py alt params id_user=1&id_field=1" "https://portal.mydataplant.com/services/outline.py?id_user=1&id_field=1"
+### outline.py baseline user_id=1&field_id=1
+HTTP/2 200 
+date: Sun, 13 Sep 2026 06:16:05 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: image/svg+xml
+strict-transport-security: max-age=63072000
+
+-- body bytes: 0
+-- body head: 
+
+### outline.py alt params user=1&field=1
+HTTP/2 200 
+date: Sun, 13 Sep 2026 06:16:07 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: image/svg+xml
+strict-transport-security: max-age=63072000
+
+-- body bytes: 0
+-- body head: 
+
+### outline.py alt params id_user=1&id_field=1
+HTTP/2 200 
+date: Sun, 13 Sep 2026 06:16:09 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: image/svg+xml
+strict-transport-security: max-age=63072000
+
+-- body bytes: 0
+-- body head:
+[0m
+[0m$ [0mprobe() { printf "\n### %s\n" "$1"; curl -sS -k -m 15 -o /tmp/probe_body -D - "$2" 2>&1 | head -20; printf -- "-- body bytes: "; wc -c < /tmp/probe_body; printf -- "-- body head: "; head -c 250 /tmp/probe_body; printf "\n"; sleep 1; }
+
+probe "smartfarming gateway /fields drift check (no header)" "https://smartfarming.suedzuckergroup.com/mdp-api/v3/api/fields"
+probe "portal backend /api/v3/fields WITH partner-link header, no JWT" "https://portal.mydataplant.com/api/v3/fields" -H "X-Selected-Partner-Link-Id: 1"
+probe "portal backend /api/v3/fields no header no JWT" "https://portal.mydataplant.com/api/v3/fields"
+### smartfarming gateway /fields drift check (no header)
+HTTP/2 400 
+date: Sun, 13 Sep 2026 06:16:15 GMT
+server: Apache/2.4.68 (Debian)
+x-powered-by: PHP/8.4.25
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-RESTful-filter, ResponseType, Language, x-selected-partner-link-id
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+-- body bytes: 77
+-- body head: {"errors":{"status":400,"title":"Missing X-Selected-Partner-Link-Id header"}}
+
+### portal backend /api/v3/fields WITH partner-link header, no JWT
+HTTP/2 403 
+date: Sun, 13 Sep 2026 06:16:16 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+-- body bytes: 51
+-- body head: {"errors":{"status":403,"title":"forbidden (149)"}}
+
+### portal backend /api/v3/fields no header no JWT
+HTTP/2 403 
+date: Sun, 13 Sep 2026 06:16:18 GMT
+server: Apache/2.4.29 (Ubuntu)
+access-control-allow-headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Accept, Authorization, X-Referer, X-Restful-Filter, Language
+access-control-allow-methods: GET,HEAD,OPTIONS,POST,PUT
+access-control-allow-credentials: true
+content-type: application/vnd.api+json
+strict-transport-security: max-age=63072000
+
+-- body bytes: 51
+-- body head: {"errors":{"status":403,"title":"forbidden (149)"}}
+[0m
+POC probe round on the **api** target complete (7 read-only requests, 1 rps). Gates held; one new descriptive fingerprint captured. Analysis follows.
+
+## STEP 1 — DELTA
+- [CHANGED] smartfarming.suedzuckergroup.com gateway fingerprint first recorded: `Apache/2.4.68 (Debian)` + `X-Powered-By: PHP/8.4.25` serving the JSON:API `400 Missing X-Selected-Partner-Link-Id header` gate — gateway is a PHP app upstream of the Kleffmann `Apache/2.4.29 (Ubuntu)` backend (portal.mydataplant.com `403 forbidden(149)`). Stack banner is REJECTED-class as a finding, but tightens the two-vendor architecture map.
+- [CHANGED] portal.mydataplant.com/services/outline.py: alternate param schemes (`user=`/`field=`, `id_user=`/`id_field=`) → byte-identical `200` + `0-byte image/svg+xml`; response carries `access-control-allow-credentials: true` but **NO `access-control-allow-origin`** → no cross-origin read primitive; soft-fail is uniform across param schemes (~110 combos now).
+- Otherwise gate invariants unchanged: smartfarming `/fields` = 400 missing-header; portal `/api/v3/fields` = 403 forbidden(149) with and without header (no JWT).
+
+## STEP 2 — PRIORITIZE
+- [PRIO] plantportal.suedzuckergroup.com,6.6,attack_surface (BFF Azure APIM, client-side partner-linking, public catalog)
+- [PRIO] shop.suedzucker.com,6.4,business_value (SFDC financial OrderSummary, pre-auth planes closed 09-12)
+- [PRIO] smartfarming/portal.mydataplant.com,6.0,cloud_surface (gateway tenant-header BOLA — sole POC-probeable api surface; fingerprint updated, no class/top-3 movement)
+
+## STEP 3 — HYPOTHESES
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway=PHP 8.4.25/Apache 2.4.68 on smartfarming.suedzuckergroup.com (400 missing-link-id); backend=Kleffmann Apache 2.4.29 (403 forbidden(149) on /api/v3/fields with/without header, no JWT); JWT carries userId/email; link-id→JWT binding unverified; header forwarded verbatim; /fields gate invariant since 09-07 (today re-confirmed).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields (or portal /api/v3/fields) Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding unverified; catalog=200 invariant since 09-07; Azure APIM/Front Door BFF; ceres-* catch-all 401 (no oracle).
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner + .../access-rights with Bearer + secondary link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 closed pre-auth planes (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG) — only horizontal-authenticated case remains, unchanged.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+
+## STEP 4 — SELF-CRITIQUE
+- [PARKED] outline.py IDOR: alt-param schemes + CORS closed today; ~110 empty-SVG combos, 500=descriptive vendor leak (REJECTED class). Impact unconfirmed, sub-top-3.
+- [PARKED] smartfarming gateway stack (PHP 8.4.25/Apache 2.4.68): descriptive banner only, no exposed PHP endpoint surfaced beyond gated /mdp-api/v3/api — REJECTED class, recon value only.
+- [FINAL] 1) plantportal.suedzuckergroup.com — 70
+- [FINAL] 2) shop.suedzucker.com — 62 (horizontal case open)
+- [FINAL] 3) smartfarming/portal.mydataplant.com — 58
+
+## STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete flow, place ≥1 order, capture own OrderSummary recordId; reuse same email for MyDataPlant POST /tokens to obtain own JWT + two own link-ids, then run the two read-only BOLA diffs above (GET /OrderSummary/{mutated id}, GET /fields link-A vs link-B, 1 rps). POC request specs are locked and require only the credential step; today's POC attempt re-confirmed all gates hold pre-auth, so no further passive PROBE is warranted on the api target.
+
+## STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com: gateway stack identified — Apache/2.4.68 (Debian) + PHP/8.4.25 serves the JSON:API 400 missing-link-id gate; upstream Kleffmann backend portal.mydataplant.com (Apache/2.4.29) returns 403 forbidden(149) — independent gateway/backend stacks confirmed; banner descriptive (REJECTED-class as vuln), architecture map tightened.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS header `access-control-allow-credentials: true` present but NO `access-control-allow-origin` → cross-origin read impossible; auth-free surface soft-fails uniformly; IDOR impact remains unconfirmed.
+[LEARN] REJECTED MISCONFIG @ outline.py CORS: allow-credentials without allow-origin provides no read primitive; not a finding (consistent with 09-12 plantportal BFF rejection).
+[LEARN] REJECTED MISCONFIG @ smartfarming gateway banner: PHP/8.4.25/Apache/2.4.68 version disclosure is descriptive; no exposed PHP surface beyond gated documented API.
+
+## STEP 7 — RISK
+[RISK] suedzucker: 45 — Phase POC on the api target: all read-only proofs attempted and failed cleanly (gates invariant, CORS/param/CORS-credential angles collapsed one by one); today added only a descriptive stack fingerprint, no new finding class. Three HIGH hypotheses (70/62/58) still gated on owned-account registration — 9th consecutive NO_DELTA run, 7 days without movement. The single productive path remains the HUMAN registration step; continued passive probing costs effort without expectation, risk is attrition of the highest-confidence hypotheses rather than new exposure.

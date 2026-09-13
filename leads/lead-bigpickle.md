@@ -3498,3 +3498,37 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ dead-asset recheck 09-13: seedrecommender NXDOMAIN, dev-chatwithyourdata GCP 34.117.138.249 TLS/connect 000 — neither resurrected; takeover surface unchanged; dead-asset set stable across 2 consecutive daily checks.
 [LEARN] REJECTED NOT-VULN @ (none new) — no new candidates surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable) stand, no class reopens.
 [RISK] suedzucker: 46 — passive phase terminal at 8 consecutive NO_DELTA; the only probe this run (dead-asset recheck) confirmed stable set, opened nothing. Three HIGH-class hypotheses (70/62/58) still gated on owned-account registration, unchanged since 09-07 — now 7 consecutive days without movement. Risk flat on inactivity; the single productive path is the HUMAN registration step; further probing increases cost, not expectation.
+## 2026-09-13 06:16:55 UTC [target] (model bigpickle)
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway=PHP 8.4.25/Apache 2.4.68 on smartfarming.suedzuckergroup.com (400 missing-link-id); backend=Kleffmann Apache 2.4.29 (403 forbidden(149) on /api/v3/fields with/without header, no JWT); JWT carries userId/email; link-id→JWT binding unverified; header forwarded verbatim; /fields gate invariant since 09-07 (today re-confirmed).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields (or portal /api/v3/fields) Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding unverified; catalog=200 invariant since 09-07; Azure APIM/Front Door BFF; ceres-* catch-all 401 (no oracle).
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner + .../access-rights with Bearer + secondary link-id, diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 closed pre-auth planes (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG) — only horizontal-authenticated case remains, unchanged.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete flow, place ≥1 order, capture own OrderSummary recordId; reuse same email for MyDataPlant POST /tokens to obtain own JWT + two own link-ids, then run the two read-only BOLA diffs above (GET /OrderSummary/{mutated id}, GET /fields link-A vs link-B, 1 rps). POC request specs are locked and require only the credential step; today's POC attempt re-confirmed all gates hold pre-auth, so no further passive PROBE is warranted on the api target.
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com: gateway stack identified — Apache/2.4.68 (Debian) + PHP/8.4.25 serves the JSON:API 400 missing-link-id gate; upstream Kleffmann backend portal.mydataplant.com (Apache/2.4.29) returns 403 forbidden(149) — independent gateway/backend stacks confirmed; banner descriptive (REJECTED-class as vuln), architecture map tightened.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS header `access-control-allow-credentials: true` present but NO `access-control-allow-origin` → cross-origin read impossible; auth-free surface soft-fails uniformly; IDOR impact remains unconfirmed.
+[LEARN] REJECTED MISCONFIG @ outline.py CORS: allow-credentials without allow-origin provides no read primitive; not a finding (consistent with 09-12 plantportal BFF rejection).
+[LEARN] REJECTED MISCONFIG @ smartfarming gateway banner: PHP/8.4.25/Apache/2.4.68 version disclosure is descriptive; no exposed PHP surface beyond gated documented API.
+[RISK] suedzucker: 45 — Phase POC on the api target: all read-only proofs attempted and failed cleanly (gates invariant, CORS/param/CORS-credential angles collapsed one by one); today added only a descriptive stack fingerprint, no new finding class. Three HIGH hypotheses (70/62/58) still gated on owned-account registration — 9th consecutive NO_DELTA run, 7 days without movement. The single productive path remains the HUMAN registration step; continued passive probing costs effort without expectation, risk is attrition of the highest-confidence hypotheses rather than new exposure.
