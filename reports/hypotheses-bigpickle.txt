@@ -1,34 +1,52 @@
-## 2026-09-13 06:16:55 UTC [target] (model bigpickle)
+## 2026-09-13 12:01:10 UTC [target] (model bigpickle)
+[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com: gateway stack identified — Apache/2.4.68 (Debian) + PHP/8.4.25 serves the JSON:API 400 missing-link-id gate; upstream Kleffmann backend portal.mydataplant.com (Apache/2.4.29) returns 403 forbidden(149) — independent gateway/backend stacks confirmed; banner descriptive (REJECTED-class as vuln), architecture map tightened.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS header `access-control-allow-credentials: true` present but NO `access-control-allow-origin` → cross-origin read impossible; auth-free surface soft-fails uniformly; IDOR impact remains unconfirmed.
+[LEARN] REJECTED MISCONFIG @ outline.py CORS: allow-credentials without allow-origin provides no read primitive; not a finding (consistent with 09-12 plantportal BFF rejection).
+[LEARN] REJECTED MISCONFIG @ smartfarming gateway banner: PHP/8.4.25/Apache/2.4.68 version disclosure is descriptive; no exposed PHP surface beyond gated documented API.
+[RISK] suedzucker: 45 — Phase POC on the api target: all read-only proofs attempted and failed cleanly (gates invariant, CORS/param/CORS-credential angles collapsed one by one); today added only a descriptive stack fingerprint, no new finding class. Three HIGH hypotheses (70/62/58) still gated on owned-account registration — 9th consecutive NO_DELTA run, 7 days without movement. The single productive path remains the HUMAN registration step; continued passive probing costs effort without expectation, risk is attrition of the highest-confidence hypotheses rather than new exposure.
+[NEW] shop.suedzucker.com/SelfRegister static surface: LWR `register_view` module (200, 1.5MB) maps the tenant-custom registration flow — `vdmcSugarSelfRegistrationController.initRegistration|completeRegistration` + `vdmcSugarShopSettingsController.fetchCaptchaSiteKey` Apex actions; fields firstName/lastName/email/password/confirmPassword/CompanyName/Country/Phone + `captchaToken` (FriendlyCaptcha, sitekey fetched at runtime); NO PartnerNumber field at registration. Registration gate is FUNCTIONALLY OPEN but bot-blocked (FriendlyCaptcha) → HUMAN-only prerequisite confirmed viable, automation impossible.
+[PRIO] shop.suedzucker.com,7.6,axis=gate_ease + tech_exposure — SelfRegister now fully mapped; custom Apex (vdmcSugar*) is the only pre-auth custom surface in the view bundle; gate = friendlyCaptcha (human-solvable, not automation)
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing-rule reliance unverified; 09-13 now confirms SelfRegister flow is FUNCTIONALLY OPEN (custom vdmcSugarSelfRegistrationController via FriendlyCaptcha-gated form, http 200 register_view) so an own buyer identity is obtainable by a human; no partner number required at registration (buyer account likely lightweight/unapproved until B2B onboarding — ordering-rights status unverified, keeps conf flat); 09-12 closed pre-auth planes (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG).
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[PARKED] SelfRegister automation angle: friendlyCaptcha sitekey fetched at runtime + server-side Apex validation → no passive bypass; only HUMAN signup viable.
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (SelfRegister confirmed open pre-auth; horizontal case still unproven)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+[NEXT] HUMAN: register one owned test identity at shop.suedzucker.com/SelfRegister — form fields firstName/lastName/email/password(+confirm)/CompanyName/Country/Phone + solve friendlyCaptcha (browser, one human solve); then GET /OrderSummary/{own recordId} to confirm ordering rights were granted by the flow. Reuse same email for MyDataPlant POST /tokens (link-id BOLA) once shop identity exists. No further passive PROBE: this was the last unmapped pre-auth form surface; 10th consecutive NO_DELTA otherwise.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com/SelfRegister: LWR `register_view` exposes custom Apex registration (vdmcSugarSelfRegistrationController.initRegistration/completeRegistration, vdmcSugarShopSettingsController.fetchCaptchaSiteKey); FriendlyCaptcha tokens gated; registration open + bot-blocked — HUMAN path only; static disclosure, not a vuln.
+[LEARN] REJECTED MISCONFIG @ shop.suedzucker.com/SelfRegister: custom Apex endpoint names in public JS bundle are descriptive disclosure; completeRegistration/initRegistration pre-auth actions are an intended, captcha-gated function — not a finding without a demonstrated authz flaw.
+[RISK] suedzucker: 45 — 10th consecutive NO_DELTA on all other surface; only new delta was mapping the SelfRegister form surface (read-only GETs). Three HIGH hypotheses unchanged and HUMAN-gated; the self-registration gate itself verified functional, so the blocked item is human-capacity for one signup, not a technical dead-end. No new exposure risk run-on-run.
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing-rule reliance unverified; 09-13 static map of SelfRegister confirms functional open registration via custom vdmcSugarSelfRegistrationController (captcha-gated, no partner number at signup — buyer account likely unapproved until B2B onboarding, ordering-rights unverified, keeps conf flat); 09-12 closed pre-auth planes (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG).
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
 [HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
 class: IDOR
 asset: smartfarming/portal.mydataplant.com
 confidence: 58
-reasoning: gateway=PHP 8.4.25/Apache 2.4.68 on smartfarming.suedzuckergroup.com (400 missing-link-id); backend=Kleffmann Apache 2.4.29 (403 forbidden(149) on /api/v3/fields with/without header, no JWT); JWT carries userId/email; link-id→JWT binding unverified; header forwarded verbatim; /fields gate invariant since 09-07 (today re-confirmed).
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; backend Kleffmann 403 forbidden(149) unauthed; /fields gate invariant since 09-07.
 evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
-verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields (or portal /api/v3/fields) Bearer + link-A vs link-B, read-only row-set diff.
+verify_steps: AUTH_HELPED — POST /tokens with own shop-identity email, then GET /mdp-api/v3/api/fields Bearer + link-A vs link-B diff.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
 confidence: 70
-reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding unverified; catalog=200 invariant since 09-07; Azure APIM/Front Door BFF; ceres-* catch-all 401 (no oracle).
-evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
-verify_steps: AUTH_HELPED — GET .../external-account/current-partner + .../access-rights with Bearer + secondary link-id, diff vs baseline.
+reasoning: /association/impersonation guarded only client-side; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding unverified; ceres-* catch-all 401; Azure APIM BFF.
+evidence_needed: owned token + two own partner-links; secondary link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner + .../access-rights with Bearer + secondary link-id diff vs baseline.
 impact: cross-partner contracts/deliveries/settlements read — HIGH
 testability: AUTH_HELPED
-[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
-class: IDOR
-asset: shop.suedzucker.com
-confidence: 62
-reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 closed pre-auth planes (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG) — only horizontal-authenticated case remains, unchanged.
-evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
-verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
-impact: cross-account order/PII/payment read — HIGH
-testability: AUTH_HELPED
-[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete flow, place ≥1 order, capture own OrderSummary recordId; reuse same email for MyDataPlant POST /tokens to obtain own JWT + two own link-ids, then run the two read-only BOLA diffs above (GET /OrderSummary/{mutated id}, GET /fields link-A vs link-B, 1 rps). POC request specs are locked and require only the credential step; today's POC attempt re-confirmed all gates hold pre-auth, so no further passive PROBE is warranted on the api target.
-[LEARN] ACCEPTED RECON @ smartfarming.suedzuckergroup.com: gateway stack identified — Apache/2.4.68 (Debian) + PHP/8.4.25 serves the JSON:API 400 missing-link-id gate; upstream Kleffmann backend portal.mydataplant.com (Apache/2.4.29) returns 403 forbidden(149) — independent gateway/backend stacks confirmed; banner descriptive (REJECTED-class as vuln), architecture map tightened.
-[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS header `access-control-allow-credentials: true` present but NO `access-control-allow-origin` → cross-origin read impossible; auth-free surface soft-fails uniformly; IDOR impact remains unconfirmed.
-[LEARN] REJECTED MISCONFIG @ outline.py CORS: allow-credentials without allow-origin provides no read primitive; not a finding (consistent with 09-12 plantportal BFF rejection).
-[LEARN] REJECTED MISCONFIG @ smartfarming gateway banner: PHP/8.4.25/Apache/2.4.68 version disclosure is descriptive; no exposed PHP surface beyond gated documented API.
-[RISK] suedzucker: 45 — Phase POC on the api target: all read-only proofs attempted and failed cleanly (gates invariant, CORS/param/CORS-credential angles collapsed one by one); today added only a descriptive stack fingerprint, no new finding class. Three HIGH hypotheses (70/62/58) still gated on owned-account registration — 9th consecutive NO_DELTA run, 7 days without movement. The single productive path remains the HUMAN registration step; continued passive probing costs effort without expectation, risk is attrition of the highest-confidence hypotheses rather than new exposure.

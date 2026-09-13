@@ -272,3 +272,6 @@ www.suedzucker.de
 ## 2026-09-13 01:11:55 UTC
 
 ## 2026-09-13 06:17:14 UTC
+
+## 2026-09-13 12:14:13 UTC
+- NEW shop.suedzucker.com/SelfRegister static surface: LWR `register_view` module (200, 1.5MB) maps the tenant-custom registration flow — `vdmcSugarSelfRegistrationController.initRegistration|completeRegist
