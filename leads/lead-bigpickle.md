@@ -3704,3 +3704,44 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin) stand, no class reopens.
 [LEARN] ACCEPTED RECON @ suedzucker inventory: 13th consecutive NO_DELTA — triage 18:55 empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; SAP OCC closed this cycle; passive surface now provably exhausted (SFDC REST/GraphQL/aura + SAP OCC + plantportal BFF + Kleffmann gateway all gated).
 [RISK] suedzucker: 52 — 13th consecutive NO_DELTA, ~9 days without movement, triage empty every run, and the last two genuinely-new passive angles (SFDC data-plane family, SAP OCC) both closed as gated. All three HIGH hypotheses (70/62/58) remain gated on one human registration deferred every cycle; the dominant risk is attrition of the entire hypothesis family via time/scope (fraction of movement = 0, risk climbing 45→48→52 as empty-triage and SSO-absorption both solidify).
+## 2026-09-13 23:12:16 UTC [target] (model bigpickle)
+[PRIO] shop.suedzucker.com,7.4,axis=gate_ease+tech_exposure — SelfRegister (vdmcSugarSelfRegistrationController + FriendlyCaptcha, no partner number) is the sole functional pre-auth entry; anchors top hypothesis family (62).
+[PRIO] plantportal.suedzuckergroup.com,6.6,axis=gate_ease+cloud_surface — Azure APIM/Front Door BFF; partner-linking BOLA family still highest-confidence lead (70).
+[PRIO] smartfarming/portal.mydataplant.com,5.9,axis=gate_ease+business_value — Kleffmann link-id BOLA (58); independent gateway (Apache/2.4.68+PHP/8.4.25) vs backend (Apache/2.4.29) stacks; outline.py remains the only auth-free surface and soft-fails uniformly.
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client-side middleware; x-selected-partner-link-id is client-supplied on /access-rights and /external-partner-impersonations; server-side binding to JWT unverified; ceres-* namespace = catch-all 401 gate (20/20 uniform, no existence oracle); BFF is Azure APIM/Front Door.
+evidence_needed: owned MSAL token + two own partner-links; secondary link-id returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner, then GET .../access-rights with Bearer + link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing rules unverified; SelfRegister functionally open (captcha-gated, no partner number at signup); all pre-auth planes closed (sobjects 401 INVALID_SESSION_ID, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed on approuter).
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend (Apache/2.4.29) stacks; /fields gate invariant 400 since 09-07; outline.py auth-free but soft-fails (0-byte SVG, allow-credentials without allow-origin → no read primitive).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — POST /mdp-api/v3/api/tokens with own email, then GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] Simplifier workflow-runtime IDOR family: uniform app-level 401 across 4 envs, 5 modules 503 "No Registration yet.", no pre-auth angle, no owned Simplifier path — <40 confidence pending owned sessions.
+[PARKED] outline.py IDOR: auth-free and gateway-bypassing but soft-fails for all probed combos; sibling/path enumeration closed; no IDOR confirmation — parked at low confidence.
+[FINAL] 1) plantportal.suedzuckergroup.com — 70 (partner-linking BOLA)
+[FINAL] 2) shop.suedzucker.com — 62 (OrderSummary BOLA)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58 (link-id BOLA)
+[NEXT] HUMAN: register one owned test identity at shop.suedzucker.com/SelfRegister — fields firstName/lastName/email/password(+confirm)/CompanyName/Country/Phone, one human solve of friendlyCaptcha; then GET /OrderSummary/{own recordId} to confirm ordering rights granted by the flow. Reuse same email at MyDataPlant POST /mdp-api/v3/api/tokens (link-id BOLA). No PROBE: 13th consecutive NO_DELTA + OCC SSO-absorption closed the last unprobed passive angle (+ SFDC REST/GraphQL/aura, plantportal BFF, Kleffmann gateway all gated); another read-only request adds noise, not signal.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 13th consecutive NO_DELTA — triage 18:55 empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; SAP OCC closed this cycle; passive surface provably exhausted (SFDC REST/GraphQL/aura + SAP OCC + plantportal BFF + Kleffmann gateway all gated).
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: SelfRegister confirmed again as the ONLY functional pre-auth entry (custom Apex registration, FriendlyCaptcha-gated, no partner number at signup) — anchors all three HIGH BOLA hypotheses; no alternative passive ascent path exists.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO) stand, no class reopens.
+[RISK] suedzucker: 54 — 13 consecutive NO_DELTA over ~9 days, triage empty every run, and each newly-probed passive angle (SFDC data-plane family, SAP OCC) closes as gated. All three HIGH hypotheses (70/62/58) remain gated on one human registration deferred every cycle since 09-07. Dominant risk is attrition of the entire hypothesis family via time/scope, not new exposure; fraction of movement remains 0, risk climbs 52→54 as empty-triage + SSO-absorption both solidify.

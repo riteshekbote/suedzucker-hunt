@@ -1,16 +1,7 @@
-## 2026-09-13 21:09:45 UTC [target] (model nemotron3)
-[PRIO] portal.mydataplant.com/api/v3,7.8,attack_surface=9,business_value=9,tech_exposure=8,gate_ease=3,cloud_surface=7,freshness=6
-[PRIO] shop.suedzucker.com,7.5,attack_surface=8,business_value=9,tech_exposure=7,gate_ease=4,cloud_surface=7,freshness=6
-[PRIO] plantportal.suedzuckergroup.com,6.8,attack_surface=7,business_value=8,tech_exposure=7,gate_ease=4,cloud_surface=6,freshness=6
-[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
-class: IDOR
-asset: portal.mydataplant.com/api/v3
-confidence: 65
-reasoning: Public Swagger (15k lines, 574 endpoints) confirms JSON:API backend with Bearer JWT (iss=auth-backend, aud=rest-client, userId+email claims, mdp_bgd_api scope). Gateway requires X-Selected-Partner-Link-Id tenant-scoping header on ALL endpoints. POST /tokens requires Authorization header despite Swagger doc error. No machine-readable OpenAPI (400 on /openapi.json). Architecture: Apache/2.4.68+PHP/8.4.25 gateway → Kleffmann Apache/2.4.29 backend. outline.py auth-free but returns empty SVG (no geometry data confirmed).
-evidence_needed: Owned JWT + valid X-Selected-Partner-Link-Id for tenant A, then test access to tenant B resources by mutating header value. Confirm if gateway validates header against token claims or trusts client-supplied value.
-verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED (owned test account via partner onboarding): obtain JWT via /tokens, capture valid X-Selected-Partner-Link-Id, then GET /api/v3/fields?partnerLinkId=<other_tenant> with valid Bearer — read-only, rate-limited 1 rps.
-impact: Cross-tenant farmer field data, cultivation plans, contracts, PII — HIGH
-testability: AUTH_HELPED
+## 2026-09-13 23:13:49 UTC [target] (model nemotron3)
+[PRIO] shop.suedzucker.com,8.3,attack_surface=9 business_value=9 tech_exposure=7 gate_ease=4 cloud_surface=8 freshness=6
+[PRIO] plantportal.suedzuckergroup.com,7.8,attack_surface=8 business_value=8 tech_exposure=8 gate_ease=3 cloud_surface=9 freshness=6
+[PRIO] portal.mydataplant.com/api/v3,8.1,attack_surface=10 business_value=9 tech_exposure=9 gate_ease=2 cloud_surface=8 freshness=5
 [HYP] Shop OrderSummary Horizontal IDOR via Salesforce B2B Commerce LWR
 class: IDOR
 asset: shop.suedzucker.com
@@ -28,6 +19,15 @@ reasoning: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (authority szgrmb2cprod.ciamlogin
 evidence_needed: Owned Entra B2C session; call POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with partnerNo of another organization — observe if backend returns impersonation token/data or enforces ownership.
 verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/_nuxt/* — extract runtime config, confirm BFF base + endpoints. AUTH_HELPED (owned test account via Entra B2C public sign-up at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100): complete MSAL flow, obtain Bearer; POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with own partnerNo (baseline), then with different partnerNo — read-only, rate-limited 1 rps.
 impact: Horizontal access to partner farmer data (fields, contracts, cultivation plans) — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: portal.mydataplant.com/api/v3
+confidence: 65
+reasoning: Public Swagger (15k lines, inline HTML) documents 574 JSON:API endpoints with numeric IDs. Auth: Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope). POST /tokens token-gen requires Authorization header (403 without) despite doc saying "not allowed". Gateway requires X-Selected-Partner-Link-Id tenant-scoping header (400 without). Backend accepts Authorization: Bearer (401 malformed), rejects Authentication: Bearer (403 forbidden(149)). No mass assignment vectors in documented request bodies. CORS: access-control-allow-credentials: true but does NOT reflect arbitrary Origin.
+evidence_needed: Two valid JWTs from different partner tenants; swap X-Selected-Partner-Link-Id header to access other tenant's resources (fields, contracts, geometries) via documented endpoints (e.g., /fields, /contracts, /geometries).
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — parse full endpoint map. AUTH_HELPED: Obtain two partner-scoped JWTs via owned accounts; test header swap on read-only endpoints (GET /fields/{id}, GET /contracts/{id}) — rate-limited 1 rps.
+impact: Cross-tenant agricultural data access (fields, contracts, geometries, exports) — HIGH
 testability: AUTH_HELPED
 [PARKED] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime IDOR-shape REST family: confidence <40 pending owned Simplifier sessions; all 4 envs return uniform 401 app-level gate; distinct from pac4j-gated /UserInterface surface.
 [PARKED] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint: CORS allows-credentials without allow-origin provides no read primitive; cross-origin read impossible; auth-free surface soft-fails uniformly (200+0-byte SVG for all 100+ probes) — impact unconfirmed; subsumed by header BOLA hypothesis (same authz boundary, broader impact).
@@ -69,4 +69,7 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ smartfarming gateway banner: PHP/8.4.25/Apache/2.4.68 version disclosure is descriptive; no exposed PHP surface beyond gated documented API.
 [LEARN] ACCEPTED RECON @ shop.suedzucker.com/SelfRegister: LWR `register_view` exposes custom Apex registration (vdmcSugarSelfRegistrationController.initRegistration/completeRegistration, vdmcSugarShopSettingsController.fetchCaptchaSiteKey); FriendlyCaptcha tokens gated; registration open + bot-blocked — HUMAN path only; static disclosure, not a vuln.
 [LEARN] REJECTED MISCONFIG @ shop.suedzucker.com/SelfRegister: custom Apex endpoint names in public JS bundle are descriptive disclosure; completeRegistration/initRegistration pre-auth actions are an intended, captcha-gated function — not a finding without a demonstrated authz flaw.
+[LEARN] ACCEPTED RECON @ suedzucker.eu10.hcs.cloud.sap: /rest/v2, /occ/v2, /rest/v2/suez{base,store} → 200 SSO redirect to UAA (sb-approuter-sac-saceu10!t3650, /sso/login/callback) — SAP Commerce OCC REST fully SSO-gated on approuter; no public OCC catalog/order REST surface; shop OrderSummary hypothesis has no parallel pre-auth SAP OCC route.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 13th consecutive NO_DELTA — triage 18:55 empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; SAP OCC closed this cycle; passive surface now provably exhausted (SFDC REST/GraphQL/aura + SAP OCC + plantportal BFF + Kleffmann gateway all gated).
+[LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-auth and with invalid Bearer — correctly gated, no pre-auth REST exposure.
 [RISK] suedzucker: 74 — Program scope covers 11 live subsidiary/partner portals (farmer PII, e-commerce, precision agri data, employee benefits, agri gov data, enterprise iPaaS) with distinct tech stacks (Nuxt/MSAL B2C, Salesforce LWR/SAP, MyDataPlant REST/JWT, WordPress, third-party SSO, Simplifier/akka-http, Matomo SaaS). Three HIGH-value IDOR targets (plantportal partner-linking, MyDataPlant X-Selected-Partner-Link-Id header, shop OrderSummary) plus auth-free outline.py geometry endpoint are reachable and AUTH_HELPED testable. MyDataPlant API exposes 574 JSON:API endpoints with numeric IDs + client-supplied tenant-scoping header — largest attack surface. Simplifier Launchpad adds enterprise integration credential exposure risk across 4 environments (prod/beta/dev/test) on shared ALB but pre-auth management surface not exposed; new workflow-runtime API adds IDOR-shape surface behind app-level gate. Carrying risk acceptable: all probes read-only (GET/HEAD/OPTIONS), no live customer data touched, rate-limited to 1 rps, active testing only on own test accounts. Passive phase terminal — program gated entirely on owned-account registration.
