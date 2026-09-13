@@ -3623,3 +3623,42 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ suedzucker inventory: 11th consecutive NO_DELTA; no live probes run this cycle per terminal-passive determination — all previously mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand, no class reopens.
 [LEARN] ACCEPTED RECON @ shop.suedzucker.com: SelfRegister remains the ONLY functional pre-auth entry across the estate (human-solvable captcha, no partner number at signup) — it anchors all three HIGH hypotheses; no alternative passive ascent path exists.
 [RISK] suedzucker: 45 — 11th consecutive NO_DELTA, 8 days without movement; all read-only surface proven exhausted (hardened Drupal, gated REST/GraphQL/aura planes, uniform 401 gates, non-reverberating CORS). Three HIGH hypotheses (70/62/58) remain entirely gated on one human registration; risk is attrition of these hypotheses via time/scope, not new exposure. The program's sole live path is the HUMAN signup step, which has been deferred across every cycle — fraction of movement is 0.
+## 2026-09-13 18:30:27 UTC [target] (model bigpickle)
+[PRIO] shop.suedzucker.com,7.4,axis=gate_ease+tech_exposure — SelfRegister (vdmcSugarSelfRegistrationController + FriendlyCaptcha, no partner number at signup) remains the sole functional pre-auth entry; anchors top hypothesis family.
+[PRIO] plantportal.suedzuckergroup.com,6.6,axis=gate_ease+cloud_surface — Azure APIM BFF, partner-linking BOLA at 70.
+[PRIO] smartfarming/portal.mydataplant.com,5.9,axis=gate_ease+business_value — Kleffmann backend BOLA at 58.
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only client-side middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server-side binding to JWT unverified; ceres-* namespace = catch-all 401 gate (no per-service evidence); BFF = Azure APIM/Front Door (x-azure-ref). Gating frozen via catalog=200 liveness only.
+evidence_needed: owned MSAL token + two own partner-links; secondary link-id returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /api-gateway/entra-ext/api/ceres-domain-backend-services/external-account/current-partner then GET .../access-rights with Bearer + link-A vs link-B, diff response bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId (15/18-char SFDC IDs) holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister functionally open (captcha-gated, no partner number — buyer ordering rights unverified until B2B onboard); pre-auth planes closed (sobjects 401 INVALID_SESSION_ID, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated).
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; upstream Apache/2.4.68+PHP/8.4.25 gateway vs Apache/2.4.29 Kleffmann backend — independent stacks; /fields gate invariant 400 since 09-07; outline.py uniquely auth-free but soft-fails (0-byte SVG, no allow-origin).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — POST /mdp-api/v3/api/tokens with own email, then GET /mdp-api/v3/api/fields Bearer + link-A vs link-B diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] Simplifier workflow-runtime IDOR family (<40): uniform app-level 401 across 4 envs + 5 modules 503, no pre-auth angle, no owned Simplifier path; parked unchanged.
+[FINAL] 1) plantportal.suedzuckergroup.com — 70 (partner-linking BOLA)
+[FINAL] 2) shop.suedzucker.com — 62 (OrderSummary BOLA; SelfRegister = only open gate)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58 (link-id BOLA)
+[NEXT] HUMAN: register one owned test identity at shop.suedzucker.com/SelfRegister — fields firstName/lastName/email/password(+confirm)/CompanyName/Country/Phone, one human solve of friendlyCaptcha; then GET /OrderSummary/{own recordId} to confirm ordering rights granted by the flow. Reuse same email at MyDataPlant POST /tokens (link-id BOLA). No live PROBE this cycle: 12th consecutive NO_DELTA, triage 16-35 empty, terminal-passive standing — another liveness probe adds noise, not signal.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 12th consecutive NO_DELTA — triage run-2026-09-13-16-35 yielded zero leads; no live probes run per terminal-passive determination; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand, no class reopens.
+[LEARN] ACCEPTED RECON @ shop.suedzucker.com: SelfRegister confirmed again as the ONLY functional pre-auth entry (custom Apex registration, FriendlyCaptcha-gated, no partner number at signup) — it anchors all three HIGH BOLA hypotheses; no alternative passive ascent path exists.
+[RISK] suedzucker: 48 — 12th consecutive NO_DELTA, 8+ days without movement, triage returns empty every run. All three HIGH hypotheses (70/62/58) remain gated on one human registration that has been deferred every cycle; attrition of the hypothesis family via time/scope is the dominant risk, not new exposure. Fraction of movement remains 0; risk ticks up 45→48 as the empty-triage pattern solidifies.
