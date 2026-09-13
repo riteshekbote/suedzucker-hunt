@@ -3458,3 +3458,43 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ plantportal.suedzuckergroup.com BFF: `access-control-allow-origin: *` + `expose-headers: *` on gated endpoints, but no `access-control-allow-credentials`; auth is Bearer-in-JS (MSAL) — no ambient credential for cross-origin JS to attach, so no cross-origin read primitive. Public catalog endpoint carries no CORS headers (wildcard route-scoped, not blanket). Standalone impact LOW, no demonstrated exploit — rejected; chain-amplifier only.
 [LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: `ceres-*` service namespace is a catch-all 401 (20/20 names uniform) — no 404/401 existence oracle, passive sibling-service name-discovery closed; prior "ceres services properly gated" is a gateway-wide gate invariant, not per-service evidence.
 [RISK] suedzucker: 46 — passive phase terminal; this run's genuine deltas (Azure APIM BFF identity, wildcard-CORS-without-credentials, catch-all 401 namespace) each closed rather than opened a finding-class; three HIGH hypotheses (plantportal 70, shop 62, MyDataPlant 58) still gated on owned-account registration, unchanged since 09-07 — 6 consecutive days without movement. The single productive path is the HUMAN registration step; every closed micro-angle incrementally shrinks the passive surface, so further probing trend edges risk up purely from cost, not expectation.
+## 2026-09-13 01:08:46 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com,6.6,attack_surface (BFF Azure APIM, client-side partner-linking flow, public catalog)
+[PRIO] shop.suedzucker.com,6.4,business_value (SFDC commerce financial data, OrderSummary recordIds)
+[PRIO] smartfarming/portal.mydataplant.com,6.0,cloud_surface (gateway tenant-header BOLA, outline.py IDOR-prone)
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: /association/impersonation guarded only by client Nuxt middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; server binding of link-id to JWT subject unverified; catalog=200 invariant since 09-07; BFF is Azure APIM/Front Door; wildcard CORS without allow-credentials (no cross-origin read primitive); ceres-* namespace catch-all 401 (no oracle). Nothing refutes, nothing advanced.
+evidence_needed: owned token + two own partner-links; secondary own link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET .../external-account/current-partner + .../access-rights with Bearer + secondary link-id, read-only diff vs baseline.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId keyed by 15/18-char SFDC IDs holds pricing/PII/payment; sharing-rule reliance unverified; SelfRegister=200 since 09-07; 09-12 closed pre-auth planes (REST sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG) — only horizontal-authenticated case remains open, unchanged.
+evidence_needed: own session + own OrderSummary id + foreign id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → place order → GET /OrderSummary/{mutated id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; header sent verbatim; /fields=400 invariant since 09-07; outline.py re-confirmed empty-SVG (impact unconfirmed, sub-top-3).
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, read-only row-set diff.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] outline.py IDOR: sub-top-3 — 100+ empty-SVG combos, impact unconfirmed; non-numeric 500 = descriptive vendor leak (REJECTED class).
+[PARKED] plantportal CORS standalone: wildcard allow-origin/expose-headers, NO allow-credentials, Bearer held in JS memory only — no cross-origin read primitive; chain-amplifier only.
+[FINAL] 1) plantportal.suedzuckergroup.com — 70
+[FINAL] 2) shop.suedzucker.com — 62 (pre-auth planes closed 09-12; horizontal case open)
+[FINAL] 3) smartfarming/portal.mydataplant.com — 58
+[NEXT] HUMAN: Register owned test identity via shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration, place ≥1 order, capture own OrderSummary recordId, then read-only diff GET /OrderSummary/{mutated id} (SFDC REST Bearer, 1 rps). Reuse same credential/email for MyDataPlant POST /tokens to test link-id BOLA with two own link-ids. No further passive PROBE warranted: 09-13 dead-asset recheck (seedrecommender, dev-chatwithyourdata) both still 000; this is the 8th consecutive NO_DELTA; profile-level delta remains behind session, unreachable by GET/HEAD/OPTIONS.
+[LEARN] ACCEPTED RECON @ dead-asset recheck 09-13: seedrecommender NXDOMAIN, dev-chatwithyourdata GCP 34.117.138.249 TLS/connect 000 — neither resurrected; takeover surface unchanged; dead-asset set stable across 2 consecutive daily checks.
+[LEARN] REJECTED NOT-VULN @ (none new) — no new candidates surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable) stand, no class reopens.
+[RISK] suedzucker: 46 — passive phase terminal at 8 consecutive NO_DELTA; the only probe this run (dead-asset recheck) confirmed stable set, opened nothing. Three HIGH-class hypotheses (70/62/58) still gated on owned-account registration, unchanged since 09-07 — now 7 consecutive days without movement. Risk flat on inactivity; the single productive path is the HUMAN registration step; further probing increases cost, not expectation.
