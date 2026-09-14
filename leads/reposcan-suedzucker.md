@@ -232,3 +232,12 @@ TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
 TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
 ## REPOSCAN 2026-09-14 06:18:11 UTC
 TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
+## REPOSCAN 2026-09-14 12:55:46 UTC
+[HYP] (none — no candidate repos provided)
+class: N/A
+asset: N/A
+confidence: N/A
+reasoning: cands.txt = "no org candidates"; scope.yml github_orgs = "none-configured"
+impact: N/A
+verify_steps: N/A
+TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
