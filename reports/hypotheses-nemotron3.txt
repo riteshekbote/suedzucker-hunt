@@ -1,32 +1,33 @@
-## 2026-09-14 06:26:51 UTC [target] (model nemotron3)
-[PRIO] portal.mydataplant.com/api/v3,8.5,attack_surface=10|business_value=9|tech_exposure=8|gate_ease=2|cloud_surface=9|freshness=7
-[PRIO] shop.suedzucker.com,8.0,attack_surface=9|business_value=8|tech_exposure=7|gate_ease=3|cloud_surface=8|freshness=7
-[PRIO] plantportal.suedzuckergroup.com,7.5,attack_surface=8|business_value=8|tech_exposure=7|gate_ease=3|cloud_surface=7|freshness=7
+## 2026-09-14 13:24:54 UTC [target] (model nemotron3)
+[PRIO] portal.mydataplant.com/api/v3,8.5,attack_surface=10 business_value=9 tech_exposure=8 gate_ease=3 cloud_surface=9 freshness=7
+[PRIO] shop.suedzucker.com,8.2,attack_surface=9 business_value=9 tech_exposure=7 gate_ease=4 cloud_surface=8 freshness=7
+[PRIO] plantportal.suedzuckergroup.com,7.8,attack_surface=8 business_value=8 tech_exposure=8 gate_ease=4 cloud_surface=7 freshness=7
+[PRIO] apps.suedzuckergroup.com,6.5,attack_surface=7 business_value=7 tech_exposure=6 gate_ease=2 cloud_surface=7 freshness=8
 [HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
 class: IDOR
 asset: portal.mydataplant.com/api/v3
 confidence: 65
-reasoning: Public Swagger (15k lines, 574 endpoints) confirms JSON:API backend with Bearer JWT (iss=auth-backend, aud=rest-client, userId+email claims, mdp_bgd_api scope); gateway requires X-Selected-Partner-Link-Id tenant-scoping header; POST /tokens generates JWT (requires auth per live test); unauth requests return 400 Missing header (gateway) or 403 forbidden(149)/(177) (backend) — properly gated but header is client-controlled tenant scope.
-evidence_needed: Owned JWT via /tokens with valid creds; test horizontal access by supplying different X-Selected-Partner-Link-Id values across partner tenants.
-verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED: Obtain creds (partner onboarding), POST /tokens for JWT; GET /fields (or any collection endpoint) with own X-Selected-Partner-Link-Id (baseline), then with different partner's ID — read-only, rate-limited 1 rps.
+reasoning: Public Swagger (15k lines) documents 574 JSON:API endpoints with numeric IDs; gateway requires X-Selected-Partner-Link-Id tenant-scoping header (not in Swagger, gateway-level only); Bearer JWT (iss=auth-backend aud=rest-client, userId+email claims, mdp_bgd_api scope); POST /tokens requires Authorization header despite doc saying otherwise; all unauth requests return 400 Missing header or 403 forbidden(149)/(177) — properly gated but header is client-controlled
+evidence_needed: Owned JWT from /tokens (LOGIN_NAME/PASSWORD); test horizontal access by supplying different X-Selected-Partner-Link-Id values against same endpoint
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED: POST https://portal.mydataplant.com/api/v3/tokens with valid credentials → obtain JWT; GET /fields (or other collection) with own X-Selected-Partner-Link-Id (baseline), then with different partner Link ID — read-only, rate-limited 1 rps
 impact: Cross-tenant access to farmer field data, cultivation plans, contracts, precision agri telemetry — HIGH
 testability: AUTH_HELPED
 [HYP] Shop OrderSummary Horizontal IDOR via SFDC Community API Gateway
 class: IDOR
 asset: shop.suedzucker.com
 confidence: 62
-reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) exposes /OrderSummary/:recordId routes; SAP Commerce Cloud OCC REST fully SSO-gated via UAA (no public catalog/order surface); SFDC REST/GraphQL/Aura all require valid session (401 INVALID_SESSION_ID pre-auth); SelfRegister is ONLY functional pre-auth entry (custom Apex, FriendlyCaptcha-gated, no partner number at signup); API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com proxies community data plane.
-evidence_needed: Owned test account via SelfRegister; valid Bearer/session via SFDC community login; test horizontal access to other users' OrderSummary records via API gateway.
-verify_steps: HUMAN: Register at https://shop.suedzucker.com/SelfRegister (firstName/lastName/email/password+confirm/CompanyName/Country/Phone, solve FriendlyCaptcha). AUTH_HELPED: Login, obtain session/Bearer; GET /OrderSummary/{other_id} via API gateway (szg-is.prod.apimanagement.eu30.hana.ondemand.com) — read-only, rate-limited 1 rps.
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) exposes /OrderSummary/:recordId routes; SAP Commerce Cloud OCC REST fully SSO-gated via UAA (no public catalog/order surface); SFDC REST/GraphQL/Aura all require valid session (401 INVALID_SESSION_ID pre-auth); SelfRegister is ONLY functional pre-auth entry (custom Apex, FriendlyCaptcha-gated, no partner number at signup); API gateway szg-is.prod.apimanagement.eu30.hana.ondemand.com proxies community data plane
+evidence_needed: Owned test account via SelfRegister; valid Bearer/session via SFDC community login; test horizontal access to other users' OrderSummary records via API gateway
+verify_steps: HUMAN: Register at https://shop.suedzucker.com/SelfRegister (firstName/lastName/email/password+confirm/CompanyName/Country/Phone, solve FriendlyCaptcha). AUTH_HELPED: Login, obtain session/Bearer; GET /OrderSummary/{other_id} via API gateway (szg-is.prod.apimanagement.eu30.hana.ondemand.com) — read-only, rate-limited 1 rps
 impact: Horizontal access to other customers' order data (PII, purchase history, pricing) — HIGH
 testability: AUTH_HELPED
 [HYP] PlantPortal Partner Impersonation BOLA via Client-Guarded Route
 class: IDOR
 asset: plantportal.suedzuckergroup.com
 confidence: 55
-reasoning: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100); BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door (x-azure-ref, x-forwarded-prefix, x-cache: CONFIG_NOCACHE); client route /association/impersonation guarded only by middleware (is-authenticated/logged-in-user/only-for-partner); endpoints GET /external-partner-impersonations?partnerSearch + POST {partnerNo} — client guard bypassable by design; backend authz unverified; ceres-* namespace catch-all 401 (20/20 uniform); switchToPartnerNumber captured in client state only, no auto setCurrentPartner.
-evidence_needed: Owned Entra B2C session via public sign-up; call POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with partnerNo of another organization — observe if backend returns impersonation token/data or enforces ownership.
-verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/_nuxt/* — extract runtime config, confirm BFF base + endpoints. AUTH_HELPED: Complete MSAL flow at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100, obtain Bearer; POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with own partnerNo (baseline), then with different partnerNo — read-only, rate-limited 1 rps.
+reasoning: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100); BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door (x-azure-ref, x-forwarded-prefix, x-cache: CONFIG_NOCACHE); client route /association/impersonation guarded only by middleware (is-authenticated/logged-in-user/only-for-partner); endpoints GET /external-partner-impersonations?partnerSearch + POST {partnerNo} — client guard bypassable by design; backend authz unverified; ceres-* namespace catch-all 401 (20/20 uniform); switchToPartnerNumber captured in client state only, no auto setCurrentPartner
+evidence_needed: Owned Entra B2C session via public sign-up; call POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with partnerNo of another organization — observe if backend returns impersonation token/data or enforces ownership
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/_nuxt/* — extract runtime config, confirm BFF base + endpoints. AUTH_HELPED: Complete MSAL flow at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100, obtain Bearer; POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with own partnerNo (baseline), then with different partnerNo — read-only, rate-limited 1 rps
 impact: Horizontal access to partner farmer data (fields, contracts, cultivation plans) — HIGH
 testability: AUTH_HELPED
 [PARKED] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime IDOR-shape REST family: confidence <40 pending owned Simplifier sessions; all 4 envs return uniform 401 app-level gate; distinct from pac4j-gated /UserInterface surface.
