@@ -1825,3 +1825,46 @@
 - LEARN: ACCEPTED RECON @ suedzucker.eu10.hcs.cloud.sap: /rest/v2, /occ/v2, /rest/v2/suez{base,store} → 200 SSO redirect to UAA (sb-approuter-sac-saceu10!t3650, /sso/log
 - LEARN: ACCEPTED RECON @ suedzucker inventory: 13th consecutive NO_DELTA — triage 18:55 empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fiel
 - LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 I
+
+## RANKED HYPOTHESES 2026-09-14 18:47:54 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_bigpickle.txt)
+- [62] shop.suedzucker.com: Shop OrderSummary Horizontal IDOR via API Gateway (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: register one owned test identity at shop.suedzucker.com/SelfRegister — fields firstName/lastName/email/password(+confirm)/CompanyName/Country/Phone, one 
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow (form fields: firstName/lastName/em
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 16th consecutive NO_DELTA — no triage candidates surfaced this cycle; all gating invariants (plantportal catalog=200 / sm
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys) stand, no class reopens.
+- LEARN: REJECTED MISCONFIG @ apps.suedzuckergroup.com additional Simplifier modules: 503 "No Registration yet." is a soft deployment failure, not an auth bypass or data
+- LEARN: REJECTED MISCONFIG @ www.suedzuckergroup.com: Hardened Drupal 11 (JSON:API/GraphQL disabled, registration closed, version files 404) — no further action.
+- LEARN: REJECTED MISCONFIG @ bisz.suedzucker.de: WordPress wp-json API exposure is descriptive/public API, not in-scope impact without auth bypass.
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: REJECTED NOT-VULN @ smartfarming/portal.mydataplant.com: Unauthenticated requests return 400 Missing X-Selected-Partner-Link-Id (gateway) or 403 forbidden(149)/
+- LEARN: REJECTED NOT-VULN @ smartfarming /exportTargets: Catalog-style export targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL server fetch — no SSRF-to-metadata ev
+- LEARN: REJECTED DEAD-ASSET @ app.agriconetwork.com: NXDOMAIN, no A/CNAME record, no cert in CT history — stale inventory entry; real platform at cropchart.net.
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com: NXDOMAIN, unreachable — dead dev environment; cropchart JS bundle reference stale.
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 I
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 IN
+- LEARN: REJECTED DEAD-ASSET @ seedrecommender + dev-chatwithyourdata.suedzuckergroup.com: 09-12/09-13 recheck HTTP 000 both — no resurrection; dead-asset set stable.
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: Confirmed 200+empty SVG for all tested combos; 500 on non-numeric reveals Apache/2.4.29 Ubuntu + Kl
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C, runtime __NUXT__ config exposes api-gateway backend URIs (401 auth-gated)
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: Public Swagger (inline HTML, 15k lines) only surface; /openapi.json and /swagger.json return 4
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: Salesforce B2B Commerce LWR (WebRuntime 236.0), SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap, OAuth via suedzu
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime: IDOR-shape REST family (instance IDs in URLs) behind app-level 401 gate — distin
+- LEARN: ACCEPTED RECON @ app.cropchart.net /actuator/*: SPA catch-all (Moro index.html, 2549 bytes, openresty+envoy), NOT real Spring Boot actuator — prior KB "actuator
+- LEARN: ACCEPTED RECON @ app.cropchart.net window.env: Google Maps API key valid with Places Text Search; Elevation/Directions/Static Maps NOT enabled; billing-abuse su
+- LEARN: ACCEPTED RECON @ app.cropchart.net AG Grid Enterprise license key: client-side key for Seth Software Sp. z o.o., not a secret.
+- LEARN: ACCEPTED RECON @ dead-asset resurrection re-check 09-12/09-13: seedrecommender + dev-chatwithyourdata both still HTTP 000 (no resurrect) — dead-asset set confir
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: SFDC REST path family (services/data, apexrest, sfsites/aura) closure confirms community data plane requires session — nar
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door (`x-azure-ref`, `x-forwarded-prefix`, `x-cache: C
+- LEARN: REJECTED MISCONFIG @ plantportal.suedzuckergroup.com BFF: `access-control-allow-origin: *` + `expose-headers: *` on gated endpoints, but no `access-control-allo
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: `ceres-*` service namespace is a catch-all 401 (20/20 names uniform) — no 404/401 existence oracle, passive si
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com: gateway stack identified — Apache/2.4.68 (Debian) + PHP/8.4.25 serves the JSON:API 400 missing-link-id gate; 
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS header `ac
+- LEARN: REJECTED MISCONFIG @ outline.py CORS: allow-credentials without allow-origin provides no read primitive; not a finding (consistent with 09-12 plantportal BFF re
+- LEARN: REJECTED MISCONFIG @ smartfarming gateway banner: PHP/8.4.25/Apache/2.4.68 version disclosure is descriptive; no exposed PHP surface beyond gated documented API
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com/SelfRegister: LWR `register_view` exposes custom Apex registration (vdmcSugarSelfRegistrationController.initRegistration/co
+- LEARN: REJECTED MISCONFIG @ shop.suedzucker.com/SelfRegister: custom Apex endpoint names in public JS bundle are descriptive disclosure; completeRegistration/initRegis
+- LEARN: ACCEPTED RECON @ suedzucker.eu10.hcs.cloud.sap: /rest/v2, /occ/v2, /rest/v2/suez{base,store} → 200 SSO redirect to UAA (sb-approuter-sac-saceu10!t3650, /sso/log
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 13th consecutive NO_DELTA — triage 18:55 empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fiel
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 I
