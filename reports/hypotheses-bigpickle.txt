@@ -1,6 +1,6 @@
-## 2026-09-15 05:43:32 UTC [target] (model bigpickle)
+## 2026-09-15 11:14:03 UTC [target] (model bigpickle)
 [PRIO] plantportal.suedzuckergroup.com,7.0,axis=gate_ease+cloud_surface
-[PRIO] shop.suedzucker.com,6.8,axis=gate_ease+tech_exposure  
+[PRIO] shop.suedzucker.com,6.8,axis=gate_ease+tech_exposure
 [PRIO] smartfarming/portal.mydataplant.com,6.2,axis=gate_ease+business_value
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
@@ -35,6 +35,6 @@ testability: AUTH_HELPED
 [FINAL] 1) plantportal.suedzuckergroup.com — 70 (partner-linking BOLA)
 [FINAL] 2) shop.suedzucker.com — 62 (OrderSummary BOLA)
 [FINAL] 3) smartfarming/portal.mydataplant.com — 58 (link-id BOLA)
-[LEARN] ACCEPTED RECON @ suedzucker inventory: 18th consecutive NO_DELTA — no triage candidates surfaced; all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably exhausted; all three HIGH hypotheses remain gated on the single human registration deferred since 09-07.
-[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure) stand, no class reopens.
-[RISK] suedzucker: 66 — 18 consecutive NO_DELTA over ~13 days, triage empty every run, every passive angle closed as gated. All three HIGH hypotheses (70/62/58) wait on one human registration deferred every cycle since 09-07. Dominant risk remains attrition of the whole hypothesis family via time/scope; movement fraction stays 0, risk climbs 64→66 as empty-triage re-solidifies and no alternate ascent path exists.
+[NEXT] HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(+confirm)/CompanyName/Country/Phone) after one human solve of friendlyCaptcha; then GET /OrderSummary/{own recordId} to confirm ordering rights granted. Reuse same email at MyDataPlant POST /mdp-api/v3/api/tokens (link-id BOLA) and plantportal Entra B2C signup (partner-linking BOLA). No PROBE: 19th consecutive NO_DELTA, all unprobed passive planes already closed as gated; one more read-only request adds noise, not signal.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 19th consecutive NO_DELTA — no triage candidates surfaced; all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably exhausted; all three HIGH hypotheses remain gated on the single human registration deferred since 09-07.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior reject
