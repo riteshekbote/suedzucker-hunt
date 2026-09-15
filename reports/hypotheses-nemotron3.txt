@@ -1,4 +1,4 @@
-## 2026-09-15 10:56:53 UTC [target] (model nemotron3)
+## 2026-09-15 15:27:50 UTC [target] (model nemotron3)
 [PRIO] shop.suedzucker.com,8.8,a=9,b=10,t=8,g=10,c=7,f=6
 [PRIO] plantportal.suedzuckergroup.com,8.0,a=8,b=9,t=7,g=8,c=6,f=6
 [PRIO] portal.mydataplant.com/api/v3,7.8,a=9,b=9,t=8,g=6,c=7,f=5
