@@ -1,4 +1,4 @@
-## 2026-09-15 00:50:25 UTC [target] (model nemotron3)
+## 2026-09-15 05:45:38 UTC [target] (model nemotron3)
 [PRIO] shop.suedzucker.com,8.8,a=9,b=10,t=8,g=10,c=7,f=6
 [PRIO] plantportal.suedzuckergroup.com,8.0,a=8,b=9,t=7,g=8,c=6,f=6
 [PRIO] portal.mydataplant.com/api/v3,7.8,a=9,b=9,t=8,g=6,c=7,f=5
@@ -45,6 +45,7 @@ testability: AUTH_HELPED
 [FINAL] 2) plantportal.suedzuckergroup.com — 55
 [FINAL] 3) portal.mydataplant.com/api/v3 — 50
 [NEXT] HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow (form fields: firstName/lastName/email/password+confirm/CompanyName/Country/Phone), solve FriendlyCaptcha, create at least one order, then test horizontal OrderSummary IDOR via API Gateway (szg-is.prod.apimanagement.eu30.hana.ondemand.com) with valid Bearer token, read-only, rate-limited 1 rps. If SelfRegister fails, fallback to plantportal.suedzuckergroup.com Entra B2C public sign-up (https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100).
+[LEARN] REJECTED DEAD-ASSET @ seedrecommender + dev-chatwithyourdata.suedzuckergroup.com: 09-12/09-13 recheck HTTP 000 both — no resurrection; dead-asset set stable.
 [LEARN] ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; 18th consecutive NO_DELTA confirms further re-enumeration adds no lead value.
 [LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO) stand, no class reopens.
 [LEARN] REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 INVALID_SESSION_ID — SFDC GraphQL plane closed at org level.

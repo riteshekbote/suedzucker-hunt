@@ -361,3 +361,4 @@
 - 2026-09-15 ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door; ceres-* namespace catch-all 401 (20/20 uniform) — gateway-wide gate invariant.
 - 2026-09-15 ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass.
 - 2026-09-15 REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable.
+- 2026-09-15 REJECTED DEAD-ASSET @ seedrecommender + dev-chatwithyourdata.suedzuckergroup.com: 09-12/09-13 recheck HTTP 000 both — no resurrection; dead-asset set stable.
