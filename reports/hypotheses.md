@@ -2013,3 +2013,20 @@
 - LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS allow-cred
 - LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door; ceres-* namespace catch-all 401 (20/20 uniform) 
 - LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass.
+
+## RANKED HYPOTHESES 2026-09-16 00:29:45 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow (form fields: firstName/lastName/em
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 23rd consecutive NO_DELTA — no triage candidates surfaced; all mapped gating invariants (plantportal catalog=200 / smartf
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 22nd+ consecutive NO_DELTA — no triage candidates surfaced; all gating invariants (plantportal catalog=200 / smartfarming
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable.
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 IN
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 I
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: SFDC REST/GraphQL/aura + SAP OCC all SSO-gated — SelfRegister only pre-auth ascent path; anchors all three HIGH hypotheses
+- LEARN: ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: alt param schemes (user/field, id_user/id_field) → byte-identical 200 + 0-byte SVG; CORS allow-cred
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door; ceres-* namespace catch-all 401 (20/20 uniform) 
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass.
