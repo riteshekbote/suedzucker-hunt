@@ -2076,3 +2076,9 @@
 - LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass.
 - LEARN: REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable.
 - LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+
+## RANKED HYPOTHESES 2026-09-16 18:57:23 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 26th consecutive NO_DELTA — no triage candidates surfaced; all mapped gating invariants (plantportal catalog=200 / smartf
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
