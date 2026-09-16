@@ -2082,3 +2082,9 @@
 - NEXT(hypotheses-bigpickle.txt): HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(
 - LEARN: ACCEPTED RECON @ suedzucker inventory: 26th consecutive NO_DELTA — no triage candidates surfaced; all mapped gating invariants (plantportal catalog=200 / smartf
 - LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+
+## RANKED HYPOTHESES 2026-09-16 21:42:55 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 27th consecutive NO_DELTA — triage empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
