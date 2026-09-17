@@ -321,3 +321,6 @@ www.suedzucker.de
 ## 2026-09-16 21:42:55 UTC
 
 ## 2026-09-17 00:02:45 UTC
+
+## 2026-09-17 04:58:16 UTC
+- CHANGED triage run-2026-09-17-01-26: "No leads provided" — pipeline produced zero candidates (28th→29th empty).
