@@ -2088,3 +2088,11 @@
 - NEXT(hypotheses-bigpickle.txt): HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(
 - LEARN: ACCEPTED RECON @ suedzucker inventory: 27th consecutive NO_DELTA — triage empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400
 - LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+
+## RANKED HYPOTHESES 2026-09-17 00:02:45 UTC
+- [62] shop.suedzucker.com: Salesforce B2B Commerce OrderSummary Record IDOR (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST the completeRegistration Apex action (fields firstName/lastName/email/password(
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 27th consecutive NO_DELTA — triage empty; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 28th consecutive NO_DELTA — triage run-2026-09-16-23-13 empty ("No leads provided"); all mapped gating invariants (plantp
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
