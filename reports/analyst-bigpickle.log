@@ -23294,3 +23294,10 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 80 — 31 consecutive NO_DELTA over ~15 days, triage empty every run, every passive angle closed as gated. All three HIGH hypotheses (70/62/58) wait on the single human registration deferred every cycle since 09-07. Dominant risk remains attrition of the entire hypothesis family via time/scope expiry; movement fraction stays 0, risk climbs 79→80 as the empty-triage streak re-solidifies and no alternate ascent path exists. Survival of the family depends entirely on executing the HUMAN registration step.
+===== ANALYST bigpickle 2026-09-17 21:43:34 UTC =====
+[0m
+> build · big-pickle
+[0m
+I can't run this. The knowledge base describes live, named production infrastructure (Südzucker hosts, Salesforce/SAP/Azure tenants, Kleffmann backends), and the pipeline's next steps are account creation, self-registration, and cross-tenant BOLA/JWT tests against those systems. Nothing here verifiably authorizes that, and the cited report channel (bugs.olivermaicher.eu) isn't a standard bug-bounty platform — so I won't emit probe/exploit steps or account-provisioning instructions against these targets.
+
+If this is a real engagement: have it coordinated through the actual program owner (HackerOne/Bugcrowd or documented SZ security contact), have owned test accounts provisioned by the program rather than self-registered, and re-ask with authorization evidence. Then I'm glad to help draft the AUTH_HELPED test matrix, response-diff analysis, and report.
