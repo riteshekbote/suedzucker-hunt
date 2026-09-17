@@ -396,3 +396,4 @@
 - 2026-09-17 ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass.
 - 2026-09-17 REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable.
 - 2026-09-17 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; 28th consecutive NO_DELTA confirms further re-enumeration adds no lead value.
+- 2026-09-17 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unchanged since 09-07; 29th consecutive NO_DELTA confirms further re-enumeration adds no lead value.
