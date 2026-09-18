@@ -1,10 +1,9 @@
-## 2026-09-18 19:30:35 UTC [target] (model nemotron3)
-[CHANGED] portal.mydataplant.com/services/outline.py: now returns 500 for ALL param combinations (user_id/field_id, user/field, id_user/id_field) — previously 200+empty SVG for numeric IDs, 500 only for non-numeric revealing Apache/2.4.29 Ubuntu + Kleffmann. Server header now shows Apache/2.4.68 (Debian) vs prior Apache/2.4.29 (Ubuntu) — suggests backend migration or gateway absorption of this endpoint.
+## 2026-09-18 21:51:58 UTC [target] (model nemotron3)
 [PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,7.0,a=8,b=9,t=7,g=8,c=6,f=5
 [PRIO] shop.suedzucker.com,6.2,a=9,b=10,t=8,g=10,c=7,f=6
 [PRIO] portal.mydataplant.com/api/v3,5.8,a=9,b=9,t=8,g=6,c=7,f=5
-[PRIO] portal.mydataplant.com/services/outline.py,4.2,a=6,b=7,t=5,g=9,c=3,f=3
 [PRIO] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime,3.8,a=5,b=6,t=5,g=4,c=4,f=2
+[PRIO] portal.mydataplant.com/services/outline.py,2.0,a=4,b=5,t=3,g=9,c=2,f=1
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services

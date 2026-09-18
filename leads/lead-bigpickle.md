@@ -4935,3 +4935,42 @@ testability: AUTH_HELPED
 [LEARN] ACCEPTED RECON @ suedzucker inventory: 35th consecutive NO_DELTA — triage run-2026-09-18-17-51 empty ("No leads provided"); no new candidates, no class reopens; all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably exhausted across 11 assets; all three HIGH hypotheses (70/62/58) remain gated on the single human registration deferred since 09-07.
 [LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure, MitBG password-reset-enumeration) stand, no class reopens.
 [RISK] suedzucker: 85 — 35 consecutive empty triage cycles over ~16 days; every triage "No leads provided"; every passive plane closed as gated; movement fraction 0. All three HIGH hypotheses and the engagement's entire finding output depend on completing the ONE HUMAN registration step deferred every cycle since 09-07. Without it this program will close with zero confirmed findings regardless of hypothesis quality.
+## 2026-09-18 21:51:14 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com, 7.4, attack=5.biz=9.test=9.gate=8.cloud=9.fresh=1
+[PRIO] shop.suedzucker.com, 7.1, attack=6.biz=9.test=9.gate=7.cloud=8.fresh=1
+[PRIO] smartfarming/portal.mydataplant.com, 6.8, attack=5.biz=8.test=8.gate=7.cloud=6.fresh=1
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence this cycle; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* catch-all 401 is a gateway-wide Azure APIM/Front Door invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own link-ids; secondary link-id returns rows scoped to another partner on GET /access-rights
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: Unchanged; LWR /OrderSummary/:recordId holds pricing/PII/payment, sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); all pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary recordId + horizontally mutated id; mutated GET returns foreign record
+verify_steps: AUTH_HELPED — self-register → own order → GET /OrderSummary/{mutated-id}, diff vs own record
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: Unchanged core; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; 09-18 outline.py now uniform 500 on Apache/2.4.68 (Debian) — last auth-free bypass surface absorbed behind/upstream of gated stack, impact unconfirmed, non-load-bearing for this hypothesis.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows
+verify_steps: AUTH_HELPED — POST /mdp-api/v3/api/tokens (own email) → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] shop SelfRegister vdmcSugarSelfRegistrationController mass-assignment: plausible class but captcha-gated (HUMAN) and no unwhitelisted-field surface in static analysis — <40, parked.
+[PARKED] MitBG /api/password-reset-send: username-enumeration class (REJECTED); no proposal.
+[FINAL] survivors ranked: [70] plantportal link-flow IDOR → [62] shop OrderSummary IDOR → [58] MyDataPlant header BOLA. Unchanged across 36 cycles; all gating proven invariant; no confidence movement warranted without owned access.
+[NEXT] HUMAN: execute the single deferred owned-identity registration (deferred since 09-07): shop.suedzucker.com/SelfRegister — solve one FriendlyCaptcha → POST vdmcSugarSelfRegistrationController.completeRegistration (firstName/lastName/email/password+confirm/CompanyName/Country/Phone, own test identity only) → confirm via GET /OrderSummary/{own recordId}; then reuse the same email at POST /mdp-api/v3/api/tokens and plantportal Entra B2C signup. No PROBE: 36 consecutive empty cycles; any read-only re-probe returns only the frozen 200/400/200 invariants.
+[LEARN] ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: uniform 500 for all param types, server banner now Apache/2.4.68 (Debian) = smartfarming gateway stack — last auth-free Kleffmann-side bypass vector absorbed behind/upstream of the gated gateway; idle surface, no leak observed.
+[LEARN] REJECTED MISCONFIG @ portal.mydataplant.com/services/outline.py: 500-on-all-params change is migration/deployment behavior (banner swap), not an exploitable misconfig; descriptive only, no authz/money/logic impact.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 36th consecutive NO_DELTA — triage continues empty; all gating invariants stand; passive surface terminal across 11 assets; all three HIGH hypotheses (70/62/58) remain gated on the single human registration deferred since 09-07.
+[RISK] suedzucker: 86 — 36th consecutive empty triage; the final passive auth-free bypass vector (outline.py) degraded to closed, leaving movement fraction 0; every mapped plane gated; the engagement's entire finding output depends on the one outstanding HUMAN registration step deferred every cycle since 09-07. Without it the program closes with zero confirmed findings regardless of hypothesis quality.
