@@ -23419,3 +23419,228 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 82 — 33 consecutive NO_DELTA over ~16 days, triage empty every run, every passive angle closed as gated. All three HIGH hypotheses (70/62/58) wait on the single human registration deferred every cycle since 09-07. Dominant risk remains attrition of the entire hypothesis family via time/scope expiry; movement fraction stays 0, risk climbs 81→82 as the empty-triage streak re-solidifies and no alternate ascent path exists. Survival of the family depends entirely on executing the HUMAN registration step.
+===== ANALYST bigpickle 2026-09-18 07:57:40 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -s --max-time 20 -w '\nHTTP:%{http_code}\n' https://plantportal.suedzuckergroup.com/ -o /tmp/opencode/pp_root.html && wc -c /tmp/opencode/pp_root.html
+HTTP:200
+594422 /tmp/opencode/pp_root.html
+[0m
+[0m$ [0mgrep -oE '/_nuxt/[A-Za-z0-9_-]+\.(js|mjs)' /tmp/opencode/pp_root.html | sort -u | head -40; echo '---RUNTIME---'; grep -oE '"(apiGateway|api-gateway|rmpServiceApiEndpoint|rmpBaseUrl|friendlyCaptchaSitekey|clientId|authority|scope)"\s*:\s*"[^"]*"' /tmp/opencode/pp_root.html | sort -u
+/_nuxt/08dCbSnU.js
+/_nuxt/2xJ-x_6M.js
+/_nuxt/3e-HVLX_.js
+/_nuxt/4erNgXM-2.js
+/_nuxt/5d830NRz2.js
+/_nuxt/6Wnmll_P.js
+/_nuxt/6aJ01xxZ.js
+/_nuxt/90tPsV1p2.js
+/_nuxt/AqGfuVcr.js
+/_nuxt/B45jKgFA.js
+/_nuxt/B4YSpYOl2.js
+/_nuxt/B6E1-Bdn2.js
+/_nuxt/B8A4KAHe2.js
+/_nuxt/B8jaJArp.js
+/_nuxt/B9KseElt2.js
+/_nuxt/B9N9viZb.js
+/_nuxt/B9Z5ySvf.js
+/_nuxt/B9o2pG0K.js
+/_nuxt/BAi_TK7i2.js
+/_nuxt/BDD3A1Lp2.js
+/_nuxt/BDNMzG2s.js
+/_nuxt/BE3fqJOo2.js
+/_nuxt/BFLY8RF62.js
+/_nuxt/BFX0zfz72.js
+/_nuxt/BGoJXULR2.js
+/_nuxt/BH1P5eZr2.js
+/_nuxt/BIK4xzfn2.js
+/_nuxt/BJlSwwvI.js
+/_nuxt/BKC1f_5s.js
+/_nuxt/BNgZk4bq.js
+/_nuxt/BNvwAlFw.js
+/_nuxt/BODZP62q.js
+/_nuxt/BP4Nrl-7.js
+/_nuxt/BPOgzMkK2.js
+/_nuxt/BSu4dHcO.js
+/_nuxt/BTcx923g2.js
+/_nuxt/BThQ33i8.js
+/_nuxt/BTuuzj5S.js
+/_nuxt/BWM0HJXx2.js
+/_nuxt/BaMZUoVN2.js
+---RUNTIME---
+[0m
+[0m$ [0mgrep -oE '(importmap|entry|modulepreload)[^>]{0,160}' /tmp/opencode/pp_root.html | head -20; echo '===ENTRY-IMPORT==='; grep -oE 'import\s+[^"'"'"']*["'"'"']/_nuxt/[A-Za-z0-9_-]+\.js' /tmp/opencode/pp_root.html | head
+importmap"
+entry":"/_nuxt/DcAvLWOw.js"}}</script
+entry.BL1igJmB.css" crossorigin
+modulepreload" as="script" crossorigin href="/_nuxt/DcAvLWOw.js"
+modulepreload" as="script" crossorigin href="/_nuxt/BgfcNpld.js"
+modulepreload" as="script" crossorigin href="/_nuxt/B8jaJArp.js"
+modulepreload" as="script" crossorigin href="/_nuxt/o2AQvMp_.js"
+modulepreload" as="script" crossorigin href="/_nuxt/as13Z-uQ.js"
+modulepreload" as="script" crossorigin href="/_nuxt/DaGjxbIF.js"
+modulepreload" as="script" crossorigin href="/_nuxt/B9o2pG0K.js"
+modulepreload" as="script" crossorigin href="/_nuxt/DgD6zSQd.js"
+modulepreload" as="script" crossorigin href="/_nuxt/BNgZk4bq.js"
+modulepreload" as="script" crossorigin href="/_nuxt/vCO5AZsz.js"
+modulepreload" as="script" crossorigin href="/_nuxt/iZLELKht.js"
+modulepreload" as="script" crossorigin href="/_nuxt/Du_W8gs7.js"
+modulepreload" as="script" crossorigin href="/_nuxt/C9USKCbR.js"
+modulepreload" as="script" crossorigin href="/_nuxt/C5STy1Vp.js"
+modulepreload" as="script" crossorigin href="/_nuxt/Cv6DGAnF.js"
+modulepreload" as="script" crossorigin href="/_nuxt/CTOisG6b.js"
+modulepreload" as="script" crossorigin href="/_nuxt/O0u-EZD4.js"
+===ENTRY-IMPORT===
+[0m
+Chunk hashes all differ from the 09-04 baseline (`DpUprWo9`/`C8VgmCLt`/`BIRtYruH`) — the plantportal SPA has been redeployed. Extracting the entry + runtime config.
+New entry chunk `DcAvLWOw.js` confirmed (old: `DpUprWo9.js`). Pulling the entry + checking runtime config for endpoint drift.
+[0m✗ [0mInvalid Tool
+The arguments provided to the tool are invalid: Invalid input for tool bash: JSON parsing failed: Text: {"command": "grep -oE '(api-gateway|ciamlogin|clientId|authority|scope|ceres|external_account|partner_link|friendlyCaptcha|apiGateway)' /tmp/opencode/pp_root.html | sort | uniq -c | sort -rn | head; echo '===CTX==='; grep -.
+Error message: JSON Parse error: Unterminated string
+[0m
+[0m$ [0mcurl -s --max-time 30 https://plantportal.suedzuckergroup.com/_nuxt/DcAvLWOw.js -o /tmp/opencode/pp_entry.js && wc -c /tmp/opencode/pp_entry.js
+657789 /tmp/opencode/pp_entry.js
+[0m
+[0m$ [0mgrep -oE 'api-gateway[^"'"'"']*' /tmp/opencode/pp_entry.js | sort -u | head -20; echo '===CERES-SVC==='; grep -oE 'ceres-[a-z-]+' /tmp/opencode/pp_entry.js | sort -u; echo '===CONFIG=== '; grep -oE '(friendlyCaptchaSitekey|rmpServiceApiEndpoint|rmpBaseUrl|clientId|ciamlogin|authority)[^,]{0,120}' /tmp/opencode/pp_entry.js | sort -u | head -30
+===CERES-SVC===
+ceres-screenshot-watermark
+===CONFIG=== 
+authority
+authority)
+authority-metadata`
+authority-metadata`)===0&&t.hasOwnProperty(`aliases`)&&t.hasOwnProperty(`preferred_cache`)&&t.hasOwnProperty(`preferred_network`)
+authority.endSessionEndpoint
+authority.endSessionEndpoint}catch{if(e.account?.homeAccountId&&e.postLogoutRedirectUri&&a.authority.protocolMode===Zh.OIDC){if(t
+authority.options
+authority.options.OIDCOptions?.defaultScopes)
+authority.options.OIDCOptions?.defaultScopes}async acquireToken(e
+authority.options.protocolMode===Zh.OIDC}var wy=class{constructor(e
+authority.protocolMode===Zh.OIDC)try{i.authority.endSessionEndpoint}catch{if(t.account?.homeAccountId){this.eventHandler.emitEven
+authority.replace(Mg.getDomainFromUrl(d
+authority.tenant}/`
+authority:`${pm}`
+authority:``
+authority:a
+authority:a.public.msal.authority
+authority:c});return I(tE
+authority:e.authority
+authority:e.authority||this.config.auth.authority
+authority:i
+authority:n
+authority:o
+authority:o});return I(tE
+authority:r
+authority:t.authority
+authority:t.canonicalAuthority
+authority:t.urlString
+authority:this.canonicalAuthority
+authority:t}
+[0m
+[0m$ [0mgrep -oE '"(apiGateway|api-?gateway|bffBaseUrl|baseUrl|ceres-?[a-z-]*base|rmpBaseUrl|rmpServiceApiEndpoint|friendlyCaptchaSitekey|tenantId|clientId|scope)"([^,]{0,160})' /tmp/opencode/pp_root.html | sort -u | head -40
+(no output)
+[0m
+[0m$ [0mgrep -oiE 'api-gateway[a-z0-9/_.-]*' /tmp/opencode/pp_root.html | sort -u | head; echo '===NUXT=== '; grep -oE '__NUXT__|window\.__|application/json' /tmp/opencode/pp_root.html | sort | uniq -c; echo '===PARTNER=== '; grep -oiE '(external-partner|[a-z-]*partner[a-z-]*)[/"]' /tmp/opencode/pp_root.html | sort -u | head
+api-gateway/entra-ext/api/
+api-gateway/entra-ext/api/ceres-domain-backend-services
+api-gateway/entra-ext/api/ceres-image-service/images
+api-gateway/entra-ext/api/ceres-internal-auth-service
+===NUXT=== 
+      1 application/json
+      3 window.__
+===PARTNER===
+[0m
+[0m$ [0mgrep -oE 'ceres-?domain[^"'"'"']{0,40}|ceres-?internal[^"'"'"']{0,40}|ceres-?image[^"'"'"']{0,40}|rmpServiceApiEndpoint[^,}]{0,100}|rmpBaseUrl[^,}]{0,100}|friendlyCaptcha[^,}]{0,60}|external-account[^"'"'"']{0,40}|access-rights|external-partner[^"'"'"']{0,40}' /tmp/opencode/pp_entry.js /tmp/opencode/pp_root.html | sort -u | head -40
+/tmp/opencode/pp_root.html:ceres-domain-backend-services
+/tmp/opencode/pp_root.html:ceres-image-service/images
+/tmp/opencode/pp_root.html:ceres-internal-auth-service
+/tmp/opencode/pp_root.html:friendlyCaptchaSitekey:"FCMIJCDF07D96D1C"
+/tmp/opencode/pp_root.html:rmpBaseUrl:"https://plantportal.suedzuckergroup.com"
+/tmp/opencode/pp_root.html:rmpServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/rmp"
+[0m
+[0m$ [0mgrep -oE 'window\.__[A-Z_]+__[^<]{0,200}' /tmp/opencode/pp_root.html | head; echo '===MSAL-AUTH=== '; grep -oE '"(authority|clientId|scopes|tenantId|redirectUri|postLogoutRedirectUri)"\s*:[^,}]{0,110}' /tmp/opencode/pp_root.html | sort -u | head -25
+window.__CERES_EARLY_WATERMARK__={"application":"epp","applicationVersion":"1.8.0"}
+window.__NUXT__={};window.__NUXT__.config={public:{environment:"PRODUCTION",msal:{clientId:"ba3120d6-3d54-478b-a048-5f1242196100",authority:"https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb135611267c",f
+===MSAL-AUTH===
+[0m
+[0m$ [0mgrep -oE 'window\.__NUXT__\.config=.*' /tmp/opencode/pp_root.html | head -c 3000
+window.__NUXT__.config={public:{environment:"PRODUCTION",msal:{clientId:"ba3120d6-3d54-478b-a048-5f1242196100",authority:"https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb135611267c",flow:"REDIRECT",redirectUri:"/auth-callback",logoutRedirectUri:"/logout",navigateToLoginRequestUrl:false,loginRedirectStartPage:"/",loginScopes:["openid","profile","User.Read"],api:{baseUrl:"https://graph.microsoft.com/v1.0",scopes:["openid","profile","User.Read"]}},auth:{provider:"MICROSOFT_ENTRA_ID",backend:{uri:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/",scopes:["api://1b7819b0-001a-4381-ad51-e4626e5afd31/external_api_access"]},mdpBackend:{uri:"https://smartfarming.suedzuckergroup.com/mdp-api/v3/api",scopes:["api://aad3fee6-9215-4ded-a3a1-b56cb63e7a00/mdp_bgd_api"]}},imageServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-image-service/images",internalAuthServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-internal-auth-service",domainBackendServicesApiEndpoint:"https://plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services",logLevel:"warn",appInsights:{enabled:false,connectionString:"",applicationName:"ceres-external-plant-portal",version:"1.8.0",samplingRatio:1,logLevel:"error"},mydataplantServiceApiEndpoint:"https://smartfarming.suedzuckergroup.com/mdp-api/v3/api",mydataplantBaseUrl:"https://smartfarming.suedzuckergroup.com",rmpServiceApiEndpoint:"https://plantportal.suedzuckergroup.com/rmp",rmpBaseUrl:"https://plantportal.suedzuckergroup.com",friendlyCaptchaSitekey:"FCMIJCDF07D96D1C",primevue:{usePrimeVue:true,autoImport:false,resolvePath:"",importPT:"",importTheme:"",loadStyles:true,options:{theme:{preset:{primitive:{borderRadius:{none:"0",xs:"2px",sm:"4px",md:"6px",lg:"8px",xl:"12px"},emerald:{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b","950":"#022c22"},green:{"50":"#f0fdf4","100":"#dcfce7","200":"#bbf7d0","300":"#86efac","400":"#4ade80","500":"#22c55e","600":"#16a34a","700":"#15803d","800":"#166534","900":"#14532d","950":"#052e16"},lime:{"50":"#f7fee7","100":"#ecfccb","200":"#d9f99d","300":"#bef264","400":"#a3e635","500":"#84cc16","600":"#65a30d","700":"#4d7c0f","800":"#3f6212","900":"#365314","950":"#1a2e05"},red:{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d","950":"#450a0a"},orange:{"50":"#fff7ed","100":"#ffedd5","200":"#fed7aa","300":"#fdba74","400":"#fb923c","500":"#f97316","600":"#ea580c","700":"#c2410c","800":"#9a3412","900":"#7c2d12","950":"#431407"},amber:{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f","950":"#451a03"},yellow:{"50":"#fefce8","100":"#fef9c3","200":"#fe
+[0m
+[0m$ [0mgrep -oE '"/[a-z][a-z0-9/._-]{3,60}"' /tmp/opencode/pp_entry.js | sort -u | grep -iE 'partner|external|account|access|current|impersonat|association|catalog|company|field|contract|deliver' | head -40
+(no output)
+[0m
+Runtime config matches baseline (same clientId, authority, 3 ceres services). The real delta is the rebuild. Now scanning the new entry chunk for endpoint-path drift on the partner-linking flow.
+[0m$ [0mgrep -oE '"/_nuxt/[A-Za-z0-9_-]+\.js"' /tmp/opencode/pp_entry.js | sort -u | wc -l; grep -oE '"/_nuxt/[A-Za-z0-9_-]+\.js"' /tmp/opencode/pp_entry.js | sort -u | head -60
+0
+[0m
+[0m$ [0mgrep -oE 'import\("[^"]+"\)' /tmp/opencode/pp_entry.js | sort -u | head -60
+(no output)
+[0m
+[0m$ [0mgrep -oE '\.[A-Za-z0-9_-]{6,12}\.js' /tmp/opencode/pp_entry.js | sort -u | head -80; echo '===COUNT==='; grep -oE '\.[A-Za-z0-9_-]{6,12}\.js' /tmp/opencode/pp_entry.js | sort -u | wc -l
+===COUNT===
+0
+[0m
+[0m$ [0mgrep -ocE 'external-account|current-partner|access-rights|impersonat' /tmp/opencode/pp_entry.js; echo '---'; grep -oE '"[a-z-]*(partner|impersonat|access-right|external-account)[a-z-]*"' /tmp/opencode/pp_entry.js | sort -u | head -30
+2
+---
+"only-for-partner"
+[0m
+[0m$ [0mgrep -oE '/_nuxt/[A-Za-z0-9_-]+\.js' /tmp/opencode/pp_root.html | sort -u | wc -l; grep -oE '/_nuxt/[A-Za-z0-9_-]+\.js' /tmp/opencode/pp_root.html | sort -u | grep -iE 'Alpha|Baker|Charlie|Delta|Echo|Foxtrot|Golf|Hotel|India|Juliet|Kilo|Lima|Mike|November|Oscar|Papa|Quebec|Romeo|Sierra|Tango|Uniform|Victor|Whiskey|Xray|Yankee|Zulu' | head
+193
+[0m
+STEP 1 — DELTA
+- [CHANGED] plantportal.suedzuckergroup.com: Nuxt "epp" SPA fully rebuilt 09-18 — entry chunk rotated `DpUprWo9`→`DcAvLWOw`, manifest now 193 chunks; server-issued `__NUXT__` runtime config byte-identical to 09-04 baseline (msal clientId `ba3120d6-3d54-478b-a048-5f1242196100`, authority `szgrmb2cprod.ciamlogin.com/516d27c9-...`, backend `/api-gateway/entra-ext/api/`, mdpBackend `smartfarming.../mdp-api/v3/api`, 3× ceres endpoints, rmp endpoints, friendlyCaptchaSitekey `FCMIJCDF07D96D1C`, version 1.8.0). Functional/endpoint surface frozen — rebuild is cosmetic.
+- [NEW] plantportal entry chunk contains helper namespace `ceres-screenshot-watermark` — UI helper, no gateway path; not a service endpoint.
+
+STEP 2 — PRIORITIZE
+- [PRIO] shop.suedzucker.com,6.8,axis=gate_ease+tech_exposure (SelfRegister = only functional pre-auth entry; unchanged)
+- [PRIO] plantportal.suedzuckergroup.com,6.7,axis=gate_ease+cloud_surface (Azure APIM BFF, client-only route guards; rebuilt w/o config drift)
+- [PRIO] smartfarming/portal.mydataplant.com,6.2,axis=business_value+banner-invariant (cross-tenant BOLA via link-id; unchanged)
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: rebuild 09-18 rotated entry chunk but server __NUXT__ config byte-identical (same 3 ceres services, same BFF base) — endpoint surface frozen, no drift; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; link-id→JWT binding unverified; ceres-* catch-all 401 (gateway-wide invariant); gateway = Azure APIM/Front Door
+evidence_needed: owned MSAL token + two own link-ids; secondary link-id returns rows scoped to another partner
+verify_steps: AUTH_HELPED — GET /external-account/current-partner with Bearer, then GET /access-rights with link-A vs link-B, diff bodies
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId holds pricing/PII/payment; sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed)
+evidence_needed: own session + own OrderSummary id + foreign mutated id; horizontal GET returns foreign record
+verify_steps: AUTH_HELPED — SelfRegister → own order → GET /OrderSummary/{mutated id}, diff vs own record
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend (Apache/2.4.29); /fields gate invariant 400 since 09-07; outline.py soft-fails (0-byte SVG, allow-credentials w/o allow-origin) — no cross-origin read primitive
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows
+verify_steps: AUTH_HELPED — POST /mdp-api/v3/api/tokens with own email, then GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- plantportal rebuild: framework-only, server config frozen — no new class, no inference; hypotheses unchanged. No new drop<40 candidates.
+- [PARKED] SelfRegister SObject mass assignment: no unwhitelisted-field evidence in static body; verification mutating + captcha-HUMAN-gated — parked unchanged.
+- [PARKED] Simplifier workflow-runtime IDOR family: uniform 401, 5 modules 503, no pre-auth angle, no owned Simplifier path — parked unchanged.
+- [PARKED] outline.py IDOR: auth-free but soft-fails all probed combos; sibling/path + CORS enumeration closed — parked unchanged.
+- [FINAL] 1) plantportal — 70 (partner-linking BOLA) | 2) shop — 62 (OrderSummary BOLA) | 3) smartfarming — 58 (link-id BOLA)
+
+STEP 5 — NEXT ACTION
+- [NEXT] HUMAN: create one owned test identity at shop.suedzucker.com/SelfRegister — POST vdmcSugarSelfRegistrationController.completeRegistration (firstName/lastName/email/password(+confirm)/CompanyName/Country/Phone) after one human friendlyCaptcha solve; then GET /OrderSummary/{own recordId} to confirm ordering rights. Reuse same email at MyDataPlant POST /mdp-api/v3/api/tokens (link-id BOLA) and plantportal Entra B2C signup (partner-linking BOLA). No PROBE: this cycle's only moved signal was a cosmetic SPA rebuild with fused config — repeat chunk-manifest diff of plantportal root opportunistically (one GET, high signal-per-request when a rebuild ships), not liveness re-probes.
+
+STEP 6 — LEARNING
+- [LEARN] ACCEPTED RECON @ plantportal.suedzuckergroup.com: entry chunk rotated DpUprWo9→DcAvLWOw (full rebuild, 193-chunk manifest, version still 1.8.0) but server `__NUXT__` config byte-identical (ceres trio, msal clientId/authority, rmp, friendlyCaptcha sitekey FCMIJCDF07D96D1C). Static-surface diff is the one cheap signal that moved in 33 cycles — adoption: re-diff the root HTML's `_nuxt` manifest per rebuild, not on fixed schedule.
+- [LEARN] REJECTED MISCONFIG @ (no new candidate) — rebuild without config drift confirms the 09-12 CORS/BFF rejections; no class reopens.
+
+STEP 7 — RISK
+- [RISK] suedzucker: 83 — 33 NO_DELTA + this cycle's config-frozen rebuild shows active shipping but no surface movement; all three HIGH hypotheses (70/62/58) still gated on the single human registration deferred since 09-07. Risk 82→83: empty-triage streak re-solidifies, and the one moving observation (cosmetic rebuild) produced no lead. Survival of the family depends entirely on executing the HUMAN registration step.
