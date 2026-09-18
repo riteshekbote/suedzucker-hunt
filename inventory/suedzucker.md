@@ -349,3 +349,6 @@ www.suedzucker.de
 - CHANGED portal.mydataplant.com/services/outline.py: now returns 500 for ALL param combinations (user_id/field_id, user/field, id_user/id_field) — previously 200+empty SVG for numeric IDs, 500 only for non-num
 
 ## 2026-09-18 21:52:06 UTC
+
+## 2026-09-18 23:50:50 UTC
+- CHANGED portal.mydataplant.com/services/outline.py: now returns 500 for ALL param combinations (was 200+empty SVG for numeric IDs, 500 only for non-numeric); server header Apache/2.4.68 (Debian) vs prior Apac
