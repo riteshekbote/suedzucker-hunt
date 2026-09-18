@@ -4848,3 +4848,42 @@ testability: AUTH_HELPED
 [LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure) stand, no class reopens.
 [LEARN] ACCEPTED RECON @ suedzucker inventory: 33rd consecutive NO_DELTA — no deltas since 2026-09-17 23:52; all mapped gating invariants stand; passive surface provably exhausted; all three HIGH hypotheses remain gated on the single human registration deferred since 09-07.
 [RISK] suedzucker: 83 — 33 consecutive NO_DELTA over ~16 days, every triage empty, every passive plane closed as gated. All three HIGH hypotheses (70/62/58) wait on one human registration deferred every cycle since 09-07; movement fraction 0, no alternate ascent path exists. Integrity of the family now depends entirely on executing the HUMAN registration step before scope/time expiry.
+## 2026-09-18 16:43:52 UTC [target] (model bigpickle)
+[PRIO] plantportal.suedzuckergroup.com, 7.4, attack=5.biz=9.test=9.gate=8.cloud=9.fresh=1
+[PRIO] shop.suedzucker.com, 7.1, attack=6.biz=9.test=9.gate=7.cloud=8.fresh=1
+[PRIO] smartfarming/portal.mydataplant.com, 6.8, attack=5.biz=8.test=8.gate=7.cloud=6.fresh=1
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: endpoint surface frozen (09-18 rebuild byte-identical); /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; link-id→JWT binding unverified; ceres-* catch-all 401 is a gateway-wide invariant; gateway = Azure APIM/Front Door.
+evidence_needed: owned MSAL token + two own link-ids; secondary link-id returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer), then GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId holds pricing/PII/payment; sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary id + foreign mutated id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → own order → GET /OrderSummary/{mutated-id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend (Apache/2.4.29); /fields gate invariant 400 since 09-07; outline.py soft-fails (0-byte SVG, allow-credentials w/o allow-origin) — no cross-origin read primitive.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — POST /mdp-api/v3/api/tokens with own email, then GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[PARKED] shop SelfRegister vdmcSugarSelfRegistrationController mass-assignment: plausible class but captcha-gated (HUMAN) and no unwhitelisted-field surface in static analysis — <40, parked.
+[PARKED] MitBG /api/password-reset-send: employee-benefits SaaS password-reset endpoint is username-enumeration class (REJECTED); no proposal.
+[FINAL] survivors ranked: [70] plantportal link-flow IDOR → [62] shop OrderSummary IDOR → [58] MyDataPlant header BOLA. All AUTH_HELPED, all unchanged, all gating proven invariant.
+[NEXT] HUMAN: execute the single deferred owned-identity registration (since 09-07): (1) shop.suedzucker.com/SelfRegister — POST vdmcSugarSelfRegistrationController.completeRegistration (firstName/lastName/email/password+confirm/CompanyName/Country/Phone) after one FriendlyCaptcha solve; confirm via GET /OrderSummary/{own recordId}. (2) Reuse same email at POST /mdp-api/v3/api/tokens (link-id BOLA) and plantportal Entra B2C signup (partner-linking BOLA). No PROBE: full re-probe of the AUTH_HELPED trio or MitBG recon generated zero deltas this cycle — one more read-only request adds noise, not signal. Passive phase remains terminal; every finding is now provably gated on owned accounts.
+[LEARN] ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: re-probed 09-18 (first touch since 09-03) — unchanged 302 /login + CBG3FE cookie + 200 benefits-login shell; adds anonymous POST /api/password-reset-send to surface map; third-party SaaS employee gate intact; no new logic surface.
+[LEARN] REJECTED MISCONFIG @ suedzucker.mitarbeiterangebote.de /api/password-reset-send: anonymous password-reset form is username-enumeration class (out-of-scope); no authz/money/logic flaw observable pre-auth.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 34th consecutive NO_DELTA — no deltas since 2026-09-17 23:52; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably exhausted across 11 assets; three HIGH hypotheses (70/62/58) remain gated on the single human registration deferred since 09-07.
+[RISK] suedzucker: 84 — 34 consecutive NO_DELTA over ~16 days; every triage empty; every passive plane closed gated; only check hit this cycle confirmed an untracked surface is also dead (MitBG login invariant). Movement fraction 0; all three HIGH hypotheses and the program's finding output depend entirely on completing the HUMAN registration step before scope/time expiry — without it the engagement yields no confirmed finding.

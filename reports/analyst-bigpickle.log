@@ -23702,3 +23702,89 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 [RISK] suedzucker: 83 — 33 consecutive NO_DELTA over ~16 days, every triage empty, every passive plane closed as gated. All three HIGH hypotheses (70/62/58) wait on one human registration deferred every cycle since 09-07; movement fraction 0, no alternate ascent path exists. Integrity of the family now depends entirely on executing the HUMAN registration step before scope/time expiry.
+===== ANALYST bigpickle 2026-09-18 16:45:19 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcurl -sI -m 15 --max-time 15 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://suedzucker.mitarbeiterangebote.de/ | head -30; echo "---HTTP---"; curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" -m 15 -A "Mozilla/5.0" https://suedzucker.mitarbeiterangebote.de/
+HTTP/2 302 
+date: Fri, 18 Sep 2026 16:43:00 GMT
+expires: Thu, 19 Nov 1981 08:52:00 GMT
+cache-control: no-store, no-cache, must-revalidate
+pragma: no-cache
+set-cookie: CBG3FE=uojjnudqfc6pn7sjs85qgus60q; expires=Sat, 19-Sep-2026 00:43:00 GMT; Max-Age=28800; path=/; secure; HttpOnly
+location: /login
+x-xss-protection: 1
+x-content-type-options: nosniff
+content-type: text/html; charset=UTF-8
+strict-transport-security: max-age=31536000; includeSubDomains; preload;
+
+---HTTP---
+302 https://suedzucker.mitarbeiterangebote.de/login
+[0m
+[0m$ [0mcurl -s -o /tmp/mitbg.html -w "code=%{http_code} type=%{content_type} bytes=%{size_download}\n" -m 15 -A "Mozilla/5.0" -L https://suedzucker.mitarbeiterangebote.de/login; echo "---title/forms---"; rg -io '<title>[^<]*</title>|<form[^>]*>|provider[^"]*|sso|login' /tmp/mitbg.html | head -20
+code=200 type=text/html; charset=UTF-8 bytes=68808
+---title/forms---
+/bin/bash: line 1: rg: command not found
+[0m
+[0m$ [0mgrep -ioE '<title>[^<]*</title>|<form[^>]*action="[^"]*"' /tmp/mitbg.html | head -10; echo "---links---"; grep -ioE 'href="https?://[^"]*"' /tmp/mitbg.html | sort -u | head -15
+<title>Attraktive Angebote für Südzucker AG-Mitarbeiter</title>
+<form method="POST" name="cbg-login--form" novalidate="novalidate" data-direct-call="true" action="&#x2F;login"
+<form method="POST" name="cbg-password-reset-code-send--form" novalidate="novalidate" data-direct-call="false" action="&#x2F;api&#x2F;password-reset-send"
+---links---
+[0m
+MitBG delta check complete (2 read-only requests, 1 rps).
+
+STEP 1 — DELTA
+- CHANGED acquired no new surface: mitarbeiterangebote.de re-probed (single-touch stale asset, 09-03 only) → unchanged: 302 /login, same `CBG3FE` session cookie (secure/HttpOnly), 200 login shell w/ POST /login + POST /api/password-reset-send forms; third-party corporate-benefits SaaS gate invariant intact.
+- NO_DELTA — all 11 in-scope assets otherwise frozen (33rd consecutive cycle); no new hosts/tech/KB since 2026-09-17 23:52.
+
+STEP 2 — PRIORITIZE
+[PRIO] plantportal.suedzuckergroup.com, 7.4, attack=5.biz=9.test=9.gate=8.cloud=9.fresh=1
+[PRIO] shop.suedzucker.com, 7.1, attack=6.biz=9.test=9.gate=7.cloud=8.fresh=1
+[PRIO] smartfarming/portal.mydataplant.com, 6.8, attack=5.biz=8.test=8.gate=7.cloud=6.fresh=1
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: endpoint surface frozen (09-18 rebuild byte-identical); /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; link-id→JWT binding unverified; ceres-* catch-all 401 is a gateway-wide invariant; gateway = Azure APIM/Front Door.
+evidence_needed: owned MSAL token + two own link-ids; secondary link-id returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer), then GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: LWR /OrderSummary/:recordId holds pricing/PII/payment; sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary id + foreign mutated id; horizontal GET returns foreign record.
+verify_steps: AUTH_HELPED — SelfRegister → own order → GET /OrderSummary/{mutated-id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: gateway 400s without tenant header; JWT carries userId/email; link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend (Apache/2.4.29); /fields gate invariant 400 since 09-07; outline.py soft-fails (0-byte SVG, allow-credentials w/o allow-origin) — no cross-origin read primitive.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — POST /mdp-api/v3/api/tokens with own email, then GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+[PARKED] shop SelfRegister vdmcSugarSelfRegistrationController mass-assignment: plausible class but captcha-gated (HUMAN) and no unwhitelisted-field surface in static analysis — <40, parked.
+[PARKED] MitBG /api/password-reset-send: employee-benefits SaaS password-reset endpoint is username-enumeration class (REJECTED); no proposal.
+[FINAL] survivors ranked: [70] plantportal link-flow IDOR → [62] shop OrderSummary IDOR → [58] MyDataPlant header BOLA. All AUTH_HELPED, all unchanged, all gating proven invariant.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: execute the single deferred owned-identity registration (since 09-07): (1) shop.suedzucker.com/SelfRegister — POST vdmcSugarSelfRegistrationController.completeRegistration (firstName/lastName/email/password+confirm/CompanyName/Country/Phone) after one FriendlyCaptcha solve; confirm via GET /OrderSummary/{own recordId}. (2) Reuse same email at POST /mdp-api/v3/api/tokens (link-id BOLA) and plantportal Entra B2C signup (partner-linking BOLA). No PROBE: full re-probe of the AUTH_HELPED trio or MitBG recon generated zero deltas this cycle — one more read-only request adds noise, not signal. Passive phase remains terminal; every finding is now provably gated on owned accounts.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: re-probed 09-18 (first touch since 09-03) — unchanged 302 /login + CBG3FE cookie + 200 benefits-login shell; adds anonymous POST /api/password-reset-send to surface map; third-party SaaS employee gate intact; no new logic surface.
+[LEARN] REJECTED MISCONFIG @ suedzucker.mitarbeiterangebote.de /api/password-reset-send: anonymous password-reset form is username-enumeration class (out-of-scope); no authz/money/logic flaw observable pre-auth.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 34th consecutive NO_DELTA — no deltas since 2026-09-17 23:52; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably exhausted across 11 assets; three HIGH hypotheses (70/62/58) remain gated on the single human registration deferred since 09-07.
+
+STEP 7 — RISK
+[RISK] suedzucker: 84 — 34 consecutive NO_DELTA over ~16 days; every triage empty; every passive plane closed gated; only check hit this cycle confirmed an untracked surface is also dead (MitBG login invariant). Movement fraction 0; all three HIGH hypotheses and the program's finding output depend entirely on completing the HUMAN registration step before scope/time expiry — without it the engagement yields no confirmed finding.
