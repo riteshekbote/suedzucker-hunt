@@ -352,3 +352,6 @@ www.suedzucker.de
 
 ## 2026-09-18 23:50:50 UTC
 - CHANGED portal.mydataplant.com/services/outline.py: now returns 500 for ALL param combinations (was 200+empty SVG for numeric IDs, 500 only for non-numeric); server header Apache/2.4.68 (Debian) vs prior Apac
+
+## 2026-09-19 02:52:46 UTC
+- CHANGED portal.mydataplant.com/services/outline.py: uniform 500 for all param combinations (was 200+empty SVG for numeric IDs, 500 only for non-numeric); server header Apache/2.4.68 (Debian) vs prior Apache/2

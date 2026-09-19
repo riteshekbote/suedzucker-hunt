@@ -1,4 +1,4 @@
-## 2026-09-18 23:49:42 UTC [target] (model bigpickle)
+## 2026-09-19 02:50:06 UTC [target] (model bigpickle)
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
@@ -21,7 +21,7 @@ testability: AUTH_HELPED
 class: IDOR
 asset: smartfarming/portal.mydataplant.com
 confidence: 58
-reasoning: Unchanged core; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens wrapped by same gateway (403 without Authorization) so credential-from-scratch token-gen is NOT gateway-bypassable — token endpoint only useful with an existing JWT; outline.py (only auth-free vector) now uniform 500, non-load-bearing.
+reasoning: Unchanged core; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens wrapped by same gateway (403 without Authorization) so credential-from-scratch token-gen is NOT gateway-bypassable; outline.py (only auth-free vector) now uniform 500, non-load-bearing.
 evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
 verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
 impact: cross-tenant PII/geometry/financial read — HIGH

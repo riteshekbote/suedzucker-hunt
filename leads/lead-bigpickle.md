@@ -5002,3 +5002,31 @@ evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link
 verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
+## 2026-09-19 02:50:06 UTC [target] (model bigpickle)
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence this cycle; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* catch-all 401 is a gateway-wide Azure APIM/Front Door invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: Unchanged; LWR /OrderSummary/:recordId holds pricing/PII/payment, sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); all pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary recordId + horizontally mutated id; mutated GET returns foreign record.
+verify_steps: AUTH_HELPED — self-register → own order → GET /OrderSummary/{mutated-id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 58
+reasoning: Unchanged core; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens wrapped by same gateway (403 without Authorization) so credential-from-scratch token-gen is NOT gateway-bypassable; outline.py (only auth-free vector) now uniform 500, non-load-bearing.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED

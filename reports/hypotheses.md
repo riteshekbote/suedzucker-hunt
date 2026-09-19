@@ -2294,3 +2294,15 @@
 - LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass
 - LEARN: REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable
 - LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+
+## RANKED HYPOTHESES 2026-09-19 02:52:46 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow (form fields: firstName/lastName/em
+- LEARN: CHANGED @ portal.mydataplant.com/services/outline.py: now 500 for all params (was 200+empty SVG numeric / 500 non-numeric); server header Apache/2.4.68 (Debian)
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 IN
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 I
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: SFDC REST/GraphQL/aura + SAP OCC all SSO-gated — SelfRegister only pre-auth ascent path; anchors all three HIGH hypotheses
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door; ceres-* namespace catch-all 401 (20/20 uniform) 
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
