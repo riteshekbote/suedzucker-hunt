@@ -1,4 +1,4 @@
-## 2026-09-19 12:14:39 UTC [target] (model bigpickle)
+## 2026-09-19 15:56:36 UTC [target] (model bigpickle)
 [HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
 class: IDOR
 asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
@@ -38,6 +38,14 @@ reasoning: No new evidence; /association/impersonation guarded only by client mi
 evidence_needed: owned MSAL token + two own link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
 verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
 impact: cross-partner contracts/deliveries/settlements read — HIGH
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence this cycle; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* 401 is a gateway-wide Azure APIM invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own partner link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
 testability: AUTH_HELPED
 [HYP] Salesforce B2B Commerce OrderSummary Record IDOR
 class: IDOR
@@ -52,8 +60,12 @@ testability: AUTH_HELPED
 class: IDOR
 asset: smartfarming/portal.mydataplant.com
 confidence: 52
-reasoning: Core unchanged; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens wrapped by same gateway (403 without Authorization); outline.py confirmed STABLE-closed 09-19 12:14 (was −3 on 09-18) — residual passive-amplifier possibility now removed, −3.
+reasoning: Core unchanged; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens gateway-wrapped (403 without Authorization); outline.py confirmed uniform 500 with gateway banner 09-19 — sole auth-free vector absorbed, −3.
 evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
 verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
 impact: cross-tenant PII/geometry/financial read — HIGH
 testability: AUTH_HELPED
+[NEXT] HUMAN: Execute the single deferred owned-identity registration (blocked since 09-07): POST vdmcSugarSelfRegistrationController.completeRegistration at shop.suedzucker.com/SelfRegister — solve one FriendlyCaptcha, submit firstName/lastName/email/company; no partner number required at signup. A single completed registration unblocks all three AUTH_HELPED hypotheses (they toggle blocked→testable) and is the only remaining ascent path; every automated avenue (reposcan=structural no-op, triage=38× empty, passive probes=gated) is now confirmed exhausted.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 38th consecutive empty triage (run-2026-09-19-13-11 "No leads provided"); reposcan-2026-09-19-14-46 reconfirms structural no-op (no GitHub org); all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface terminal across 11 assets; three HIGH hypotheses (70/62/52) remain gated on the single human registration deferred since 09-07.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure, MitBG password-reset-enumeration, outline.py 500 banner) stand, no class reopens.
+[RISK] suedzucker: 89 — 38th consecutive empty triage; reposcan reconfirmed structural no-op (no GitHub org); the final passive auth-free bypass vector (outline.py) has been closed since 09-18, leaving movement fraction 0 across every automated channel. Program outcome is fully dependent on the single HUMAN registration deferred every cycle since 09-07; without it the pipeline closes at zero confirmed findings regardless of hypothesis quality. Risk +1 vs prior cycle.

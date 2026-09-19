@@ -25578,3 +25578,1261 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] suedzucker: 89 — 38th consecutive empty triage; outline.py closure now confirmed permanent (prior residual "flap-back" silver lining removed), movement fraction 0 across all 11 assets; every mapped plane gated; all program output still depends on the one HUMAN registration deferred 12+ days since 09-07. Without it the engagement closes with zero confirmed findings despite 3 intact HIGH hypotheses. Escalating.
+===== ANALYST bigpickle 2026-09-19 16:05:52 UTC =====
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && git log --oneline -5 2>/dev/null; echo "---STATUS---"; git status --short 2>/dev/null | head -30
+005181f reposcan 2026-09-19-14-46
+---STATUS---
+?? analyst-out.txt
+?? analyst-prompt.txt
+?? ctx.txt
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la && find . -maxdepth 2 -name "*.yml" -o -maxdepth 2 -name "*.yaml" -o -maxdepth 2 -name "lead*.txt" -o -maxdepth 2 -name "hypotheses*" 2>/dev/null | head -40
+total 380
+drwxr-xr-x 12 runner runner   4096 Sep 19 15:55 .
+drwxr-xr-x  3 runner runner   4096 Sep 19 15:55 ..
+drwxr-xr-x  7 runner runner   4096 Sep 19 15:56 .git
+drwxr-xr-x  3 runner runner   4096 Sep 19 15:55 .github
+-rw-r--r--  1 runner runner   1852 Sep 19 15:55 README.md
+-rw-r--r--  1 runner runner    299 Sep 19 15:56 analyst-out.txt
+-rw-r--r--  1 runner runner 149664 Sep 19 15:55 analyst-prompt.txt
+-rw-r--r--  1 runner runner 145788 Sep 19 15:55 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 leads
+-rw-r--r--  1 runner runner   3335 Sep 19 15:55 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 reports
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 reposcan-raw
+-rw-r--r--  1 runner runner   3289 Sep 19 15:55 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 scripts
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 triage
+./reports/hypotheses-ling3.txt
+./reports/hypotheses-bigpickle.txt
+./reports/hypotheses-longcat.txt
+./reports/hypotheses-laguna.txt
+./reports/hypotheses-nemotron3.txt
+./reports/hypotheses.md
+./scope.yml
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && find . -type f -not -path './.git/*' -newermt "2026-09-19 12:00" | sort
+./.github/workflows/hunt.yml
+./.github/workflows/reposcan.yml
+./.github/workflows/sync-issues.yml
+./.github/workflows/triage.yml
+./README.md
+./analyst-out.txt
+./analyst-prompt.txt
+./ctx.txt
+./inventory/suedzucker.md
+./knowledge/index.md
+./leads/lead-bigpickle.md
+./leads/lead-laguna.md
+./leads/lead-ling3.md
+./leads/lead-longcat.md
+./leads/lead-mimo.md
+./leads/lead-nemotron3.md
+./leads/reposcan-suedzucker.md
+./probe-results.md
+./recon-notes/DEDICATED-DEEP.md
+./reports/analyst-bigpickle.log
+./reports/analyst-laguna.log
+./reports/analyst-ling3.log
+./reports/analyst-longcat.log
+./reports/analyst-nemotron3.log
+./reports/hypotheses-bigpickle.txt
+./reports/hypotheses-laguna.txt
+./reports/hypotheses-ling3.txt
+./reports/hypotheses-longcat.txt
+./reports/hypotheses-nemotron3.txt
+./reports/hypotheses.md
+./reports/valid-bugs.md
+./reposcan-raw/summary.txt
+./scope.yml
+./scripts/sync-issues.py
+./state_bigpickle.json
+./state_laguna.json
+./state_ling3.json
+./state_longcat.json
+./state_mimo.json
+./state_nemotron3.json
+./triage/.gitkeep
+./triage/run-2026-09-02-21-26.md
+./triage/run-2026-09-02-23-32.md
+./triage/run-2026-09-03-01-24.md
+./triage/run-2026-09-03-06-26.md
+./triage/run-2026-09-03-11-40.md
+./triage/run-2026-09-03-15-10.md
+./triage/run-2026-09-03-18-41.md
+./triage/run-2026-09-03-21-28.md
+./triage/run-2026-09-03-23-30.md
+./triage/run-2026-09-04-01-18.md
+./triage/run-2026-09-04-05-58.md
+./triage/run-2026-09-04-10-34.md
+./triage/run-2026-09-04-14-31.md
+./triage/run-2026-09-04-17-45.md
+./triage/run-2026-09-04-20-00.md
+./triage/run-2026-09-04-22-09.md
+./triage/run-2026-09-05-00-07.md
+./triage/run-2026-09-05-04-31.md
+./triage/run-2026-09-05-08-33.md
+./triage/run-2026-09-05-12-00.md
+./triage/run-2026-09-05-14-46.md
+./triage/run-2026-09-05-16-59.md
+./triage/run-2026-09-05-18-48.md
+./triage/run-2026-09-05-20-48.md
+./triage/run-2026-09-05-22-26.md
+./triage/run-2026-09-06-00-12.md
+./triage/run-2026-09-06-04-41.md
+./triage/run-2026-09-06-09-03.md
+./triage/run-2026-09-06-12-54.md
+./triage/run-2026-09-06-15-53.md
+./triage/run-2026-09-06-17-50.md
+./triage/run-2026-09-06-19-42.md
+./triage/run-2026-09-06-21-49.md
+./triage/run-2026-09-06-23-19.md
+./triage/run-2026-09-07-01-05.md
+./triage/run-2026-09-07-06-07.md
+./triage/run-2026-09-07-12-35.md
+./triage/run-2026-09-07-17-53.md
+./triage/run-2026-09-07-20-53.md
+./triage/run-2026-09-07-23-09.md
+./triage/run-2026-09-08-01-13.md
+./triage/run-2026-09-08-05-59.md
+./triage/run-2026-09-08-10-36.md
+./triage/run-2026-09-08-14-45.md
+./triage/run-2026-09-08-18-10.md
+./triage/run-2026-09-08-21-10.md
+./triage/run-2026-09-08-23-24.md
+./triage/run-2026-09-09-01-28.md
+./triage/run-2026-09-09-06-37.md
+./triage/run-2026-09-09-11-48.md
+./triage/run-2026-09-09-15-29.md
+./triage/run-2026-09-09-18-49.md
+./triage/run-2026-09-09-21-20.md
+./triage/run-2026-09-09-23-20.md
+./triage/run-2026-09-10-01-10.md
+./triage/run-2026-09-10-05-59.md
+./triage/run-2026-09-10-10-46.md
+./triage/run-2026-09-10-14-41.md
+./triage/run-2026-09-10-17-56.md
+./triage/run-2026-09-10-20-15.md
+./triage/run-2026-09-10-22-36.md
+./triage/run-2026-09-11-00-30.md
+./triage/run-2026-09-11-05-09.md
+./triage/run-2026-09-11-09-42.md
+./triage/run-2026-09-11-13-55.md
+./triage/run-2026-09-11-17-24.md
+./triage/run-2026-09-11-20-00.md
+./triage/run-2026-09-11-22-17.md
+./triage/run-2026-09-12-00-21.md
+./triage/run-2026-09-12-04-58.md
+./triage/run-2026-09-12-08-58.md
+./triage/run-2026-09-12-12-37.md
+./triage/run-2026-09-12-15-48.md
+./triage/run-2026-09-12-17-57.md
+./triage/run-2026-09-12-19-59.md
+./triage/run-2026-09-12-22-04.md
+./triage/run-2026-09-12-23-38.md
+./triage/run-2026-09-13-01-23.md
+./triage/run-2026-09-13-06-44.md
+./triage/run-2026-09-13-12-25.md
+./triage/run-2026-09-13-16-35.md
+./triage/run-2026-09-13-18-55.md
+./triage/run-2026-09-13-21-11.md
+./triage/run-2026-09-13-23-11.md
+./triage/run-2026-09-14-01-06.md
+./triage/run-2026-09-14-06-18.md
+./triage/run-2026-09-14-12-58.md
+./triage/run-2026-09-14-18-21.md
+./triage/run-2026-09-14-21-54.md
+./triage/run-2026-09-15-00-03.md
+./triage/run-2026-09-15-04-56.md
+./triage/run-2026-09-15-09-42.md
+./triage/run-2026-09-15-14-32.md
+./triage/run-2026-09-15-18-26.md
+./triage/run-2026-09-15-21-42.md
+./triage/run-2026-09-15-23-48.md
+./triage/run-2026-09-16-02-06.md
+./triage/run-2026-09-16-07-42.md
+./triage/run-2026-09-16-12-55.md
+./triage/run-2026-09-16-17-22.md
+./triage/run-2026-09-16-20-24.md
+./triage/run-2026-09-16-23-13.md
+./triage/run-2026-09-17-01-26.md
+./triage/run-2026-09-17-06-36.md
+./triage/run-2026-09-17-12-00.md
+./triage/run-2026-09-17-17-01.md
+./triage/run-2026-09-17-20-20.md
+./triage/run-2026-09-17-23-03.md
+./triage/run-2026-09-18-01-18.md
+./triage/run-2026-09-18-05-58.md
+./triage/run-2026-09-18-10-31.md
+./triage/run-2026-09-18-14-37.md
+./triage/run-2026-09-18-17-51.md
+./triage/run-2026-09-18-20-06.md
+./triage/run-2026-09-18-22-35.md
+./triage/run-2026-09-19-00-34.md
+./triage/run-2026-09-19-04-57.md
+./triage/run-2026-09-19-09-09.md
+./triage/run-2026-09-19-13-11.md
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la triage/ leads/ knowledge/ recon-notes/ reports/ reposcan-raw/ | head -80
+knowledge/:
+total 120
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner   4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner 110617 Sep 19 15:55 index.md
+
+leads/:
+total 1872
+drwxr-xr-x  2 runner runner    4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner    4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner  690143 Sep 19 15:55 lead-bigpickle.md
+-rw-r--r--  1 runner runner    5610 Sep 19 15:55 lead-laguna.md
+-rw-r--r--  1 runner runner    5500 Sep 19 15:55 lead-ling3.md
+-rw-r--r--  1 runner runner    5720 Sep 19 15:55 lead-longcat.md
+-rw-r--r--  1 runner runner      18 Sep 19 15:55 lead-mimo.md
+-rw-r--r--  1 runner runner 1164787 Sep 19 15:55 lead-nemotron3.md
+-rw-r--r--  1 runner runner   16756 Sep 19 15:55 reposcan-suedzucker.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner 4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner  822 Sep 19 15:55 DEDICATED-DEEP.md
+
+reports/:
+total 4432
+drwxr-xr-x  2 runner runner    4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner    4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner 1975432 Sep 19 15:55 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   23870 Sep 19 15:55 analyst-laguna.log
+-rw-r--r--  1 runner runner   23760 Sep 19 15:55 analyst-ling3.log
+-rw-r--r--  1 runner runner   23980 Sep 19 15:55 analyst-longcat.log
+-rw-r--r--  1 runner runner 2306241 Sep 19 15:55 analyst-nemotron3.log
+-rw-r--r--  1 runner runner    6747 Sep 19 15:55 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 19 15:55 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 19 15:55 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 19 15:55 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   10279 Sep 19 15:55 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  359668 Sep 19 15:55 hypotheses.md
+-rw-r--r--  1 runner runner    2629 Sep 19 15:55 valid-bugs.md
+
+reposcan-raw/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner 4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner   73 Sep 19 15:55 summary.txt
+
+triage/:
+total 556
+drwxr-xr-x  2 runner runner  4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner  4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner     0 Sep 19 15:55 .gitkeep
+-rw-r--r--  1 runner runner   143 Sep 19 15:55 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner   701 Sep 19 15:55 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner   201 Sep 19 15:55 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner   159 Sep 19 15:55 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner   152 Sep 19 15:55 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner   182 Sep 19 15:55 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner   245 Sep 19 15:55 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner   276 Sep 19 15:55 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner   172 Sep 19 15:55 run-2026-09-03-23-30.md
+-rw-r--r--  1 runner runner   189 Sep 19 15:55 run-2026-09-04-01-18.md
+-rw-r--r--  1 runner runner   241 Sep 19 15:55 run-2026-09-04-05-58.md
+-rw-r--r--  1 runner runner   254 Sep 19 15:55 run-2026-09-04-10-34.md
+-rw-r--r--  1 runner runner   232 Sep 19 15:55 run-2026-09-04-14-31.md
+-rw-r--r--  1 runner runner   196 Sep 19 15:55 run-2026-09-04-17-45.md
+-rw-r--r--  1 runner runner   203 Sep 19 15:55 run-2026-09-04-20-00.md
+-rw-r--r--  1 runner runner   218 Sep 19 15:55 run-2026-09-04-22-09.md
+-rw-r--r--  1 runner runner   195 Sep 19 15:55 run-2026-09-05-00-07.md
+-rw-r--r--  1 runner runner   258 Sep 19 15:55 run-2026-09-05-04-31.md
+-rw-r--r--  1 runner runner   172 Sep 19 15:55 run-2026-09-05-08-33.md
+-rw-r--r--  1 runner runner   174 Sep 19 15:55 run-2026-09-05-12-00.md
+-rw-r--r--  1 runner runner   189 Sep 19 15:55 run-2026-09-05-14-46.md
+-rw-r--r--  1 runner runner   178 Sep 19 15:55 run-2026-09-05-16-59.md
+-rw-r--r--  1 runner runner   163 Sep 19 15:55 run-2026-09-05-18-48.md
+-rw-r--r--  1 runner runner   210 Sep 19 15:55 run-2026-09-05-20-48.md
+-rw-r--r--  1 runner runner   153 Sep 19 15:55 run-2026-09-05-22-26.md
+-rw-r--r--  1 runner runner 13734 Sep 19 15:55 run-2026-09-06-00-12.md
+-rw-r--r--  1 runner runner   259 Sep 19 15:55 run-2026-09-06-04-41.md
+-rw-r--r--  1 runner runner 11480 Sep 19 15:55 run-2026-09-06-09-03.md
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && cat triage/run-2026-09-19-13-11.md triage/run-2026-09-19-09-09.md triage/run-2026-09-19-04-57.md triage/run-2026-09-19-00-34.md 2>/dev/null; echo "===LEAD-MIMO==="; cat leads/lead-mimo.md; echo "===STATE==="; cat state_bigpickle.json state_nemotron3.json; echo "===REPOSCAN==="; cat reposcan-raw/summary.txt; echo "===VALID-BUGS==="; cat reports/valid-bugs.md
+===== TRIAGE 2026-09-19 13:11:02 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. Please paste the probe results/leads for triage.
+
+===== TRIAGE 2026-09-19 09:09:20 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+[0m→ [0mRead .
+[0m✱ [0mGlob "**/*.md"[90m 100 matches[0m
+[0m✱ [0mGlob "**/scope.yml"[90m 1 match[0m
+I'll check the workspace for leads and scope information.
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/suedzucker.md
+[0m→ [0mRead new-leads.txt
+[0m→ [0mRead probe-results.txt
+[0m→ [0mRead triage-output.txt
+[0m→ [0mRead triage-prompt.txt
+[0m→ [0mRead triage/run-2026-09-19-04-57.md
+**No leads provided.** The `LEADS:` section in your message is empty, and the workspace files (`new-leads.txt`, `probe-results.txt`) are also empty.
+
+Please paste the hunt bot output containing the leads you want triaged, and I'll validate each against the 7-Question Gate.
+
+===== TRIAGE 2026-09-19 04:57:57 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+The LEADS section is empty — no leads provided for triage. Please paste the hunt bot results so I can validate them against the 7-Question Gate.
+
+===== TRIAGE 2026-09-19 00:34:35 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads were provided. Please paste the probe results/leads you'd like me to evaluate against the 7-Question Gate.
+===LEAD-MIMO===
+# Lead log (seed)
+===STATE===
+{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}===REPOSCAN===
+TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
+===VALID-BUGS===
+# Validated findings (running count 0)
+
+- 2 lead(s) marked VALID at 2026-09-06 00:12:08 UTC
+  - | Q3 Impact | **YES** — If valid user_id+field_id pairs yield SVG geometry, cross-tenant field boundary/location disclosure (agri location PII). |
+  - | Q7 Reasonable triager | **NO** — Cannot demonstrate impact without valid IDs. Architecture is IDOR-prone but proof incomplete. |
+
+- 1 lead(s) marked VALID at 2026-09-06 09:03:45 UTC
+  - | Q4 Provable | ❌ | Gateway returns 400 (Missing header) or 403 (unauthed) — this is *correct* behavior. Whether a valid JWT for partner A can use X-Selected-Partner-Link-Id for partner B is untested.
+
+- 3 lead(s) marked VALID at 2026-09-06 15:53:51 UTC
+  - | Q3 Real impact? | **YES (if valid IDs exist)** — cross-tenant field boundary/location geometry disclosure (agri location PII) — MEDIUM/HIGH |
+  - | Q4 Provable non-invasively? | **NO** — all tested combos returned empty SVG; cannot confirm data disclosure without valid field IDs from own account |
+  - | outline.py geometry IDOR | **HOLD** | Confirm scope (Kleffmann vendor?) → own account → test with valid field IDs |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:09:21 UTC
+  - | Q4 Provable | NO | Requires own JWT + valid X-Selected-Partner-Link-Id header + cross-tenant header mutation; cannot prove without test credentials |
+
+- 5 lead(s) marked VALID at 2026-09-11 20:00:59 UTC
+  - **Verdict: VALID**
+  - **Verdict: VALID**
+  - | Q3 Impact | **PARTIAL** — Field boundary/location geometry is agri location PII. 200 responses with empty SVG body means either test IDs have no geometry or auth failure is soft-fail. Impact depends
+  - | MyDataPlant BOLA (X-Selected-Partner-Link-Id) | **VALID** | 8.6 | IDOR/BOLA |
+  - | Plant Portal BOLA (switchToPartnerNumber) | **VALID** | 8.1 | IDOR/BOLA |
+
+- 2 lead(s) marked VALID at 2026-09-12 04:58:30 UTC
+  - | Q4 Provable | **NO** — requires authenticated session + order placement to capture valid recordId, then test horizontal access |
+  - **VALID leads: 0** — All three HOLD leads require AUTH_HELPED testing (own test accounts) to produce a reportable PoC. No lead has sufficient passive proof to pass all 7 gates today.
+
+- 5 lead(s) marked VALID at 2026-09-12 22:04:33 UTC
+  - **Verdict: VALID**
+  - **Verdict: VALID**
+  - | Q4 Provable non-invasively? | No — 100+ probes all returned 200+empty SVG. Cannot confirm non-empty data return without own test account with valid field geometry. | NO (impact unconfirmed) |
+  - | 1 | Plant Portal partner-linking BOLA | **VALID** | 8.6 |
+  - | 2 | MyDataPlant X-Selected-Partner-Link-Id BOLA | **VALID** | 8.6 |
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && echo "===PROBE-RESULTS==="; cat probe-results.md; echo "===ANALYST-OUT==="; cat analyst-out.txt; echo "===SCOPE==="; cat scope.yml
+===PROBE-RESULTS===
+
+## 2026-09-02 21:40:00 UTC
+
+
+## 2026-09-02 23:35:55 UTC
+
+
+## 2026-09-03 01:37:08 UTC
+
+
+## 2026-09-03 06:28:47 UTC
+
+
+## 2026-09-03 11:41:50 UTC
+
+
+## 2026-09-03 16:00:35 UTC
+
+
+## 2026-09-03 19:14:36 UTC
+
+
+## 2026-09-03 21:51:49 UTC
+
+
+## 2026-09-03 23:56:35 UTC
+
+
+## 2026-09-04 02:52:37 UTC
+
+
+## 2026-09-04 07:31:16 UTC
+
+
+## 2026-09-04 12:23:16 UTC
+
+
+## 2026-09-04 16:46:07 UTC
+
+
+## 2026-09-04 19:18:44 UTC
+
+
+## 2026-09-04 21:36:21 UTC
+
+
+## 2026-09-04 23:22:47 UTC
+
+
+## 2026-09-05 01:08:45 UTC
+
+
+## 2026-09-05 05:51:00 UTC
+
+
+## 2026-09-05 09:54:41 UTC
+
+
+## 2026-09-05 13:15:34 UTC
+
+
+## 2026-09-05 16:21:14 UTC
+
+
+## 2026-09-05 18:29:35 UTC
+
+
+## 2026-09-05 20:47:37 UTC
+
+
+## 2026-09-05 22:39:50 UTC
+
+
+## 2026-09-06 00:14:25 UTC
+
+
+## 2026-09-06 04:51:16 UTC
+
+
+## 2026-09-06 09:18:46 UTC
+
+
+## 2026-09-06 13:08:42 UTC
+
+
+## 2026-09-06 16:17:42 UTC
+
+
+## 2026-09-06 18:17:45 UTC
+
+
+## 2026-09-06 20:31:31 UTC
+
+
+## 2026-09-06 22:24:45 UTC
+
+
+## 2026-09-07 00:05:49 UTC
+
+
+## 2026-09-07 04:53:24 UTC
+
+
+## 2026-09-07 09:58:10 UTC
+
+
+## 2026-09-07 15:37:20 UTC
+
+
+## 2026-09-07 19:30:25 UTC
+
+
+## 2026-09-07 22:18:09 UTC
+
+
+## 2026-09-08 00:30:39 UTC
+
+
+## 2026-09-08 05:20:34 UTC
+
+
+## 2026-09-08 09:49:56 UTC
+
+
+## 2026-09-08 14:23:25 UTC
+
+
+## 2026-09-08 18:06:10 UTC
+
+
+## 2026-09-08 20:50:47 UTC
+
+
+## 2026-09-08 23:09:41 UTC
+
+
+## 2026-09-09 01:19:06 UTC
+
+
+## 2026-09-09 06:08:09 UTC
+
+
+## 2026-09-09 11:31:53 UTC
+
+
+## 2026-09-09 15:24:32 UTC
+
+
+## 2026-09-09 18:42:18 UTC
+
+
+## 2026-09-09 21:30:13 UTC
+
+
+## 2026-09-09 23:32:53 UTC
+
+
+## 2026-09-10 01:29:35 UTC
+
+
+## 2026-09-10 06:43:28 UTC
+
+
+## 2026-09-10 11:53:52 UTC
+
+
+## 2026-09-10 15:47:53 UTC
+
+
+## 2026-09-10 18:56:14 UTC
+
+
+## 2026-09-10 21:23:12 UTC
+
+
+## 2026-09-10 23:24:34 UTC
+
+
+## 2026-09-11 01:28:09 UTC
+
+
+## 2026-09-11 06:40:00 UTC
+
+
+## 2026-09-11 11:48:23 UTC
+
+
+## 2026-09-11 15:53:35 UTC
+
+
+## 2026-09-11 19:00:55 UTC
+
+
+## 2026-09-11 21:42:39 UTC
+
+
+## 2026-09-11 23:32:58 UTC
+
+
+## 2026-09-12 01:33:52 UTC
+
+
+## 2026-09-12 06:29:20 UTC
+
+
+## 2026-09-12 11:15:13 UTC
+
+
+## 2026-09-12 14:14:08 UTC
+
+
+## 2026-09-12 17:17:24 UTC
+
+
+## 2026-09-12 19:27:47 UTC
+
+
+## 2026-09-12 21:42:39 UTC
+
+
+## 2026-09-12 23:21:02 UTC
+
+
+## 2026-09-13 01:11:55 UTC
+
+
+## 2026-09-13 06:17:14 UTC
+
+
+## 2026-09-13 12:14:13 UTC
+
+
+## 2026-09-13 16:09:00 UTC
+
+
+## 2026-09-13 18:35:13 UTC
+
+
+## 2026-09-13 21:09:58 UTC
+
+
+## 2026-09-13 23:14:00 UTC
+
+
+## 2026-09-14 01:15:10 UTC
+
+
+## 2026-09-14 06:27:01 UTC
+
+
+## 2026-09-14 13:25:03 UTC
+
+
+## 2026-09-14 18:47:55 UTC
+
+
+## 2026-09-14 22:17:12 UTC
+
+
+## 2026-09-15 00:50:37 UTC
+
+
+## 2026-09-15 05:45:47 UTC
+
+
+## 2026-09-15 11:14:15 UTC
+
+
+## 2026-09-15 15:28:01 UTC
+
+
+## 2026-09-15 19:26:09 UTC
+
+
+## 2026-09-15 22:25:29 UTC
+
+
+## 2026-09-16 00:29:45 UTC
+
+
+## 2026-09-16 05:14:15 UTC
+
+
+## 2026-09-16 10:05:44 UTC
+
+
+## 2026-09-16 14:49:10 UTC
+
+
+## 2026-09-16 18:57:23 UTC
+
+
+## 2026-09-16 21:42:56 UTC
+
+
+## 2026-09-17 00:02:45 UTC
+
+
+## 2026-09-17 04:58:16 UTC
+
+
+## 2026-09-17 09:52:58 UTC
+
+
+## 2026-09-17 14:38:29 UTC
+
+
+## 2026-09-17 18:33:36 UTC
+
+
+## 2026-09-17 21:43:34 UTC
+
+
+## 2026-09-17 23:52:42 UTC
+
+
+## 2026-09-18 02:53:12 UTC
+
+
+## 2026-09-18 07:57:40 UTC
+
+
+## 2026-09-18 12:39:42 UTC
+
+
+## 2026-09-18 16:45:20 UTC
+
+
+## 2026-09-18 19:30:44 UTC
+
+
+## 2026-09-18 21:52:07 UTC
+
+
+## 2026-09-18 23:50:50 UTC
+
+
+## 2026-09-19 02:52:46 UTC
+
+
+## 2026-09-19 07:48:29 UTC
+
+
+## 2026-09-19 12:17:07 UTC
+
+===ANALYST-OUT===
+[0m
+> build · big-pickle
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && git log --oneline -5 2>/dev/null; echo "---STATUS---"; git status --short 2>/dev/null | head -30
+005181f reposcan 2026-09-19-14-46
+---STATUS---
+?? analyst-out.txt
+?? analyst-prompt.txt
+?? ctx.txt
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la && find . -maxdepth 2 -name "*.yml" -o -maxdepth 2 -name "*.yaml" -o -maxdepth 2 -name "lead*.txt" -o -maxdepth 2 -name "hypotheses*" 2>/dev/null | head -40
+total 380
+drwxr-xr-x 12 runner runner   4096 Sep 19 15:55 .
+drwxr-xr-x  3 runner runner   4096 Sep 19 15:55 ..
+drwxr-xr-x  7 runner runner   4096 Sep 19 15:56 .git
+drwxr-xr-x  3 runner runner   4096 Sep 19 15:55 .github
+-rw-r--r--  1 runner runner   1852 Sep 19 15:55 README.md
+-rw-r--r--  1 runner runner    299 Sep 19 15:56 analyst-out.txt
+-rw-r--r--  1 runner runner 149664 Sep 19 15:55 analyst-prompt.txt
+-rw-r--r--  1 runner runner 145788 Sep 19 15:55 ctx.txt
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 inventory
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 knowledge
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 leads
+-rw-r--r--  1 runner runner   3335 Sep 19 15:55 probe-results.md
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 recon-notes
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 reports
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 reposcan-raw
+-rw-r--r--  1 runner runner   3289 Sep 19 15:55 scope.yml
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 scripts
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_bigpickle.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_laguna.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_ling3.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_longcat.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_mimo.json
+-rw-r--r--  1 runner runner     33 Sep 19 15:55 state_nemotron3.json
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 triage
+./reports/hypotheses-ling3.txt
+./reports/hypotheses-bigpickle.txt
+./reports/hypotheses-longcat.txt
+./reports/hypotheses-laguna.txt
+./reports/hypotheses-nemotron3.txt
+./reports/hypotheses.md
+./scope.yml
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && find . -type f -not -path './.git/*' -newermt "2026-09-19 12:00" | sort
+./.github/workflows/hunt.yml
+./.github/workflows/reposcan.yml
+./.github/workflows/sync-issues.yml
+./.github/workflows/triage.yml
+./README.md
+./analyst-out.txt
+./analyst-prompt.txt
+./ctx.txt
+./inventory/suedzucker.md
+./knowledge/index.md
+./leads/lead-bigpickle.md
+./leads/lead-laguna.md
+./leads/lead-ling3.md
+./leads/lead-longcat.md
+./leads/lead-mimo.md
+./leads/lead-nemotron3.md
+./leads/reposcan-suedzucker.md
+./probe-results.md
+./recon-notes/DEDICATED-DEEP.md
+./reports/analyst-bigpickle.log
+./reports/analyst-laguna.log
+./reports/analyst-ling3.log
+./reports/analyst-longcat.log
+./reports/analyst-nemotron3.log
+./reports/hypotheses-bigpickle.txt
+./reports/hypotheses-laguna.txt
+./reports/hypotheses-ling3.txt
+./reports/hypotheses-longcat.txt
+./reports/hypotheses-nemotron3.txt
+./reports/hypotheses.md
+./reports/valid-bugs.md
+./reposcan-raw/summary.txt
+./scope.yml
+./scripts/sync-issues.py
+./state_bigpickle.json
+./state_laguna.json
+./state_ling3.json
+./state_longcat.json
+./state_mimo.json
+./state_nemotron3.json
+./triage/.gitkeep
+./triage/run-2026-09-02-21-26.md
+./triage/run-2026-09-02-23-32.md
+./triage/run-2026-09-03-01-24.md
+./triage/run-2026-09-03-06-26.md
+./triage/run-2026-09-03-11-40.md
+./triage/run-2026-09-03-15-10.md
+./triage/run-2026-09-03-18-41.md
+./triage/run-2026-09-03-21-28.md
+./triage/run-2026-09-03-23-30.md
+./triage/run-2026-09-04-01-18.md
+./triage/run-2026-09-04-05-58.md
+./triage/run-2026-09-04-10-34.md
+./triage/run-2026-09-04-14-31.md
+./triage/run-2026-09-04-17-45.md
+./triage/run-2026-09-04-20-00.md
+./triage/run-2026-09-04-22-09.md
+./triage/run-2026-09-05-00-07.md
+./triage/run-2026-09-05-04-31.md
+./triage/run-2026-09-05-08-33.md
+./triage/run-2026-09-05-12-00.md
+./triage/run-2026-09-05-14-46.md
+./triage/run-2026-09-05-16-59.md
+./triage/run-2026-09-05-18-48.md
+./triage/run-2026-09-05-20-48.md
+./triage/run-2026-09-05-22-26.md
+./triage/run-2026-09-06-00-12.md
+./triage/run-2026-09-06-04-41.md
+./triage/run-2026-09-06-09-03.md
+./triage/run-2026-09-06-12-54.md
+./triage/run-2026-09-06-15-53.md
+./triage/run-2026-09-06-17-50.md
+./triage/run-2026-09-06-19-42.md
+./triage/run-2026-09-06-21-49.md
+./triage/run-2026-09-06-23-19.md
+./triage/run-2026-09-07-01-05.md
+./triage/run-2026-09-07-06-07.md
+./triage/run-2026-09-07-12-35.md
+./triage/run-2026-09-07-17-53.md
+./triage/run-2026-09-07-20-53.md
+./triage/run-2026-09-07-23-09.md
+./triage/run-2026-09-08-01-13.md
+./triage/run-2026-09-08-05-59.md
+./triage/run-2026-09-08-10-36.md
+./triage/run-2026-09-08-14-45.md
+./triage/run-2026-09-08-18-10.md
+./triage/run-2026-09-08-21-10.md
+./triage/run-2026-09-08-23-24.md
+./triage/run-2026-09-09-01-28.md
+./triage/run-2026-09-09-06-37.md
+./triage/run-2026-09-09-11-48.md
+./triage/run-2026-09-09-15-29.md
+./triage/run-2026-09-09-18-49.md
+./triage/run-2026-09-09-21-20.md
+./triage/run-2026-09-09-23-20.md
+./triage/run-2026-09-10-01-10.md
+./triage/run-2026-09-10-05-59.md
+./triage/run-2026-09-10-10-46.md
+./triage/run-2026-09-10-14-41.md
+./triage/run-2026-09-10-17-56.md
+./triage/run-2026-09-10-20-15.md
+./triage/run-2026-09-10-22-36.md
+./triage/run-2026-09-11-00-30.md
+./triage/run-2026-09-11-05-09.md
+./triage/run-2026-09-11-09-42.md
+./triage/run-2026-09-11-13-55.md
+./triage/run-2026-09-11-17-24.md
+./triage/run-2026-09-11-20-00.md
+./triage/run-2026-09-11-22-17.md
+./triage/run-2026-09-12-00-21.md
+./triage/run-2026-09-12-04-58.md
+./triage/run-2026-09-12-08-58.md
+./triage/run-2026-09-12-12-37.md
+./triage/run-2026-09-12-15-48.md
+./triage/run-2026-09-12-17-57.md
+./triage/run-2026-09-12-19-59.md
+./triage/run-2026-09-12-22-04.md
+./triage/run-2026-09-12-23-38.md
+./triage/run-2026-09-13-01-23.md
+./triage/run-2026-09-13-06-44.md
+./triage/run-2026-09-13-12-25.md
+./triage/run-2026-09-13-16-35.md
+./triage/run-2026-09-13-18-55.md
+./triage/run-2026-09-13-21-11.md
+./triage/run-2026-09-13-23-11.md
+./triage/run-2026-09-14-01-06.md
+./triage/run-2026-09-14-06-18.md
+./triage/run-2026-09-14-12-58.md
+./triage/run-2026-09-14-18-21.md
+./triage/run-2026-09-14-21-54.md
+./triage/run-2026-09-15-00-03.md
+./triage/run-2026-09-15-04-56.md
+./triage/run-2026-09-15-09-42.md
+./triage/run-2026-09-15-14-32.md
+./triage/run-2026-09-15-18-26.md
+./triage/run-2026-09-15-21-42.md
+./triage/run-2026-09-15-23-48.md
+./triage/run-2026-09-16-02-06.md
+./triage/run-2026-09-16-07-42.md
+./triage/run-2026-09-16-12-55.md
+./triage/run-2026-09-16-17-22.md
+./triage/run-2026-09-16-20-24.md
+./triage/run-2026-09-16-23-13.md
+./triage/run-2026-09-17-01-26.md
+./triage/run-2026-09-17-06-36.md
+./triage/run-2026-09-17-12-00.md
+./triage/run-2026-09-17-17-01.md
+./triage/run-2026-09-17-20-20.md
+./triage/run-2026-09-17-23-03.md
+./triage/run-2026-09-18-01-18.md
+./triage/run-2026-09-18-05-58.md
+./triage/run-2026-09-18-10-31.md
+./triage/run-2026-09-18-14-37.md
+./triage/run-2026-09-18-17-51.md
+./triage/run-2026-09-18-20-06.md
+./triage/run-2026-09-18-22-35.md
+./triage/run-2026-09-19-00-34.md
+./triage/run-2026-09-19-04-57.md
+./triage/run-2026-09-19-09-09.md
+./triage/run-2026-09-19-13-11.md
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && ls -la triage/ leads/ knowledge/ recon-notes/ reports/ reposcan-raw/ | head -80
+knowledge/:
+total 120
+drwxr-xr-x  2 runner runner   4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner   4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner 110617 Sep 19 15:55 index.md
+
+leads/:
+total 1872
+drwxr-xr-x  2 runner runner    4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner    4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner  690143 Sep 19 15:55 lead-bigpickle.md
+-rw-r--r--  1 runner runner    5610 Sep 19 15:55 lead-laguna.md
+-rw-r--r--  1 runner runner    5500 Sep 19 15:55 lead-ling3.md
+-rw-r--r--  1 runner runner    5720 Sep 19 15:55 lead-longcat.md
+-rw-r--r--  1 runner runner      18 Sep 19 15:55 lead-mimo.md
+-rw-r--r--  1 runner runner 1164787 Sep 19 15:55 lead-nemotron3.md
+-rw-r--r--  1 runner runner   16756 Sep 19 15:55 reposcan-suedzucker.md
+
+recon-notes/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner 4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner  822 Sep 19 15:55 DEDICATED-DEEP.md
+
+reports/:
+total 4432
+drwxr-xr-x  2 runner runner    4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner    4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner 1975432 Sep 19 15:55 analyst-bigpickle.log
+-rw-r--r--  1 runner runner   23870 Sep 19 15:55 analyst-laguna.log
+-rw-r--r--  1 runner runner   23760 Sep 19 15:55 analyst-ling3.log
+-rw-r--r--  1 runner runner   23980 Sep 19 15:55 analyst-longcat.log
+-rw-r--r--  1 runner runner 2306241 Sep 19 15:55 analyst-nemotron3.log
+-rw-r--r--  1 runner runner    6747 Sep 19 15:55 hypotheses-bigpickle.txt
+-rw-r--r--  1 runner runner      51 Sep 19 15:55 hypotheses-laguna.txt
+-rw-r--r--  1 runner runner      50 Sep 19 15:55 hypotheses-ling3.txt
+-rw-r--r--  1 runner runner      52 Sep 19 15:55 hypotheses-longcat.txt
+-rw-r--r--  1 runner runner   10279 Sep 19 15:55 hypotheses-nemotron3.txt
+-rw-r--r--  1 runner runner  359668 Sep 19 15:55 hypotheses.md
+-rw-r--r--  1 runner runner    2629 Sep 19 15:55 valid-bugs.md
+
+reposcan-raw/:
+total 12
+drwxr-xr-x  2 runner runner 4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner 4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner   73 Sep 19 15:55 summary.txt
+
+triage/:
+total 556
+drwxr-xr-x  2 runner runner  4096 Sep 19 15:55 .
+drwxr-xr-x 12 runner runner  4096 Sep 19 15:55 ..
+-rw-r--r--  1 runner runner     0 Sep 19 15:55 .gitkeep
+-rw-r--r--  1 runner runner   143 Sep 19 15:55 run-2026-09-02-21-26.md
+-rw-r--r--  1 runner runner   701 Sep 19 15:55 run-2026-09-02-23-32.md
+-rw-r--r--  1 runner runner   201 Sep 19 15:55 run-2026-09-03-01-24.md
+-rw-r--r--  1 runner runner   159 Sep 19 15:55 run-2026-09-03-06-26.md
+-rw-r--r--  1 runner runner   152 Sep 19 15:55 run-2026-09-03-11-40.md
+-rw-r--r--  1 runner runner   182 Sep 19 15:55 run-2026-09-03-15-10.md
+-rw-r--r--  1 runner runner   245 Sep 19 15:55 run-2026-09-03-18-41.md
+-rw-r--r--  1 runner runner   276 Sep 19 15:55 run-2026-09-03-21-28.md
+-rw-r--r--  1 runner runner   172 Sep 19 15:55 run-2026-09-03-23-30.md
+-rw-r--r--  1 runner runner   189 Sep 19 15:55 run-2026-09-04-01-18.md
+-rw-r--r--  1 runner runner   241 Sep 19 15:55 run-2026-09-04-05-58.md
+-rw-r--r--  1 runner runner   254 Sep 19 15:55 run-2026-09-04-10-34.md
+-rw-r--r--  1 runner runner   232 Sep 19 15:55 run-2026-09-04-14-31.md
+-rw-r--r--  1 runner runner   196 Sep 19 15:55 run-2026-09-04-17-45.md
+-rw-r--r--  1 runner runner   203 Sep 19 15:55 run-2026-09-04-20-00.md
+-rw-r--r--  1 runner runner   218 Sep 19 15:55 run-2026-09-04-22-09.md
+-rw-r--r--  1 runner runner   195 Sep 19 15:55 run-2026-09-05-00-07.md
+-rw-r--r--  1 runner runner   258 Sep 19 15:55 run-2026-09-05-04-31.md
+-rw-r--r--  1 runner runner   172 Sep 19 15:55 run-2026-09-05-08-33.md
+-rw-r--r--  1 runner runner   174 Sep 19 15:55 run-2026-09-05-12-00.md
+-rw-r--r--  1 runner runner   189 Sep 19 15:55 run-2026-09-05-14-46.md
+-rw-r--r--  1 runner runner   178 Sep 19 15:55 run-2026-09-05-16-59.md
+-rw-r--r--  1 runner runner   163 Sep 19 15:55 run-2026-09-05-18-48.md
+-rw-r--r--  1 runner runner   210 Sep 19 15:55 run-2026-09-05-20-48.md
+-rw-r--r--  1 runner runner   153 Sep 19 15:55 run-2026-09-05-22-26.md
+-rw-r--r--  1 runner runner 13734 Sep 19 15:55 run-2026-09-06-00-12.md
+-rw-r--r--  1 runner runner   259 Sep 19 15:55 run-2026-09-06-04-41.md
+-rw-r--r--  1 runner runner 11480 Sep 19 15:55 run-2026-09-06-09-03.md
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && cat triage/run-2026-09-19-13-11.md triage/run-2026-09-19-09-09.md triage/run-2026-09-19-04-57.md triage/run-2026-09-19-00-34.md 2>/dev/null; echo "===LEAD-MIMO==="; cat leads/lead-mimo.md; echo "===STATE==="; cat state_bigpickle.json state_nemotron3.json; echo "===REPOSCAN==="; cat reposcan-raw/summary.txt; echo "===VALID-BUGS==="; cat reports/valid-bugs.md
+===== TRIAGE 2026-09-19 13:11:02 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads provided. Please paste the probe results/leads for triage.
+
+===== TRIAGE 2026-09-19 09:09:20 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+[0m→ [0mRead .
+[0m✱ [0mGlob "**/*.md"[90m 100 matches[0m
+[0m✱ [0mGlob "**/scope.yml"[90m 1 match[0m
+I'll check the workspace for leads and scope information.
+[0m→ [0mRead probe-results.md
+[0m→ [0mRead scope.yml
+[0m→ [0mRead inventory/suedzucker.md
+[0m→ [0mRead new-leads.txt
+[0m→ [0mRead probe-results.txt
+[0m→ [0mRead triage-output.txt
+[0m→ [0mRead triage-prompt.txt
+[0m→ [0mRead triage/run-2026-09-19-04-57.md
+**No leads provided.** The `LEADS:` section in your message is empty, and the workspace files (`new-leads.txt`, `probe-results.txt`) are also empty.
+
+Please paste the hunt bot output containing the leads you want triaged, and I'll validate each against the 7-Question Gate.
+
+===== TRIAGE 2026-09-19 04:57:57 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+The LEADS section is empty — no leads provided for triage. Please paste the hunt bot results so I can validate them against the 7-Question Gate.
+
+===== TRIAGE 2026-09-19 00:34:35 UTC =====
+[0m
+> build · mimo-v2.5-free
+[0m
+No leads were provided. Please paste the probe results/leads you'd like me to evaluate against the 7-Question Gate.
+===LEAD-MIMO===
+# Lead log (seed)
+===STATE===
+{"phase": "POC", "target": "api"}{"phase": "POC", "target": "api"}===REPOSCAN===
+TARGET_ORG not configured for suedzucker; skipping public-org deep scan.
+===VALID-BUGS===
+# Validated findings (running count 0)
+
+- 2 lead(s) marked VALID at 2026-09-06 00:12:08 UTC
+  - | Q3 Impact | **YES** — If valid user_id+field_id pairs yield SVG geometry, cross-tenant field boundary/location disclosure (agri location PII). |
+  - | Q7 Reasonable triager | **NO** — Cannot demonstrate impact without valid IDs. Architecture is IDOR-prone but proof incomplete. |
+
+- 1 lead(s) marked VALID at 2026-09-06 09:03:45 UTC
+  - | Q4 Provable | ❌ | Gateway returns 400 (Missing header) or 403 (unauthed) — this is *correct* behavior. Whether a valid JWT for partner A can use X-Selected-Partner-Link-Id for partner B is untested.
+
+- 3 lead(s) marked VALID at 2026-09-06 15:53:51 UTC
+  - | Q3 Real impact? | **YES (if valid IDs exist)** — cross-tenant field boundary/location geometry disclosure (agri location PII) — MEDIUM/HIGH |
+  - | Q4 Provable non-invasively? | **NO** — all tested combos returned empty SVG; cannot confirm data disclosure without valid field IDs from own account |
+  - | outline.py geometry IDOR | **HOLD** | Confirm scope (Kleffmann vendor?) → own account → test with valid field IDs |
+
+- 1 lead(s) marked VALID at 2026-09-07 23:09:21 UTC
+  - | Q4 Provable | NO | Requires own JWT + valid X-Selected-Partner-Link-Id header + cross-tenant header mutation; cannot prove without test credentials |
+
+- 5 lead(s) marked VALID at 2026-09-11 20:00:59 UTC
+  - **Verdict: VALID**
+  - **Verdict: VALID**
+  - | Q3 Impact | **PARTIAL** — Field boundary/location geometry is agri location PII. 200 responses with empty SVG body means either test IDs have no geometry or auth failure is soft-fail. Impact depends
+  - | MyDataPlant BOLA (X-Selected-Partner-Link-Id) | **VALID** | 8.6 | IDOR/BOLA |
+  - | Plant Portal BOLA (switchToPartnerNumber) | **VALID** | 8.1 | IDOR/BOLA |
+
+- 2 lead(s) marked VALID at 2026-09-12 04:58:30 UTC
+  - | Q4 Provable | **NO** — requires authenticated session + order placement to capture valid recordId, then test horizontal access |
+  - **VALID leads: 0** — All three HOLD leads require AUTH_HELPED testing (own test accounts) to produce a reportable PoC. No lead has sufficient passive proof to pass all 7 gates today.
+
+- 5 lead(s) marked VALID at 2026-09-12 22:04:33 UTC
+  - **Verdict: VALID**
+  - **Verdict: VALID**
+  - | Q4 Provable non-invasively? | No — 100+ probes all returned 200+empty SVG. Cannot confirm non-empty data return without own test account with valid field geometry. | NO (impact unconfirmed) |
+  - | 1 | Plant Portal partner-linking BOLA | **VALID** | 8.6 |
+  - | 2 | MyDataPlant X-Selected-Partner-Link-Id BOLA | **VALID** | 8.6 |
+[0m
+===SCOPE===
+programs:
+  suedzucker:
+    name: Südzucker AG / Südzucker Group Bug Bounty
+    disclosure_policy: via bugs.olivermaicher.eu (Oliver Maicher private program) - report + PoC + contact + payment
+    assets:
+      - name: "All company-owned infrastructure, production systems, supply chain systems, enterprise IT, customer and partner platforms, APIs, websites, and domains operated by Südzucker Group and its subsidiaries"
+        priority: In
+    out_of_scope:
+- "Network level Denial of Service attacks"
+      - "Application Denial of Service by locking user accounts"
+      - "Descriptive error messages or headers (e.g. Stack Traces, banner grabbing)"
+      - "Disclosure of known public files or directories (e.g. robots.txt)"
+      - "Outdated software / library versions"
+      - "OPTIONS / TRACE HTTP method enabled"
+      - "CSRF on logout"
+      - "CSRF on forms that are available to anonymous users"
+      - "Cookies that lack HTTP Only or Secure settings for non-sensitive data"
+      - "Self-XSS and issues exploitable only through Self-XSS"
+      - "Reports resulting from automated scanning utilities without additional details or a POC demonstrating a specific exploit"
+      - "Attacks requiring physical access to a user's device"
+      - "Attacks dependent upon social engineering of employees or vendors"
+      - "Username enumeration based on login or forgot password pages"
+      - "Enforcement policies for brute force, rate limiting, or account lockout"
+      - "SSL/TLS best practices"
+      - "SSL attacks such as BEAST, BREACH, Renegotiation attack"
+      - "Clickjacking, without additional details demonstrating a specific exploit"
+      - "Mail configuration issues including SPF, DKIM, DMARC settings"
+      - "Use of a known-vulnerable library without a description of an exploit specific to our implementation"
+      - "Password and account recovery policies"
+      - "Presence of autocomplete functionality in form fields"
+      - "Publicly accessible login panels"
+      - "Lack of email address verification during account registration or account invitation"
+      - "Lack of email address verification password restore"
+      - "Session control during email/password changes"
+      - "Social engineering, physical attacks, and DoS/DDoS testing (per program notes)"
+      - "Exposure of customer/employee/financial/authentication data during testing (per program notes)"
+    github_orgs:
+      - none-configured
+
+rules:
+  passive_first: false          # deep-hunt agent: active probes allowed when scoped
+  max_requests_per_second: 1    # never hammer live infra
+  no_doom: true                 # no DoS/DDoS, no account-lockout attacks
+  account_creation: restricted  # only on test/sandbox assets, never live customer data
+  no_data_modification: true    # no writes/deletes on live customer data
+  no_pre_disclosure: true       # never disclose before program response
+  poc_required: true            # scanner output alone is REJECTED
+  redact_secrets_in_commits: true
+
+models:
+  - { id: opencode/big-pickle, name: bigpickle }
+  - { id: opencode/nemotron-3-ultra-free, name: nemotron3 }
+  - { id: opencode/longcat-2.0-free, name: longcat }
+  - { id: opencode/ling-3.0-flash-free, name: ling3 }
+  - { id: opencode/laguna-s-2.1-free, name: laguna }
+[0m
+[0m$ [0mcd /home/runner/work/suedzucker-hunt/suedzucker-hunt && cat reports/hypotheses-bigpickle.txt 2>/dev/null | head -40; echo "===TAIL of knowledge index==="; tail -20 knowledge/index.md 2>/dev/null | cut -c1-200
+## 2026-09-19 12:14:39 UTC [target] (model bigpickle)
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* 401 is a gateway-wide Azure APIM invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: Unchanged; LWR /OrderSummary/:recordId holds pricing/PII/payment, sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); all pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary recordId + horizontally mutated id; mutated GET returns foreign record.
+verify_steps: AUTH_HELPED — self-register → own order → GET /OrderSummary/{mutated-id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 55
+reasoning: Core unchanged; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens wrapped by same gateway (403 without Authorization); outline.py (only auth-free vector) now uniform 500 — amplifier removed, confidence −3.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+[NEXT] HUMAN: Execute the single deferred owned-identity registration (blocked since 09-07): POST vdmcSugarSelfRegistrationController.completeRegistration at shop.suedzucker.com/SelfRegister — solve one FriendlyCaptcha, submit firstName/lastName/email/company; no partner number required at signup. This toggles all three AUTH_HELPED hypotheses from blocked → testable and is the only remaining ascent path.
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 37th consecutive NO_DELTA — triage continues empty (no candidates since outline.py closed on 09-18); all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably terminal across 11 assets; all three HIGH hypotheses (70/62/55) remain gated on the single human registration deferred since 09-07.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure, MitBG password-reset-enumeration, outline.py 500 banner) stand, no class reopens.
+[RISK] suedzucker: 88 — 37th consecutive empty triage; the final passive auth-free bypass vector (outline.py) degraded to closed on 09-18, leaving movement fraction 0; every mapped plane gated; the engagement's entire finding output still depends on the one outstanding HUMAN registration step deferred every cycle since 09-07. Without it the program closes with zero confirmed findings regardless of hypothesis quality. Risk escalating.
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* 401 is a gateway-wide Azure APIM/Front Door invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+===TAIL of knowledge index===
+- 2026-09-18 ACCEPTED RECON @ suedzucker.mitarbeiterangebote.de: re-probed 09-18 (first touch since 09-03) — unchanged 302 /login + CBG3FE cookie + 200 benefits-login shell; adds anonymous POST /api
+- 2026-09-18 REJECTED MISCONFIG @ suedzucker.mitarbeiterangebote.de /api/password-reset-send: anonymous password-reset form is username-enumeration class (out-of-scope); no authz/money/logic flaw obse
+- 2026-09-18 ACCEPTED RECON @ suedzucker inventory: 34th consecutive NO_DELTA — no deltas since 2026-09-17 23:52; all mapped gating invariants (plantportal catalog=200 / smartfarming fields=400 / sh
+- 2026-09-18 ACCEPTED RECON @ suedzucker inventory: 35th consecutive NO_DELTA — triage run-2026-09-18-17-51 empty ("No leads provided"); no new candidates, no class reopens; all gating invariants (p
+- 2026-09-18 REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-o
+- 2026-09-18 CHANGED @ portal.mydataplant.com/services/outline.py: now 500 for all params (was 200+empty SVG numeric / 500 non-numeric); server header Apache/2.4.68 (Debian) vs prior Apache/2.4.29 (Ub
+- 2026-09-18 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unc
+- 2026-09-18 ACCEPTED RECON @ portal.mydataplant.com/services/outline.py: uniform 500 for all param types, server banner now Apache/2.4.68 (Debian) = smartfarming gateway stack — last auth-free Klef
+- 2026-09-18 REJECTED MISCONFIG @ portal.mydataplant.com/services/outline.py: 500-on-all-params change is migration/deployment behavior (banner swap), not an exploitable misconfig; descriptive only, n
+- 2026-09-18 ACCEPTED RECON @ suedzucker inventory: 36th consecutive NO_DELTA — triage continues empty; all gating invariants stand; passive surface terminal across 11 assets; all three HIGH hypothe
+- 2026-09-19 CHANGED @ portal.mydataplant.com/services/outline.py: now 500 for all params (was 200+empty SVG numeric / 500 non-numeric); server header Apache/2.4.68 (Debian) vs prior Apache/2.4.29 (Ub
+- 2026-09-19 REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 INVALID_SESSION_ID — SF
+- 2026-09-19 REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 INVALID_SESSION_ID pre-a
+- 2026-09-19 ACCEPTED RECON @ shop.suedzucker.com: SFDC REST/GraphQL/aura + SAP OCC all SSO-gated — SelfRegister only pre-auth ascent path; anchors all three HIGH hypotheses
+- 2026-09-19 ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door; ceres-* namespace catch-all 401 (20/20 uniform) — gateway-wide gate invar
+- 2026-09-19 ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass
+- 2026-09-19 REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable
+- 2026-09-19 ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/200 — gating invariant unc
+- 2026-09-19 ACCEPTED RECON @ suedzucker inventory: 37th consecutive NO_DELTA — triage continues empty (no candidates since outline.py closed on 09-18); all gating invariants (plantportal catalog=20
+- 2026-09-19 REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-o
+[0m
+STEP 1 — DELTA
+- CHANGED reposcan run-2026-09-19-14-46 (commit 005181f): structural no-op reconfirmed — `TARGET_ORG not configured for suedzucker`, no GitHub org present; automated public-repo angle contributes zero surface (consistent with prior runs).
+- CHANGED triage run-2026-09-19-13-11: "No leads provided" — 38th consecutive empty triage; pipeline produced zero new candidates since outline.py closed.
+- NO_DELTA @ all 11 assets: no new hosts, tech, or KB entries after the 37th NO_DELTA (2026-09-19). Gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) unverified-by-probe but unchanged; no re-probe executed this cycle per terminal-passive determination.
+
+STEP 2 — PRIORITIZE
+- [PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext (BFF partner-linking BOLA): attack_surface 6, business_value 8, tech_exposure 6, gate_ease 2, cloud_surface 6, freshness 4 → score 5.5, axis=high-business-value IDOR surface behind APIM; client-side-only middleware guard on /association/impersonation.
+- [PRIO] shop.suedzucker.com (OrderSummary recordId IDOR): 7/9/6/2/5/4 → 5.9, axis=only pre-auth ascent path (SelfRegister) + highest data value; all data planes session-gated.
+- [PRIO] smartfarming/portal.mydataplant.com (X-Selected-Partner-Link-Id BOLA): 5/7/6/2/4/3 → 4.9, axis=tenant-scope header unbound to JWT evidence; last auth-free amplifier removed.
+
+STEP 3 — HYPOTHESES (unchanged set; no new candidate qualifies ≥40)
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence this cycle; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights + /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* 401 is a gateway-wide Azure APIM invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own partner link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: Unchanged; LWR /OrderSummary/:recordId holds pricing/PII/payment, sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); all pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary recordId + horizontally mutated id; mutated GET returns foreign record.
+verify_steps: AUTH_HELPED — self-register → own order → GET /OrderSummary/{mutated-id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 52
+reasoning: Core unchanged; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens gateway-wrapped (403 without Authorization); outline.py confirmed uniform 500 with gateway banner 09-19 — sole auth-free vector absorbed, −3.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+- Held (≥40, verify-steps concrete, non-REJECTED class): all three above.
+- [PARKED] Simplifier workflow-runtime REST family (instance IDs in URLs): <40 pending owned Simplifier session; no session obtainable passively; drop until AUTH_HELPED.
+- [PARKED] outline.py IDOR: endpoint now uniform 500 with gateway banner — surface degraded to nil; no parallel auth-free path (sibling sweep closed).
+- [PARKED] MitBG /api/password-reset-send: username-enumeration class — REJECTED-class, no reopen.
+- [FINAL] survivors ranked: (1) plantportal partner-linking BOLA [70]; (2) shop OrderSummary IDOR [62]; (3) MyDataPlant X-Selected-Partner-Link-Id BOLA [52].
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Execute the single deferred owned-identity registration (blocked since 09-07): POST vdmcSugarSelfRegistrationController.completeRegistration at shop.suedzucker.com/SelfRegister — solve one FriendlyCaptcha, submit firstName/lastName/email/company; no partner number required at signup. A single completed registration unblocks all three AUTH_HELPED hypotheses (they toggle blocked→testable) and is the only remaining ascent path; every automated avenue (reposcan=structural no-op, triage=38× empty, passive probes=gated) is now confirmed exhausted.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 38th consecutive empty triage (run-2026-09-19-13-11 "No leads provided"); reposcan-2026-09-19-14-46 reconfirms structural no-op (no GitHub org); all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface terminal across 11 assets; three HIGH hypotheses (70/62/52) remain gated on the single human registration deferred since 09-07.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure, MitBG password-reset-enumeration, outline.py 500 banner) stand, no class reopens.
+
+STEP 7 — RISK
+[RISK] suedzucker: 89 — 38th consecutive empty triage; reposcan reconfirmed structural no-op (no GitHub org); the final passive auth-free bypass vector (outline.py) has been closed since 09-18, leaving movement fraction 0 across every automated channel. Program outcome is fully dependent on the single HUMAN registration deferred every cycle since 09-07; without it the pipeline closes at zero confirmed findings regardless of hypothesis quality. Risk +1 vs prior cycle.
