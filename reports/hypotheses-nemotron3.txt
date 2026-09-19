@@ -1,5 +1,4 @@
-## 2026-09-19 02:52:36 UTC [target] (model nemotron3)
-[CHANGED] portal.mydataplant.com/services/outline.py: uniform 500 for all param combinations (was 200+empty SVG for numeric IDs, 500 only for non-numeric); server header Apache/2.4.68 (Debian) vs prior Apache/2.4.29 (Ubuntu) — backend migration/gateway absorption; IDOR surface degraded
+## 2026-09-19 07:48:17 UTC [target] (model nemotron3)
 [PRIO] shop.suedzucker.com,6.2,a=9,b=10,t=8,g=10,c=7,f=6
 [PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,7.0,a=8,b=9,t=7,g=8,c=6,f=5
 [PRIO] portal.mydataplant.com/api/v3,5.0,a=9,b=9,t=8,g=6,c=7,f=4
@@ -30,7 +29,7 @@ reasoning: Public Swagger (15k lines, inline HTML) documents 574 JSON:API endpoi
 evidence_needed: Owned JWT via /tokens (requires valid credentials from partner onboarding); test if X-Selected-Partner-Link-Id can be manipulated to access other tenants' data via documented endpoints (fields, farms, contracts, geometries)
 verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED: Obtain valid credentials (partner onboarding), POST /tokens with Authorization header, extract JWT; GET /api/v3/fields with own X-Selected-Partner-Link-Id (baseline), then with different partnerLinkId — read-only, rate-limited 1 rps
 impact: Cross-tenant access to precision agriculture data (fields, geometries, contracts, sensor data) — HIGH
-testability: AUTH_HELPED
+testability: AUTH_HELD
 [PARKED] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint: now returns 500 for all params; CORS allows-credentials without allow-origin provides no read primitive; cross-origin read impossible; auth-free surface hard-fails uniformly — impact unconfirmed; subsumed by header BOLA hypothesis
 [PARKED] MyDataPlant SSRF via Export Targets: Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch — no SSRF-to-metadata evidence
 [PARKED] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime IDOR-shape REST family: confidence <40 pending owned Simplifier sessions; all 4 envs return uniform 401 app-level gate; distinct from pac4j-gated /UserInterface surface

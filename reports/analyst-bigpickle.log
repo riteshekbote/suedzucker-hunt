@@ -24672,3 +24672,56 @@ STEP 6 — LEARNING
 
 STEP 7 — RISK
 - [RISK] suedzucker: 87 — 37th consecutive empty triage with liveness re-probed and fully frozen; the last auth-free Kleffmann bypass (outline.py) degraded to closed 09-18, leaving movement fraction 0; every mapped plane gated; the engagement's entire finding output depends on the single outstanding HUMAN registration deferred every cycle since 09-07. Without it the program closes with zero confirmed findings regardless of hypothesis quality.
+===== ANALYST bigpickle 2026-09-19 07:48:29 UTC =====
+[0m
+> build · big-pickle
+[0m
+STEP 1 — DELTA
+NO_DELTA — 37th consecutive cycle; no inventory, KB, or liveness changes since 2026-09-19 02:52:46 UTC (last delta = outline.py banner/500 change on 09-18). All gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface terminal across 11 assets.
+
+STEP 2 — PRIORITIZE
+- [PRIO] plantportal.suedzuckergroup.com, 6.8, surface=5 b=8 t=7(MSAL/JWT/BFF) g=1(full gate) c=7(Azure APIM) f=1
+- [PRIO] shop.suedzucker.com, 6.5, surface=6 b=8 t=8(LWR/Apex/OAuth) g=1 c=7(SFDC) f=3(SelfRegister open path)
+- [PRIO] smartfarming/portal.mydataplant.com, 5.1, surface=4 b=7 t=6(JWT/BOLA) g=1 c=6 f=1 — outline.py amplifier now dead
+
+STEP 3 — HYPOTHESES
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: No new evidence; /association/impersonation guarded only by client middleware; x-selected-partner-link-id client-supplied on /access-rights and /external-partner-impersonations; link-id→MSAL-token binding unverified; ceres-* 401 is a gateway-wide Azure APIM invariant, not per-service authz.
+evidence_needed: owned MSAL token + two own link-ids; GET /access-rights with link-B (non-current) returns rows scoped to another partner.
+verify_steps: AUTH_HELPED — GET /external-account/current-partner (Bearer) → capture partnerLinkId; GET /access-rights with link-A vs link-B, diff bodies.
+impact: cross-partner contracts/deliveries/settlements read — HIGH
+testability: AUTH_HELPED
+[HYP] Salesforce B2B Commerce OrderSummary Record IDOR
+class: IDOR
+asset: shop.suedzucker.com
+confidence: 62
+reasoning: Unchanged; LWR /OrderSummary/:recordId holds pricing/PII/payment, sharing rules unverified; SelfRegister open (FriendlyCaptcha-gated, no partner number, vdmcSugarSelfRegistrationController init/completeRegistration); all pre-auth planes closed (sobjects 401, GraphQL 403 API_DISABLED_FOR_ORG, aura session-gated, SAP OCC SSO-absorbed).
+evidence_needed: own session + own OrderSummary recordId + horizontally mutated id; mutated GET returns foreign record.
+verify_steps: AUTH_HELPED — self-register → own order → GET /OrderSummary/{mutated-id}, diff vs own record.
+impact: cross-account order/PII/payment read — HIGH
+testability: AUTH_HELPED
+[HYP] MyDataPlant Cross-Tenant BOLA via X-Selected-Partner-Link-Id Header
+class: IDOR
+asset: smartfarming/portal.mydataplant.com
+confidence: 55
+reasoning: Core unchanged; gateway 400s without X-Selected-Partner-Link-Id; JWT carries userId/email, link-id→JWT binding unverified; independent gateway (Apache/2.4.68+PHP/8.4.25) vs Kleffmann backend; POST /tokens wrapped by same gateway (403 without Authorization); outline.py (only auth-free vector) now uniform 500 — amplifier removed, confidence −3.
+evidence_needed: owned JWT + two own link-ids; GET /fields with non-current link-id returns foreign-scope rows.
+verify_steps: AUTH_HELPED — obtain JWT via gateway-wrapped /tokens with owned credential → GET /mdp-api/v3/api/fields Bearer + link-A vs link-B, diff bodies.
+impact: cross-tenant PII/geometry/financial read — HIGH
+testability: AUTH_HELPED
+
+STEP 4 — SELF-CRITIQUE
+All three survive (70/62/55, all ≥40, all with concrete AUTH_HELPED verify steps). No REJECTED-class or unparkable hypothesis this cycle. No new findings warrant PARKED.
+
+STEP 5 — NEXT ACTION
+[NEXT] HUMAN: Execute the single deferred owned-identity registration (blocked since 09-07): POST vdmcSugarSelfRegistrationController.completeRegistration at shop.suedzucker.com/SelfRegister — solve one FriendlyCaptcha, submit firstName/lastName/email/company; no partner number required at signup. This toggles all three AUTH_HELPED hypotheses from blocked → testable and is the only remaining ascent path.
+
+STEP 6 — LEARNING
+[LEARN] ACCEPTED RECON @ suedzucker inventory: 37th consecutive NO_DELTA — triage continues empty (no candidates since outline.py closed on 09-18); all gating invariants (plantportal catalog=200 / smartfarming fields=400 / shop SelfRegister=200) stand; passive surface provably terminal across 11 assets; all three HIGH hypotheses (70/62/55) remain gated on the single human registration deferred since 09-07.
+[LEARN] REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL org-disable, CORS-without-origin, OCC SSO, SelfRegister Apex-name disclosure, MitBG password-reset-enumeration, outline.py 500 banner) stand, no class reopens.
+
+STEP 7 — RISK
+[RISK] suedzucker: 88 — 37th consecutive empty triage; the final passive auth-free bypass vector (outline.py) degraded to closed on 09-18, leaving movement fraction 0; every mapped plane gated; the engagement's entire finding output still depends on the one outstanding HUMAN registration step deferred every cycle since 09-07. Without it the program closes with zero confirmed findings regardless of hypothesis quality. Risk escalating.
