@@ -1,4 +1,4 @@
-## 2026-09-19 07:48:17 UTC [target] (model nemotron3)
+## 2026-09-19 12:16:58 UTC [target] (model nemotron3)
 [PRIO] shop.suedzucker.com,6.2,a=9,b=10,t=8,g=10,c=7,f=6
 [PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,7.0,a=8,b=9,t=7,g=8,c=6,f=5
 [PRIO] portal.mydataplant.com/api/v3,5.0,a=9,b=9,t=8,g=6,c=7,f=4
@@ -25,11 +25,16 @@ testability: HUMAN → AUTH_HELPED
 class: IDOR
 asset: portal.mydataplant.com/api/v3
 confidence: 50
+reasoning: Public Swagger (1
+[HYP] MyDataPlant Cross-Tenant Data Access via X-Selected-Partner-Link-Id Header Manipulation
+class: IDOR
+asset: portal.mydataplant.com/api/v3
+confidence: 50
 reasoning: Public Swagger (15k lines, inline HTML) documents 574 JSON:API endpoints with numeric IDs; JWT auth (iss=auth-backend, aud=rest-client, userId+email claims, mdp_bgd_api scope); gateway requires X-Selected-Partner-Link-Id tenant-scoping header (value=server-issued partnerLinkId); POST /tokens requires Authorization header (403 without) despite doc stating "Authorization header not allowed"; backend validates JWT correctly (malformed 401, invalid sig 401, alg=none 401); CORS allows-credentials but no allow-origin reflection; outline.py auth-free endpoint now returns 500 for all probes (was 200+empty SVG); gateway stack Apache/2.4.68+PHP/8.4.25, backend Apache/2.4.68 (Debian) — unified stack
 evidence_needed: Owned JWT via /tokens (requires valid credentials from partner onboarding); test if X-Selected-Partner-Link-Id can be manipulated to access other tenants' data via documented endpoints (fields, farms, contracts, geometries)
 verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED: Obtain valid credentials (partner onboarding), POST /tokens with Authorization header, extract JWT; GET /api/v3/fields with own X-Selected-Partner-Link-Id (baseline), then with different partnerLinkId — read-only, rate-limited 1 rps
 impact: Cross-tenant access to precision agriculture data (fields, geometries, contracts, sensor data) — HIGH
-testability: AUTH_HELD
+testability: AUTH_HELPED
 [PARKED] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint: now returns 500 for all params; CORS allows-credentials without allow-origin provides no read primitive; cross-origin read impossible; auth-free surface hard-fails uniformly — impact unconfirmed; subsumed by header BOLA hypothesis
 [PARKED] MyDataPlant SSRF via Export Targets: Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch — no SSRF-to-metadata evidence
 [PARKED] apps.suedzuckergroup.com/HybridUserInterface/workflow-runtime IDOR-shape REST family: confidence <40 pending owned Simplifier sessions; all 4 envs return uniform 401 app-level gate; distinct from pac4j-gated /UserInterface surface
