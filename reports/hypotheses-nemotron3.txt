@@ -1,12 +1,21 @@
-## 2026-09-19 16:05:40 UTC [target] (model nemotron3)
-[PRIO] shop.suedzucker.com,8.75,a=9,b=10,t=8,g=10,c=7,f=6
-[PRIO] portal.mydataplant.com/api/v3,7.7,a=9,b=9,t=8,g=6,c=7,f=4
-[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,7.6,a=8,b=9,t=7,g=8,c=6,f=5
+## 2026-09-19 18:27:29 UTC [target] (model nemotron3)
+[PRIO] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services,8.5,a=9,b=10,t=8,g=7,c=7,f=6
+[PRIO] shop.suedzucker.com,7.9,a=9,b=9,t=8,g=6,c=7,f=6
+[PRIO] portal.mydataplant.com/api/v3,7.2,a=9,b=9,t=7,g=5,c=6,f=4
+[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
+class: IDOR
+asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
+confidence: 70
+reasoning: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100); BFF /api-gateway/entra-ext confirmed Azure APIM/Front Door (x-azure-ref, x-forwarded-prefix, x-cache:CONFIG_NOCACHE); client route /association/impersonation guarded only by client-side middleware; endpoints GET /external-partner-impersonations?partnerSearch + POST {partnerNo} to ceres-domain-backend-services — client guard bypassable by design; backend authz unverified; ceres-* namespace catch-all 401 (20/20 uniform); switchToPartnerNumber captured in client state only, no auto setCurrentPartner
+evidence_needed: Owned Entra B2C session via public sign-up at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100; call POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with partnerNo of another organization — observe if backend returns impersonation token/data or enforces ownership
+verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/_nuxt/* — extract runtime config, confirm BFF base + endpoints. AUTH_HELPED: Complete MSAL flow, obtain Bearer; POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with own partnerNo (baseline), then with different partnerNo — read-only, rate-limited 1 rps
+impact: Horizontal access to partner farmer data (fields, contracts, cultivation plans) — HIGH
+testability: AUTH_HELPED
 [HYP] Shop OrderSummary Horizontal IDOR via SFDC Community API Gateway
 class: IDOR
 asset: shop.suedzucker.com
 confidence: 62
-reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) with `/OrderSummary/:recordId` and `/product/:recordId` routes; SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap fully SSO-gated via UAA (no public OCC REST — `/rest/v2/`, `/occ/v2/` → 200 SSO redirect to suedzucker.authentication.eu10.hana.ondemand.com); SFDC REST (`services/data/vXX/sobjects`), GraphQL (`v62.0/graphql` → 403 API_DISABLED_FOR_ORG), and Aura all require valid session; SelfRegister (LWR `register_view`, custom Apex `vdmcSugarSelfRegistrationController.initRegistration/completeRegistration`, FriendlyCaptcha-gated) is the ONLY functional pre-auth entry; no partner number at signup; horizontal IDOR scope limited to authenticated users within same community
+reasoning: Salesforce B2B Commerce LWR (WebRuntime 236.0) with /OrderSummary/:recordId and /product/:recordId routes; SAP Commerce Cloud backend suedzucker.eu10.hcs.cloud.sap fully SSO-gated via UAA (no public OCC REST — /rest/v2/, /occ/v2/ → 200 SSO redirect to suedzucker.authentication.eu10.hana.ondemand.com); SFDC REST (services/data/vXX/sobjects), GraphQL (v62.0/graphql → 403 API_DISABLED_FOR_ORG), and Aura all require valid session; SelfRegister (LWR register_view, custom Apex vdmcSugarSelfRegistrationController.initRegistration/completeRegistration, FriendlyCaptcha-gated) is the ONLY functional pre-auth entry; no partner number at signup; horizontal IDOR scope limited to authenticated users within same community
 evidence_needed: Owned test identity via SelfRegister (form: firstName/lastName/email/password+confirm/CompanyName/Country/Phone), complete FriendlyCaptcha, create ≥1 order; then GET /services/data/v62.0/sobjects/OrderSummary/{otherId} or /OrderSummary/{otherId} via API Gateway (szg-is.prod.apimanagement.eu30.hana.ondemand.com) with valid Bearer — observe cross-order data access
 verify_steps: PASSIVE: GET https://shop.suedzucker.com/SelfRegister — confirm 200 + register_view module. HUMAN: Register test account via SelfRegister, solve FriendlyCaptcha, place test order. AUTH_HELPED: Obtain Bearer via SFDC community session; GET /services/data/v62.0/sobjects/OrderSummary/{otherId} and /OrderSummary/{otherId} — read-only, rate-limited 1 rps
 impact: Horizontal access to other customers' order PII (pricing, shipping, products) — HIGH
@@ -17,17 +26,8 @@ asset: portal.mydataplant.com/api/v3
 confidence: 50
 reasoning: Public Swagger (15k lines, inline HTML) documents 574 JSON:API endpoints with numeric IDs; JWT auth (iss=auth-backend, aud=rest-client, userId+email claims, mdp_bgd_api scope); gateway requires X-Selected-Partner-Link-Id tenant-scoping header (value=server-issued partnerLinkId); POST /tokens requires Authorization header (403 without) despite doc stating "Authorization header not allowed"; backend validates JWT correctly (malformed 401, invalid sig 401, alg=none 401); CORS allows-credentials but no allow-origin reflection; outline.py auth-free endpoint now returns 500 for all probes (was 200+empty SVG); gateway stack Apache/2.4.68+PHP/8.4.25, backend Apache/2.4.68 (Debian) — unified stack
 evidence_needed: Owned JWT via /tokens (requires valid credentials from partner onboarding); test if X-Selected-Partner-Link-Id can be manipulated to access other tenants' data via documented endpoints (fields, farms, contracts, geometries)
-verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED: Obtain valid credentials (partner onboarding), POST /tokens with Authorization header, extract JWT; GET /api/v3/fields with own X-Selected-Partner-Link-Id (baseline), then with different partnerLinkId — read-only, rate-limited 1 rps
+verify_steps: PASSIVE: GET https://smartfarming.suedzuckergroup.com/mdp-api/v3/api — confirm Swagger endpoint map. AUTH_HELPED: Obtain valid credentials (partner onboarding), POST /tokens with Authorization
 impact: Cross-tenant access to precision agriculture data (fields, geometries, contracts, sensor data) — HIGH
-testability: AUTH_HELPED
-[HYP] Plant Portal Horizontal Partner Data Access via Partner Linking Flow
-class: IDOR
-asset: plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services
-confidence: 70
-reasoning: Nuxt 3 "epp" v1.8.0, MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a048-5f1242196100); BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door (`x-azure-ref`, `x-forwarded-prefix`, `x-cache: CONFIG_NOCACHE`); client route `/association/impersonation` guarded only by client-side middleware; endpoints GET `/external-partner-impersonations?partnerSearch` + POST `{partnerNo}` to ceres-domain-backend-services — client guard bypassable by design; backend authz unverified; ceres-* namespace catch-all 401 (20/20 uniform); switchToPartnerNumber captured in client state only, no auto setCurrentPartner
-evidence_needed: Owned Entra B2C session via public sign-up at https://szgrmb2cprod.ciamlogin.com/516d27c9-70e5-49b6-8ca4-fb1242196100/oauth2/v2.0/authorize?client_id=ba3120d6-3d54-478b-a048-5f1242196100; call POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with partnerNo of another organization — observe if backend returns impersonation token/data or enforces ownership
-verify_steps: PASSIVE: GET https://plantportal.suedzuckergroup.com/_nuxt/* — extract runtime config, confirm BFF base + endpoints. AUTH_HELPED: Complete MSAL flow, obtain Bearer; POST /api-gateway/entra-ext/api/ceres-domain-backend-services/external-partner-impersonations with own partnerNo (baseline), then with different partnerNo — read-only, rate-limited 1 rps
-impact: Horizontal access to partner farmer data (fields, contracts, cultivation plans) — HIGH
 testability: AUTH_HELPED
 [PARKED] MyDataPlant Geometry IDOR via Auth-Free outline.py Endpoint: now returns 500 for all params; CORS allows-credentials without allow-origin provides no read primitive; cross-origin read impossible; auth-free surface hard-fails uniformly — impact unconfirmed; subsumed by header BOLA hypothesis
 [PARKED] MyDataPlant SSRF via Export Targets: Swagger shows catalog targets (TERMINAL_USB_EXPORT, PDF) not arbitrary-URL fetch — no SSRF-to-metadata evidence

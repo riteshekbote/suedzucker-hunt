@@ -2354,3 +2354,26 @@
 - LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass
 - LEARN: REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable
 - LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2
+
+## RANKED HYPOTHESES 2026-09-19 18:27:39 UTC
+- [70] plantportal.suedzuckergroup.com/api-gateway/entra-ext/api/ceres-domain-backend-services: Plant Portal Horizontal Partner Data Access via Partner Linking Flow (from art/lead_nemotron3.txt)
+- [55] plantportal.info: Plant Portal partner-number linking IDOR/BOLA (from art/lead_bigpickle.txt)
+- NEXT(hypotheses-bigpickle.txt): PROBE: GET https://plantportal.info/ then /robots.txt and /.well-known/openid-configuration to map the farmer-portal tech + auth model (read-only reach scan).
+- NEXT(hypotheses-nemotron3.txt): HUMAN: Register owned test identity at shop.suedzucker.com/SelfRegister (public 200 shell) — complete self-registration flow (form fields: firstName/lastName/em
+- LEARN: REJECTED MISCONFIG @ www.suedzuckergroup.com: JSON:API+GraphQL disabled, registration closed, version files 404 — hardened Drupal; not a vuln.
+- LEARN: REJECTED MISCONFIG @ www.suedzuckergroup.com: etracker secure-code in page source is a descriptive/tracking config, not in-scope impact.
+- LEARN: ACCEPTED RECON @ suedzucker.de: root renamed to suedzuckergroup.com — passive surface analysis of old zone was targeting dead root; must re-enumerate new TLD.
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: Nuxt "epp" app confirmed; MSAL Entra B2C (authority szgrmb2cprod.ciamlogin.com, clientId ba3120d6-3d54-478b-a0
+- LEARN: ACCEPTED RECON @ smartfarming.suedzuckergroup.com/mdp-api/v3/api: full MyDataPlant REST Swagger is publicly browsable (no auth required to read docs); reveals e
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: identified as Salesforce Commerce Cloud "sfdc communities"/DXP (SLDS, /sfsites/). Managed third-party infra; tenant-level 
+- LEARN: REJECTED NOT-VULN @ plantportal api-gateway endpoints: ceres-internal-auth-service / ceres-domain-backend-services / ceres-image-service all return 401 unauth (
+- LEARN: ACCEPTED RECON @ suedzucker inventory: 37th consecutive NO_DELTA — triage continues empty (no candidates since outline.py closed on 09-18); all gating invariant
+- LEARN: REJECTED MISCONFIG @ (no new candidate) — none surfaced this cycle; prior rejections (Simplifier 503, Drupal hardening, client-side config/keys, SFDC GraphQL or
+- LEARN: CHANGED @ portal.mydataplant.com/services/outline.py: now 500 for all params (was 200+empty SVG numeric / 500 non-numeric); server header Apache/2.4.68 (Debian)
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/v62.0/graphql: no-auth GET → 403 API_DISABLED_FOR_ORG (Chatter Connect disabled), invalid Bearer → 401 IN
+- LEARN: REJECTED NOT-VULN @ shop.suedzucker.com /services/data/: version-list 200 (SFDC v31–v67) standard Experience-Cloud behavior; /services/data/vXX/sobjects → 401 I
+- LEARN: ACCEPTED RECON @ shop.suedzucker.com: SFDC REST/GraphQL/aura + SAP OCC all SSO-gated — SelfRegister only pre-auth ascent path; anchors all three HIGH hypotheses
+- LEARN: ACCEPTED RECON @ plantportal.suedzuckergroup.com: BFF `/api-gateway/entra-ext` confirmed Azure APIM/Front Door; ceres-* namespace catch-all 401 (20/20 uniform) 
+- LEARN: ACCEPTED RECON @ apps.suedzuckergroup.com: 5 unregistered Simplifier modules return 503 "No Registration yet." — soft deployment failure, not auth bypass
+- LEARN: REJECTED DEAD-ASSET @ dev.siseth.com + seedrecommender.suedzuckergroup.com: HTTP 000 both — no resurrection; dead-asset set stable
+- LEARN: ACCEPTED RECON @ all three AUTH_HELPED surfaces (plantportal /api/catalog/companies / smartfarming /fields / shop SelfRegister): liveness re-confirmed 200/400/2

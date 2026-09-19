@@ -361,3 +361,14 @@ www.suedzucker.de
 ## 2026-09-19 12:17:07 UTC
 
 ## 2026-09-19 16:05:52 UTC
+
+## 2026-09-19 18:27:39 UTC
+- NEW www.suedzuckergroup.com — corporate site redirect target of suedzucker.de (Drupal 11, live)
+- NEW shop.suedzucker.com — customer shop SPA with /login (e-commerce auth)
+- NEW plantportal.info — Plant Portal (farmer portal, partner-number linking flow)
+- NEW app.agriconetwork.com — Giełda Wysłodkowa byproduct trading platform (financial)
+- NEW bisz.suedzucker.de — BISZ Rübenanbau portal (Plant Portal link, gov/agri data)
+- NEW suedzucker.mitarbeiterangebote.de — employee corporate-benefits portal
+- CHANGED inventory root zone: suedzucker.de → suedzuckergroup.com (official rename per on-site announcement)
+- NEW plantportal.suedzuckergroup.com (Nuxt 3 + PrimeVue, "epp" v1.8.0) — farmer portal, partner-number linking flow confirmed via Nuxt payload
+- NEW shop.suedzucker.com (Salesforce B2B Commerce LWR) — live SPA with /login, /cart, /checkout, /order, /SelfRegister, /OrderSummary/:recordId, /product/:recordId routes
